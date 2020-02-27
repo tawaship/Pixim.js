@@ -1,0 +1,49 @@
+<script src="dist/Emitter.js"></script>
+
+
+<script>
+	const f = a => {
+		console.log('on', a);
+	};
+	
+	new Emitter()
+		.on('ev', f)
+		.emit('ev', 1) // on 1
+		.off('ev', f)
+		.emit('ev', 1) // nothing
+	
+	new Emitter()
+		.on('ev', (...args) => {
+			console.log('on', ...args);
+		})
+		.emit('ev', 1, 2, 3, 4, 5, 6, 7); // on 1 2 3 4 5 6 7
+	
+	new Emitter()
+		.on('ev', function(a) {
+			console.log(this, a);
+		})
+		.cemit('ev', {hoge: 1}, 2) // ev 1 2 3 4 5 6 7
+	
+		new Emitter()
+		.on('ev', a => {
+			console.log(this, a);
+		})
+		.cemit('ev', {hoge: 1}, 2) // {hoge: 1} 2
+			
+	new Emitter()
+		.on('ev', a => {
+			console.log('ev', a);
+		})
+		.on('ev', a => {
+			console.log('ev', a);
+		})
+		.on('ev2', a => {
+			console.log('ev', a);
+		})
+		.on('ev2', a => {
+			console.log('ev', a);
+		})
+		.clear('ev')
+		.emit('ev', 1) // (nothing)
+		.emit('ev2', 1) // ev 1, ev 1
+</script>

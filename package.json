@@ -1,0 +1,46 @@
+{
+  "name": "@tawaship/pixim.js",
+  "version": "1.0.6",
+  "description": "Framework that wraps pixi.js.",
+  "main": "dist/Pixim.cjs.js",
+  "module": "dist/Pixim.esm.js",
+  "types": "types/Pixim.d.ts",
+  "scripts": {
+    "watch": "rollup -cw",
+    "build": "ENV PROD=1 rollup -c && tsc --target ES5 --emitDeclarationOnly && jsdoc -c jsdoc.json -p -R README.md && npm test",
+    "test": "mocha test/index.js"
+  },
+  "keywords": [
+    "emitter",
+    "dispatcher",
+    "event"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tawaship/Pixim.js.git"
+  },
+  "author": "tawaship",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tawaship/Pixim.js/issues"
+  },
+  "homepage": "https://tawaship.github.io/Pixim.js",
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.1",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-typescript": "^3.0.0",
+    "del": "^5.1.0",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "^3.6.3",
+    "mocha": "^7.1.0",
+    "rollup": "^1.31.1",
+    "rollup-plugin-terser": "^5.2.0",
+    "tslib": "^1.11.0",
+    "typescript": "^3.8.2"
+  },
+  "dependencies": {
+    "@tawaship/emitter": "^1.1.1",
+    "pixi.js": "^5.2.1"
+  }
+}
