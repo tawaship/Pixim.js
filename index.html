@@ -1,49 +1,35 @@
-<script src="dist/Emitter.js"></script>
-
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js"></script>
+<script src="dist/Pixim.js"></script>
 
 <script>
-	const f = a => {
-		console.log('on', a);
-	};
+	const app = new Pixim.Application(document.body,{width: 100, height: 100}, {autoAdjust: true, fullScreen: false});
+	console.log(app)
 	
-	new Emitter()
-		.on('ev', f)
-		.emit('ev', 1) // on 1
-		.off('ev', f)
-		.emit('ev', 1) // nothing
+	app.play();
 	
-	new Emitter()
-		.on('ev', (...args) => {
-			console.log('on', ...args);
-		})
-		.emit('ev', 1, 2, 3, 4, 5, 6, 7); // on 1 2 3 4 5 6 7
+	const g = app._piximData.app.stage.addChild(new PIXI.Graphics())
+	g.beginFill(0xFF0000, 1);
+	g.drawRect(0, 0, 50, 50);
 	
-	new Emitter()
-		.on('ev', function(a) {
-			console.log(this, a);
-		})
-		.cemit('ev', {hoge: 1}, 2) // ev 1 2 3 4 5 6 7
+	const c = g.addChild(new Pixim.Container());
+	c.task.on("A", () => {
+		g.x += 0.5;
+	})
 	
-		new Emitter()
-		.on('ev', a => {
-			console.log(this, a);
-		})
-		.cemit('ev', {hoge: 1}, 2) // {hoge: 1} 2
-			
-	new Emitter()
-		.on('ev', a => {
-			console.log('ev', a);
-		})
-		.on('ev', a => {
-			console.log('ev', a);
-		})
-		.on('ev2', a => {
-			console.log('ev', a);
-		})
-		.on('ev2', a => {
-			console.log('ev', a);
-		})
-		.clear('ev')
-		.emit('ev', 1) // (nothing)
-		.emit('ev2', 1) // ev 1, ev 1
+	const c2 = g.addChild(new Pixim.Container());
+	c2.task.on("A", () => {
+		g.x += 0.5;
+	})
+	
+	setTimeout(()=>{
+		c.task.tickEnabled = false;
+		//app.pause(true);
+	},1000)
+	
+	setTimeout(()=>{
+		c.task.tickEnabled = true;
+		//app.pause(false);
+	},2000)
 </script>
+</body>

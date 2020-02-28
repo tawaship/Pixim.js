@@ -7,7 +7,7 @@
   "types": "types/Pixim.d.ts",
   "scripts": {
     "watch": "rollup -cw",
-    "build": "ENV PROD=1 rollup -c && tsc --target ES5 --emitDeclarationOnly && jsdoc -c jsdoc.json -p -R README.md && npm test",
+    "build": "ENV PROD=1 rollup -c && tsc --target ES5 --emitDeclarationOnly && typedoc src/",
     "test": "mocha test/index.js"
   },
   "keywords": [
@@ -40,7 +40,7 @@
     "typescript": "^3.8.2"
   },
   "dependencies": {
-    "@tawaship/emitter": "^1.1.1",
+    "@tawaship/emitter": "^1.1.2",
     "pixi.js": "^5.2.1"
   }
 }

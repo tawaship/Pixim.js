@@ -2,77 +2,96 @@ import Emitter from './Emitter';
 import Container from './Container';
 import TickerData from './TickerData';
 
-type Tasks = Task[];
+interface TaskData {
+	context: Container,
+	tickEnabled: boolean
+}
 
-/**
- * @class
- * @memberof Pixim
- * @extends Pixim.Emitter
- */
 export default class Task extends Emitter {
-	/**
-	 * @member {Tasks[]}
-	 * @static
-	 * @private
-	 */
-	private static _tasks: Tasks = [];
+	private static _tasks: Task[] = [];
 	
-	/**
-	 * @member {Pixim.Container}
-	 * @private
-	 */
-	private _target: Container;
+	private _piximData: TaskData;
 	
-	/**
-	 * @constructor
-	 * @param {Pixim.Container} target
-	 */
-	constructor(target: Container) {
+	constructor(context: Container) {
 		super();
 		
-		this._target = target;
+		this._piximData = {
+			context,
+			tickEnabled: true
+		};
 	}
 	
-	private static _has(task: Task): boolean {
-		return this._tasks.indexOf(task) > -1;
+	/**
+	 * Get registration index of task.
+	 */
+	private static _getIndex(task: Task): number {
+		return this._tasks.indexOf(task);
 	}
 	
+	/**
+	 * Register task.
+	 */
 	static add(task: Task): void {
-		if (this._has(task)) {
+		if (this._getIndex(task) > -1) {
 			return;
 		}
 		
-		Task._tasks.push(task);
+		this._tasks.push(task);
 	}
 	
+	/**
+	 * Unregister task.
+	 */
 	static remove(task: Task): void {
-		if (!this._has(task)) {
+		const index = this._getIndex(task);
+		
+		if (index === -1) {
 			return;
 		}
 		
-		this._tasks.splice(idx, 1);
+		this._tasks.splice(index, 1);
 	}
 	
+	/**
+	 * Execute all task.
+	 */
 	static done(e: TickerData): void {
-		const tasks: Tasks = this._tasks;
+		const tasks: Task[] = this._tasks;
 		
 		for (let i: number = 0; i < tasks.length; i++) {
-			tasks[i].update(e);
+			tasks[i]._update(e);
 		}
 	}
 	
-	update(e: TickerData): void {
+	get tickEnabled(): boolean {
+		return this._piximData.tickEnabled;
+	}
+	
+	set tickEnabled(enabled) {
+		this._piximData.tickEnabled = enabled;
+	}
+	
+	/**
+	 * Execute task.
+	 */
+	_update(e: TickerData): void {
+		if (!this.tickEnabled) {
+			return;
+		}
+		
 		const eventNames: string[] = this.eventNames;
-		const target: Container = this._target;
+		const context: Container = this._piximData.context;
 		
 		for (let i: number = 0; i < eventNames.length; i++) {
-			this.cemit(eventNames[i], target, e);
+			this.cemit(eventNames[i], context, e);
 		}
 	}
 	
+	/**
+	 * Destroy instance.
+	 */
 	destroy(): void {
 		Task.remove(this);
 		this.clear();
-		this._target = null;
 	}
 }

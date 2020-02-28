@@ -37,7 +37,7 @@ export default (async () => {
 					sourcemap: true
 				}
 			],
-			external: ['pixi.js'],
+			external: ['pixi.js', '@tawaship/emitter'],
 			plugins: [
 				nodeResolve(),
 				commonjs(),
@@ -54,7 +54,7 @@ export default (async () => {
 					name: 'Pixim',
 					sourcemap: true,
 					globals: {
-					//	'pixi.js': 'PIXI'
+						'pixi.js': 'PIXI'
 					}
 				}
 			],
@@ -67,7 +67,7 @@ export default (async () => {
 				terser({
 					compress: {
 						defaults: false,
-						drop_console: true
+					//	drop_console: true
 					},
 					mangle: false,
 					output: {
@@ -86,7 +86,7 @@ export default (async () => {
 					format: 'iife',
 					name: 'Pixim',
 					globals: {
-					//	'pixi.js': 'PIXI'
+						'pixi.js': 'PIXI'
 					}
 				}
 			],
