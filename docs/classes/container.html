@@ -66,15 +66,6 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<dl class="tsd-comment-tags">
-						<dt>see</dt>
-						<dd><p><a href="http://pixijs.download/v5.2.1/docs/PIXI.Container.html">http://pixijs.download/v5.2.1/docs/PIXI.Container.html</a></p>
-						</dd>
-					</dl>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -212,11 +203,9 @@
 							<aside class="tsd-sources">
 								<p>Overrides Container.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Container.ts#L24">src/package/Container.ts:24</a></li>
+									<li>Defined in src/modules/Container.ts:12</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-							</div>
 							<h4 class="tsd-returns-title">Returns <a href="container.html" class="tsd-signature-type">Container</a></h4>
 						</li>
 					</ul>
@@ -369,16 +358,9 @@
 					<div class="tsd-signature tsd-kind-icon">_pixim<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/containerdata.html" class="tsd-signature-type">ContainerData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Container.ts#L24">src/package/Container.ts:24</a></li>
+							<li>Defined in src/modules/Container.ts:12</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>member</dt>
-							<dd><p>{Pixim.Container~ContainerData}</p>
-							</dd>
-						</dl>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-protected">
 					<a name="_tempdisplayobjectparent" class="tsd-anchor"></a>
@@ -1478,17 +1460,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Container.ts#L49">src/package/Container.ts:49</a></li>
+									<li>Defined in src/modules/Container.ts:33</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>member</dt>
-									<dd><p>{Pixim~Task}</p>
-									</dd>
-									<dt>readonly</dt>
-									<dd></dd>
-								</dl>
+								<div class="lead">
+									<p>Task object that works only while it is being displayed.</p>
+								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="task.html" class="tsd-signature-type">Task</a></h4>
 						</li>
@@ -1698,12 +1676,12 @@
 							<aside class="tsd-sources">
 								<p>Overrides Container.destroy</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Container.ts#L59">src/package/Container.ts:59</a></li>
+									<li>Defined in src/modules/Container.ts:42</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Destroy instance</p>
+									<p>Destroy instance.</p>
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>override</dt>
@@ -2664,9 +2642,6 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="a.html" class="tsd-kind-icon">A</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="application.html" class="tsd-kind-icon">Application</a>
 					</li>
 				</ul>
@@ -2934,43 +2909,37 @@
 						<a href="emitter.html" class="tsd-kind-icon">Emitter</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="t.html" class="tsd-kind-icon">T</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="task.html" class="tsd-kind-icon">Task</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/applicationdata.html" class="tsd-kind-icon">Application<wbr>Data</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/containerdata.html" class="tsd-kind-icon">Container<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/position.html" class="tsd-kind-icon">Position</a>
+						<a href="../interfaces/iposition.html" class="tsd-kind-icon">IPosition</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/rect.html" class="tsd-kind-icon">Rect</a>
+						<a href="../interfaces/irect.html" class="tsd-kind-icon">IRect</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/size.html" class="tsd-kind-icon">Size</a>
+						<a href="../interfaces/isize.html" class="tsd-kind-icon">ISize</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/taskdata.html" class="tsd-kind-icon">Task<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/tickerdata.html" class="tsd-kind-icon">Ticker<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#applicationoption" class="tsd-kind-icon">Application<wbr>Option</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#layers" class="tsd-kind-icon">Layers</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#roots" class="tsd-kind-icon">Roots</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#e" class="tsd-kind-icon">E</a>
 					</li>
 				</ul>
 			</nav>

@@ -66,10 +66,6 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -120,8 +116,13 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="application.html#once" class="tsd-kind-icon">once</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#pause" class="tsd-kind-icon">pause</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#play" class="tsd-kind-icon">play</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#resizeframe" class="tsd-kind-icon">resize<wbr>Frame</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#tobottom" class="tsd-kind-icon">to<wbr>Bottom</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#tocenter" class="tsd-kind-icon">to<wbr>Center</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#toleft" class="tsd-kind-icon">to<wbr>Left</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#tomiddle" class="tsd-kind-icon">to<wbr>Middle</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#toright" class="tsd-kind-icon">to<wbr>Right</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="application.html#totop" class="tsd-kind-icon">to<wbr>Top</a></li>
 							</ul>
 						</section>
 					</div>
@@ -139,7 +140,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L56">src/package/Application.ts:56</a></li>
+									<li>Defined in src/modules/Application.ts:41</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,12 +154,27 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> container: <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> = document.body</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The parent element of the canvas that displays the content.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> pixiOptions: <span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Optional data when call &#39;new PIXI.Application&#39;.</p>
+										</div>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> piximOptions: <a href="../globals.html#applicationoption" class="tsd-signature-type">ApplicationOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Optional data for Pixim.</p>
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="application.html" class="tsd-signature-type">Application</a></h4>
@@ -174,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">_pixim<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/applicationdata.html" class="tsd-signature-type">ApplicationData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L56">src/package/Application.ts:56</a></li>
+							<li>Defined in src/modules/Application.ts:41</li>
 						</ul>
 					</aside>
 				</section>
@@ -184,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">_content<wbr>Roots<span class="tsd-signature-symbol">:</span> <a href="../globals.html#roots" class="tsd-signature-type">Roots</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L54">src/package/Application.ts:54</a></li>
+							<li>Defined in src/modules/Application.ts:39</li>
 						</ul>
 					</aside>
 				</section>
@@ -202,16 +218,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:25</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:8</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registered event names.</p>
+								</div>
 								<dl class="tsd-comment-tags">
-									<dt>member</dt>
-									<dd><p>{string[]}</p>
-									</dd>
-									<dt>readonly</dt>
-									<dd></dd>
 									<dt>since</dt>
 									<dd><p>1.1.1</p>
 									</dd>
@@ -228,25 +242,28 @@
 					<a name="adjust" class="tsd-anchor"></a>
 					<h3>adjust</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">adjust<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="application.html" class="tsd-signature-type">Application</a></li>
+						<li class="tsd-signature tsd-kind-icon">adjust<span class="tsd-signature-symbol">(</span>size<span class="tsd-signature-symbol">: </span><a href="../interfaces/isize.html" class="tsd-signature-type">ISize</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="application.html" class="tsd-signature-type">Application</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L201">src/package/Application.ts:201</a></li>
+									<li>Defined in src/modules/Application.ts:199</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Resize canvas to fit specified size.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>width: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>height: <span class="tsd-signature-type">number</span></h5>
+									<h5>size: <a href="../interfaces/isize.html" class="tsd-signature-type">ISize</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="application.html" class="tsd-signature-type">Application</a></h4>
+							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -260,12 +277,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L239">src/package/Application.ts:239</a></li>
+									<li>Defined in src/modules/Application.ts:229</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Adjust canvas height.</p>
+									<p>Resize canvas to fit specified height.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -289,12 +306,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L223">src/package/Application.ts:223</a></li>
+									<li>Defined in src/modules/Application.ts:214</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Adjust canvas width.</p>
+									<p>Resize canvas to fit specified width.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -319,7 +336,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#cemit">cemit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:76</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:58</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,6 +360,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -361,7 +381,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:83</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:65</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -373,6 +393,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type to remove.<br>If it is empty, removes all events.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -391,7 +414,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:67</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:49</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -409,6 +432,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -420,14 +446,14 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:59</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:41</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -444,7 +470,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Registered callback.</p>
 									</div>
@@ -459,14 +485,14 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:43</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:25</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -483,7 +509,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
@@ -498,14 +524,14 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:51</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:33</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -522,7 +548,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
@@ -537,13 +563,13 @@
 					<a name="pause" class="tsd-anchor"></a>
 					<h3>pause</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">pause<span class="tsd-signature-symbol">(</span>paused<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">pause<span class="tsd-signature-symbol">(</span>paused<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="application.html" class="tsd-signature-type">Application</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L178">src/package/Application.ts:178</a></li>
+									<li>Defined in src/modules/Application.ts:180</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -557,7 +583,7 @@
 									<h5>paused: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="application.html" class="tsd-signature-type">Application</a></h4>
 							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
@@ -572,7 +598,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L124">src/package/Application.ts:124</a></li>
+									<li>Defined in src/modules/Application.ts:127</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -586,42 +612,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="resizeframe" class="tsd-anchor"></a>
-					<h3>resize<wbr>Frame</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">resize<wbr>Frame<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L192">src/package/Application.ts:192</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>width: <span class="tsd-signature-type">number</span></h5>
-								</li>
-								<li>
-									<h5>height: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="stop" class="tsd-anchor"></a>
 					<h3>stop</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="application.html" class="tsd-signature-type">Application</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L141">src/package/Application.ts:141</a></li>
+									<li>Defined in src/modules/Application.ts:144</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,8 +629,134 @@
 									<p>Stop application.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="application.html" class="tsd-signature-type">Application</a></h4>
 							<p>Returns itself for the method chaining.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tobottom" class="tsd-anchor"></a>
+					<h3>to<wbr>Bottom</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Bottom<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:279</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tocenter" class="tsd-anchor"></a>
+					<h3>to<wbr>Center</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Center<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:247</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="toleft" class="tsd-anchor"></a>
+					<h3>to<wbr>Left</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Left<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:239</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tomiddle" class="tsd-anchor"></a>
+					<h3>to<wbr>Middle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Middle<span class="tsd-signature-symbol">(</span>height<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:271</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>height: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="toright" class="tsd-anchor"></a>
+					<h3>to<wbr>Right</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Right<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:255</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="totop" class="tsd-anchor"></a>
+					<h3>to<wbr>Top</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Top<span class="tsd-signature-symbol">(</span>width<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/modules/Application.ts:263</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>width: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -646,9 +772,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="a.html" class="tsd-kind-icon">A</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
@@ -700,10 +823,25 @@
 								<a href="application.html#play" class="tsd-kind-icon">play</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="application.html#resizeframe" class="tsd-kind-icon">resize<wbr>Frame</a>
+								<a href="application.html#stop" class="tsd-kind-icon">stop</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="application.html#stop" class="tsd-kind-icon">stop</a>
+								<a href="application.html#tobottom" class="tsd-kind-icon">to<wbr>Bottom</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="application.html#tocenter" class="tsd-kind-icon">to<wbr>Center</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="application.html#toleft" class="tsd-kind-icon">to<wbr>Left</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="application.html#tomiddle" class="tsd-kind-icon">to<wbr>Middle</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="application.html#toright" class="tsd-kind-icon">to<wbr>Right</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="application.html#totop" class="tsd-kind-icon">to<wbr>Top</a>
 							</li>
 						</ul>
 					</li>
@@ -716,43 +854,37 @@
 						<a href="emitter.html" class="tsd-kind-icon">Emitter</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="t.html" class="tsd-kind-icon">T</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="task.html" class="tsd-kind-icon">Task</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/applicationdata.html" class="tsd-kind-icon">Application<wbr>Data</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/containerdata.html" class="tsd-kind-icon">Container<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/position.html" class="tsd-kind-icon">Position</a>
+						<a href="../interfaces/iposition.html" class="tsd-kind-icon">IPosition</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/rect.html" class="tsd-kind-icon">Rect</a>
+						<a href="../interfaces/irect.html" class="tsd-kind-icon">IRect</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/size.html" class="tsd-kind-icon">Size</a>
+						<a href="../interfaces/isize.html" class="tsd-kind-icon">ISize</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/taskdata.html" class="tsd-kind-icon">Task<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/tickerdata.html" class="tsd-kind-icon">Ticker<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#applicationoption" class="tsd-kind-icon">Application<wbr>Option</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#layers" class="tsd-kind-icon">Layers</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#roots" class="tsd-kind-icon">Roots</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#e" class="tsd-kind-icon">E</a>
 					</li>
 				</ul>
 			</nav>

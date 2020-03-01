@@ -1,8 +1,8 @@
-# @tawaship/emitter
+# pixim.js
 
 **A little useful emitter.**
 
-[![Build Status](https://travis-ci.org/tawaship/Emitter.svg?branch=master)](https://travis-ci.org/tawaship/Emitter)
+[![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 ---

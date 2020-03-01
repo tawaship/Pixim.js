@@ -4,18 +4,13 @@
     "target": "ES6",
     "strict": true,
     "declaration": true,
-    "outDir": "./types",
+    "outDir": "./types"
   },
   "typedocOptions": {
     "mode": "file",
-   // "out": "docs",
-    "target": "es5",
+    "out": "docs",
     "moduleResolution": "node",
-  // "includeDeclarations": true,
-   // "exclude": ["node_modules/@tawaship/emitter/types/Emitter.d.ts"],
-    ////"externalPattern": ["**/*.js"],
-  //  "excludeExternals": true
-    //"entryPoint": "Pixim"
+    "gitRevision": "master"
   },
   "exclude": ["node_modules", "src/**/*.d.ts"]
 }

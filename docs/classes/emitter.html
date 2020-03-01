@@ -70,7 +70,7 @@
 				<div class="tsd-comment tsd-typography">
 					<dl class="tsd-comment-tags">
 						<dt>see</dt>
-						<dd><p><a href="https://tawaship.github.io/Emitter/">https://tawaship.github.io/Emitter/</a></p>
+						<dd><p><a href="https://tawaship.github.io/Emitter/index.html">https://tawaship.github.io/Emitter/index.html</a></p>
 						</dd>
 					</dl>
 				</div>
@@ -133,16 +133,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#eventnames">eventNames</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:25</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:8</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registered event names.</p>
+								</div>
 								<dl class="tsd-comment-tags">
-									<dt>member</dt>
-									<dd><p>{string[]}</p>
-									</dd>
-									<dt>readonly</dt>
-									<dd></dd>
 									<dt>since</dt>
 									<dd><p>1.1.1</p>
 									</dd>
@@ -166,7 +164,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#cemit">cemit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:76</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:58</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -190,6 +188,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -208,7 +209,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:83</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:65</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -220,6 +221,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type to remove.<br>If it is empty, removes all events.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -238,7 +242,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:67</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:49</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -256,6 +260,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Emitter</span></h4>
@@ -267,14 +274,14 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:59</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:41</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -291,7 +298,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Registered callback.</p>
 									</div>
@@ -306,14 +313,14 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:43</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:25</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -330,7 +337,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
@@ -345,14 +352,14 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
+						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Emitter</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="emitter.html">Emitter</a>.<a href="emitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/Emitter.d.ts:51</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:33</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -369,7 +376,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">Function</span></h5>
+									<h5>func: <span class="tsd-signature-type">EmitterCallback</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
@@ -392,9 +399,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="a.html" class="tsd-kind-icon">A</a>
-					</li>
 					<li class=" tsd-kind-class">
 						<a href="application.html" class="tsd-kind-icon">Application</a>
 					</li>
@@ -432,43 +436,37 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class">
-						<a href="t.html" class="tsd-kind-icon">T</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="task.html" class="tsd-kind-icon">Task</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/applicationdata.html" class="tsd-kind-icon">Application<wbr>Data</a>
 					</li>
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/containerdata.html" class="tsd-kind-icon">Container<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/position.html" class="tsd-kind-icon">Position</a>
+						<a href="../interfaces/iposition.html" class="tsd-kind-icon">IPosition</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/rect.html" class="tsd-kind-icon">Rect</a>
+						<a href="../interfaces/irect.html" class="tsd-kind-icon">IRect</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="../interfaces/size.html" class="tsd-kind-icon">Size</a>
+						<a href="../interfaces/isize.html" class="tsd-kind-icon">ISize</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="../interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="../interfaces/taskdata.html" class="tsd-kind-icon">Task<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="../interfaces/tickerdata.html" class="tsd-kind-icon">Ticker<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#applicationoption" class="tsd-kind-icon">Application<wbr>Option</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#layers" class="tsd-kind-icon">Layers</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#roots" class="tsd-kind-icon">Roots</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#e" class="tsd-kind-icon">E</a>
 					</li>
 				</ul>
 			</nav>

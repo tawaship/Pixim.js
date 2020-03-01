@@ -22,7 +22,7 @@ export default (async () => {
 	
 	return [
 		{
-			input: 'src/Pixim.ts',
+			input: 'src/index.ts',
 			output: [
 				{
 					banner,
@@ -38,6 +38,9 @@ export default (async () => {
 				}
 			],
 			external: ['pixi.js', '@tawaship/emitter'],
+			watch: {
+				clearScreen: false
+			},
 			plugins: [
 				nodeResolve(),
 				commonjs(),
@@ -45,7 +48,7 @@ export default (async () => {
 			]
 		},
 		{
-			input: 'src/Pixim.ts',
+			input: 'src/index.ts',
 			output: [
 				{
 					banner,
@@ -78,7 +81,7 @@ export default (async () => {
 			]
 		},
 		{
-			input: 'src/Pixim.ts',
+			input: 'src/index.ts',
 			output: [
 				{
 					banner,

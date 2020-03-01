@@ -66,6 +66,10 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -82,11 +86,10 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#app" class="tsd-kind-icon">app</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#autoadjust" class="tsd-kind-icon">auto<wbr>Adjust</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#container" class="tsd-kind-icon">container</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#frame" class="tsd-kind-icon">frame</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#isrun" class="tsd-kind-icon">is<wbr>Run</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#layers" class="tsd-kind-icon">layers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#options" class="tsd-kind-icon">options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="applicationdata.html#view" class="tsd-kind-icon">view</a></li>
 							</ul>
 						</section>
@@ -101,17 +104,7 @@
 					<div class="tsd-signature tsd-kind-icon">app<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Application</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L18">src/package/Application.ts:18</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="autoadjust" class="tsd-anchor"></a>
-					<h3>auto<wbr>Adjust</h3>
-					<div class="tsd-signature tsd-kind-icon">auto<wbr>Adjust<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L22">src/package/Application.ts:22</a></li>
+							<li>Defined in src/modules/Application.ts:31</li>
 						</ul>
 					</aside>
 				</section>
@@ -121,17 +114,7 @@
 					<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L19">src/package/Application.ts:19</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="frame" class="tsd-anchor"></a>
-					<h3>frame</h3>
-					<div class="tsd-signature tsd-kind-icon">frame<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLDivElement</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L20">src/package/Application.ts:20</a></li>
+							<li>Defined in src/modules/Application.ts:32</li>
 						</ul>
 					</aside>
 				</section>
@@ -141,7 +124,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Run<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L17">src/package/Application.ts:17</a></li>
+							<li>Defined in src/modules/Application.ts:30</li>
 						</ul>
 					</aside>
 				</section>
@@ -151,7 +134,17 @@
 					<div class="tsd-signature tsd-kind-icon">layers<span class="tsd-signature-symbol">:</span> <a href="../globals.html#layers" class="tsd-signature-type">Layers</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L23">src/package/Application.ts:23</a></li>
+							<li>Defined in src/modules/Application.ts:35</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="options" class="tsd-anchor"></a>
+					<h3>options</h3>
+					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../globals.html#applicationoption" class="tsd-signature-type">ApplicationOption</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/modules/Application.ts:34</li>
 						</ul>
 					</aside>
 				</section>
@@ -161,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">view<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLCanvasElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/4ab6c82/src/package/Application.ts#L21">src/package/Application.ts:21</a></li>
+							<li>Defined in src/modules/Application.ts:33</li>
 						</ul>
 					</aside>
 				</section>
@@ -178,9 +171,6 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
-						<a href="../classes/a.html" class="tsd-kind-icon">A</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="../classes/application.html" class="tsd-kind-icon">Application</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -190,27 +180,18 @@
 						<a href="../classes/emitter.html" class="tsd-kind-icon">Emitter</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="../classes/t.html" class="tsd-kind-icon">T</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="../classes/task.html" class="tsd-kind-icon">Task</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface">
+					<li class="current tsd-kind-interface tsd-is-private">
 						<a href="applicationdata.html" class="tsd-kind-icon">Application<wbr>Data</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="applicationdata.html#app" class="tsd-kind-icon">app</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="applicationdata.html#autoadjust" class="tsd-kind-icon">auto<wbr>Adjust</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="applicationdata.html#container" class="tsd-kind-icon">container</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="applicationdata.html#frame" class="tsd-kind-icon">frame</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="applicationdata.html#isrun" class="tsd-kind-icon">is<wbr>Run</a>
@@ -219,41 +200,41 @@
 								<a href="applicationdata.html#layers" class="tsd-kind-icon">layers</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="applicationdata.html#options" class="tsd-kind-icon">options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="applicationdata.html#view" class="tsd-kind-icon">view</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface">
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="containerdata.html" class="tsd-kind-icon">Container<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="position.html" class="tsd-kind-icon">Position</a>
+						<a href="iposition.html" class="tsd-kind-icon">IPosition</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="rect.html" class="tsd-kind-icon">Rect</a>
+						<a href="irect.html" class="tsd-kind-icon">IRect</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="size.html" class="tsd-kind-icon">Size</a>
+						<a href="isize.html" class="tsd-kind-icon">ISize</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-is-private">
 						<a href="taskdata.html" class="tsd-kind-icon">Task<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="tickerdata.html" class="tsd-kind-icon">Ticker<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#applicationoption" class="tsd-kind-icon">Application<wbr>Option</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#layers" class="tsd-kind-icon">Layers</a>
 					</li>
-					<li class=" tsd-kind-type-alias">
+					<li class=" tsd-kind-type-alias tsd-is-private">
 						<a href="../globals.html#roots" class="tsd-kind-icon">Roots</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#e" class="tsd-kind-icon">E</a>
 					</li>
 				</ul>
 			</nav>

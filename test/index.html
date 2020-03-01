@@ -1,0 +1,81 @@
+<body style="margin: 0; overflow: hidden;">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.js"></script>
+<script src="../dist/Pixim.js"></script>
+
+<script>
+	/*
+	new PIXI.Loader()
+		.add("hoge", "fonts.png")
+		.add("moge", "fonts_w.json")
+		.load((loader,resources) => {
+			console.log(resources)
+		});
+		
+	*/
+	const app = new Pixim.Application(document.body,{width: 400, height: 400}, {autoAdjust: true});
+	//app.fullScreen({width: innerWidth, height:innerHeight})
+	app.play();
+	console.log(Pixim.Content)
+	const A = Pixim.Content.create("A");
+	
+	A.defineImages({
+		hoge: "fonts.png"
+	})
+	
+	A.defineLibraries({
+		root: class A extends PIXI.Container {
+			constructor($) {
+				super();
+				
+				console.log($.resources.images.hoge)
+				
+				
+				
+				const g = this.addChild(new PIXI.Graphics())
+				g.beginFill(0xFF0000, 1);
+				g.drawRect(0, 0, 50, 50);
+				
+				const c = g.addChild(new Pixim.Container());
+				c.task.on("A", () => {
+					g.x += 0.5;
+				})
+				
+				const c2 = g.addChild(new Pixim.Container());
+				c2.task.on("A", () => {
+					g.x += 0.5;
+				})
+				
+				setTimeout(()=>{
+					c.task.tickEnabled = false;
+					//app.pause(true);
+				},1000)
+				
+				setTimeout(()=>{
+					c.task.tickEnabled = true;
+					//app.pause(false);
+					
+				},2000)
+				
+				setTimeout(()=>{
+					c.task.tickEnabled = true;
+					//app.pause(false);
+					
+				},2000)
+				
+				this.addChild(new PIXI.Sprite($.resources.images.hoge))
+			}
+		}
+	});
+	const a = new A();
+	a.addImages({
+		m:"fonts_w.png"
+	})
+	
+	const aa = new A()
+	
+	app.attachAsync(aa)
+		.then(()=>{
+			app.play();
+		});
+</script>
+</body>
