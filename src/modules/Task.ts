@@ -1,5 +1,11 @@
 import { Emitter } from './Emitter';
-import { ITickerData } from './ITickerData';
+
+/**
+ * @private
+ */
+export interface ITickerData {
+	delta: number
+}
 
 /**
  * @private
@@ -9,9 +15,12 @@ interface ITaskData {
 	tickEnabled: boolean
 }
 
+/**
+ * @ignore
+ */
+const _tasks: Task[] = [];
+
 export class Task extends Emitter {
-	private static _tasks: Task[] = [];
-	
 	private _piximData: ITaskData;
 	
 	constructor(context: any) {
@@ -27,7 +36,7 @@ export class Task extends Emitter {
 	 * Get registration index of task.
 	 */
 	private static _getIndex(task: Task): number {
-		return this._tasks.indexOf(task);
+		return _tasks.indexOf(task);
 	}
 	
 	/**
@@ -38,7 +47,7 @@ export class Task extends Emitter {
 			return;
 		}
 		
-		this._tasks.push(task);
+		_tasks.push(task);
 	}
 	
 	/**
@@ -51,17 +60,15 @@ export class Task extends Emitter {
 			return;
 		}
 		
-		this._tasks.splice(index, 1);
+		_tasks.splice(index, 1);
 	}
 	
 	/**
 	 * Execute all task.
 	 */
 	static done(e: ITickerData): void {
-		const tasks: Task[] = this._tasks;
-		
-		for (let i: number = 0; i < tasks.length; i++) {
-			tasks[i]._update(e);
+		for (let i: number = 0; i < _tasks.length; i++) {
+			_tasks[i]._update(e);
 		}
 	}
 	

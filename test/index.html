@@ -1,4 +1,7 @@
 <body style="margin: 0; overflow: hidden;">
+	<div>
+		<canvas id="a"></canvas>
+	</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.js"></script>
 <script src="../dist/Pixim.js"></script>
 
@@ -12,24 +15,41 @@
 		});
 		
 	*/
-	const app = new Pixim.Application(document.body,{width: 400, height: 400}, {autoAdjust: true});
+	/*
+	class G {
+		static a = {a:0}
+		static k() {
+			return this.a;
+		}
+	}
+	
+	class GG extends G{
+		static a = {a:1}
+	}
+	class HH extends G{}
+	console.log(HH.k())
+	console.log(GG.k() === HH.k())
+	*/
+	
+	const app = new Pixim.Application({width: 400, height: 400, view: document.getElementById("a"), resolution: 1, preserveDrawingBuffer: true}, {autoAdjust: true,container:document.body});
 	//app.fullScreen({width: innerWidth, height:innerHeight})
 	app.play();
 	console.log(Pixim.Content)
 	const A = Pixim.Content.create("A");
+	const B = Pixim.Content.create("B");
 	
 	A.defineImages({
 		hoge: "fonts.png"
 	})
-	
+	/*
+	A.defineImages({
+		ae: "fonts_w.png"
+	})
+	*/
 	A.defineLibraries({
 		root: class A extends PIXI.Container {
 			constructor($) {
 				super();
-				
-				console.log($.resources.images.hoge)
-				
-				
 				
 				const g = this.addChild(new PIXI.Graphics())
 				g.beginFill(0xFF0000, 1);
@@ -37,7 +57,7 @@
 				
 				const c = g.addChild(new Pixim.Container());
 				c.task.on("A", () => {
-					g.x += 0.5;
+					g.x += 1;
 				})
 				
 				const c2 = g.addChild(new Pixim.Container());
@@ -66,16 +86,60 @@
 			}
 		}
 	});
+	
+	B.defineLibraries({
+		root: class B extends PIXI.Container {
+			constructor($) {
+				super();
+				console.log($.resources.images)
+				const g = this.addChild(new PIXI.Graphics())
+				g.beginFill(0xFFFFFF, 1);
+				g.drawRect(0, 0, 100, 100);
+			}
+		}
+	});
+	console.log(5)
 	const a = new A();
+	
 	a.addImages({
-		m:"fonts_w.png"
+		hoge: "fonts.png"
 	})
 	
-	const aa = new A()
+	a.prepareAsync()
+	.then(()=>{
 	
-	app.attachAsync(aa)
+	a.addImages({
+		a: "fonts_w.png"
+	})
+	})
+	.then(()=>{
+	const aaa = new A();
+	//aaa._pixim.$.lib.root = null
+	
+	console.log(A._piximData.lib)
+	
+	console.log(A._piximData === B._piximData)
+	app.addLayer("A");
+	const aa = new A();
+	const bb = new B();
+	console.log(aa._piximData.manifests.images)
+	
+	app.attachAsync(a)
 		.then(()=>{
+			return app.attachAsync(bb,"A");
+		})
+		.then(() => {
 			app.play();
+			
+			setTimeout(()=>{
+				app.detach(bb)
+			}, 1000);
+			
+			setTimeout(()=>{
+				app.attachAsync(bb)
+				//console.log(app.view.toDataURL())
+			}, 1500);
 		});
+	});
 </script>
 </body>

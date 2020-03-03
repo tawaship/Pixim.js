@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { Container } from './Container';
 import { Content } from './Content';
 import { Emitter } from './Emitter';
 import { Task } from './Task';
@@ -7,17 +6,19 @@ import { Task } from './Task';
 /**
  * @private
  */
-type Roots = { [id: number]: PIXI.Container };
+type TRoots = { [id: string]: PIXI.Container };
 
 /**
  * @private
  */
-type Layers = { [name: string]: PIXI.Container };
+type TLayers = { [name: string]: PIXI.Container };
 
 /**
+ * @property container Parent node of canvas element.
  * @property autoAdjust Whether to adjust canvas size automatically.
  */
-export type ApplicationOption = {
+export type TApplicationOption = {
+	container?: HTMLElement,
 	autoAdjust?: boolean
 }
 
@@ -28,11 +29,9 @@ interface IApplicationData {
 	isRun: boolean,
 	app: PIXI.Application,
 	stage: PIXI.Container,
-	container: HTMLElement,
-	//frame: HTMLDivElement,
 	view: HTMLCanvasElement,
-	options: ApplicationOption,
-	layers: Layers
+	options: TApplicationOption,
+	layers: TLayers
 }
 
 export interface ISize {
@@ -49,23 +48,21 @@ export interface IRect extends ISize, IPosition {
 
 }
 
+/**
+ * @ignore
+ */
+const _roots: TRoots = {};
+
 export class Application extends Emitter {
-	private static _contentRoots: Roots = {};
-	
 	private _piximData: IApplicationData;
 	
 	/**
-	 * @param container The parent element of the canvas that displays the content.
 	 * @param pixiOptions Optional data when call 'new PIXI.Application'.
 	 * @param piximOptions Optional data for Pixim.
 	 * @see http://pixijs.download/v5.2.1/docs/PIXI.Application.html
 	 */
-	constructor(container: HTMLElement = document.body, pixiOptions: Object = {}, piximOptions: ApplicationOption = {}) {
+	constructor(pixiOptions: Object = {}, piximOptions: TApplicationOption = {}) {
 		super();
-		
-		//pixiOptions = pixiOptions || {};
-		//pixiOptions.width = pixiOptions.width || 450;
-		//pixiOptions.height = pixiOptions.height || 800;
 		
 		const app: PIXI.Application = new PIXI.Application(pixiOptions);
 		app.stop();
@@ -74,68 +71,31 @@ export class Application extends Emitter {
 		
 		const view: HTMLCanvasElement = app.view;
 		view.style.position = 'relative';
-		//view.style.width = '100%';
-		//view.style.height = '100%';
 		
-		const frame: HTMLDivElement = document.createElement('div');
-		frame.style.position = 'relative';
-		//frame.style.overflow = 'hidden';
-		//frame.style.left = '0px';
-		//frame.style.top = '0px';
-		//frame.appendChild(view);
+		if (piximOptions.container) {
+			piximOptions.container.appendChild(view);
+		} else {
+			if (!view.parentNode) {
+				document.body.appendChild(view);
+			}
+		}
 		
 		const autoAdjust: boolean = piximOptions.autoAdjust || false;
-		//const fullScreen: boolean = piximOptions.fullScreen || false;
 		
 		this._piximData = {
 			isRun: false,
 			app,
 			stage,
-			container,
-			//frame,
 			view,
 			layers: {},
 			options: piximOptions
 		};
 		
 		const ticker: PIXI.Ticker = this._piximData.app.ticker;
-		/*
-		this.on(events.FpsChanged, (fps: number) => {
-			ticker.speed = fps / 60;
-		});
-		*/
+		
 		ticker.add((delta: number) => {
 			Task.done({ delta });
 		});
-		
-		/*
-		if (piximOptions.fullScreen) {
-			this.resizeFrame({ width: window.innerWidth, height: window.innerHeight });
-			
-			if (piximOptions.autoAdjust) {
-				window.addEventListener('resize', () => {
-					this.resizeFrame({ width: window.innerWidth, height: window.innerHeight });
-				});
-			}
-		} else {
-			
-		}
-		*/
-		/*
-		if (piximOptions.autoAdjust) {
-			const f = () => {
-				this.resizeFrame({ width: window.innerWidth, height: window.innerHeight })
-					.toCenter(window.innerWidth)
-					//.toMiddle(window.innerHeight);
-			};
-			
-			window.addEventListener('resize', f);
-			
-			f();
-		} else {
-			this.resizeFrame({ width: view.width, height: view.height });
-		}
-		*/
 		
 		if (piximOptions.autoAdjust) {
 			const f = () => {
@@ -150,6 +110,10 @@ export class Application extends Emitter {
 		}
 	}
 	
+	get view(): HTMLCanvasElement {
+		return this._piximData.view;
+	}
+	
 	/**
 	 * Whether application has layer.
 	 */
@@ -162,7 +126,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addLayer(name: string): Application {
+	addLayer(name: string): this {
 		if (this._hasLayer(name)) {
 			return this;
 		}
@@ -177,7 +141,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	removeLayer(name: string): Application {
+	removeLayer(name: string): this {
 		if (!this._hasLayer(name)) {
 			return this;
 		}
@@ -196,7 +160,7 @@ export class Application extends Emitter {
 			.then((root: PIXI.Container) => {
 				this.addLayer(layerName);
 				
-				Application._contentRoots[content.contentID] = root;
+				_roots[content.contentID] = root;
 				this._piximData.layers[layerName].addChild(root);
 				
 				return root;
@@ -208,16 +172,15 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	detach(content: Content): Application {
-		const root: PIXI.Container = Application._contentRoots[content.contentID];
+	detach(content: Content): this {
+		const root: PIXI.Container = _roots[content.contentID];
 		
 		if (!root) {
 			return this;
 		}
 		
-		root.parent.removeChild(root);
-		root.destroy();
-		delete(Application._contentRoots[content.contentID]);
+		this._destroyRoot(root);
+		delete(_roots[content.contentID]);
 		
 		return this;
 	}
@@ -227,12 +190,11 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	play(): Application {
+	play(): this {
 		if (this._piximData.isRun) {
 			return this;
 		}
 		
-		this._piximData.container.appendChild(this._piximData.view);
 		this._piximData.app.start();
 		this._piximData.isRun = true;
 		
@@ -244,7 +206,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	stop(): Application {
+	stop(): this {
 		if (!this._piximData.isRun) {
 			return this;
 		}
@@ -254,24 +216,32 @@ export class Application extends Emitter {
 		
 		const stage: PIXI.Container = this._piximData.app.stage;
 		
-		const layers: Layers = this._piximData.layers;
+		const layers: TLayers = this._piximData.layers;
 		
 		for (let i in layers) {
 			layers[i].removeChildren();
 		}
 		
-		for (let i in Application._contentRoots) {
-			const root: PIXI.Container = Application._contentRoots[i];
-			root.parent.removeChild(root);
-			root.destroy();
+		const keys: string[] = [];
+		for (let i in _roots) {
+			this._destroyRoot(_roots[i]);
+			keys.push(i);
 		}
 		
-		Application._contentRoots = {};
+		for (let i = 0; i < keys.length; i++) {
+			delete(_roots[keys[i]]);
+		}
 		
 		this._piximData.app.ticker.update();
-		this._piximData.container.removeChild(this._piximData.view);
 		
 		return this;
+	}
+	
+	_destroyRoot(root: PIXI.Container): void {
+		if (root.parent) {
+			root.parent.removeChild(root);
+		}
+		root.destroy();
 	}
 	
 	/**
@@ -279,7 +249,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	pause(paused: boolean): Application {
+	pause(paused: boolean): this {
 		if (!this._piximData.isRun) {
 			return this;
 		}
@@ -293,51 +263,19 @@ export class Application extends Emitter {
 		return this;
 	}
 	
-	/*
-	resizeFrame(size: ISize): Application {
-		const frame: HTMLDivElement = this._piximData.frame;
-		
-		frame.style.width = `${size.width}px`;
-		frame.style.height = `${size.height}px`;
-		
-		if (this._piximData.options.autoAdjust) {
-			return this.adjust(size);
-		}
-		
-		return this;
-	}
-	*/
-	
-	/**
-	 * Resize canvas to fit specified size.
-	 * 
-	 * @return Returns itself for the method chaining.
-	 */
-	 /*
-	adjust(size: ISize): Application {
-		const view: HTMLCanvasElement = this._piximData.view;
-		
-		if (size.width / size.height > view.width / view.height) {
-			return this.adjustHeight(size.height);
-		}
-		
-		return this.adjustWidth(size.width);
-	}
-	*/
-	
 	/**
 	 * Resize canvas to fit specified rectangle.
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	fullScreen(rect: IRect = { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight}) {
+	fullScreen(rect: IRect = { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight}): Application {
 		const view: HTMLCanvasElement = this._piximData.view;
 		
 		if (rect.width / rect.height > view.width / view.height) {
 			return this.adjustHeight(rect.height).toCenter(rect).toTop(rect);
 		}
 		
-		this.adjustWidth(rect.width).toMiddle(rect).toLeft(rect);
+		return this.adjustWidth(rect.width).toMiddle(rect).toLeft(rect);
 	}
 	
 	/**
@@ -389,7 +327,7 @@ export class Application extends Emitter {
 	toCenter(rect: IRect): Application {
 		const view = this._piximData.view;
 		
-		view.style.left = `${(rect.width - this._getFrameRect().width) / 2 + rect.x}px`;
+		view.style.left = `${(rect.width - this._getViewRect().width) / 2 + rect.x}px`;
 		
 		return this;
 	}
@@ -400,7 +338,7 @@ export class Application extends Emitter {
 	toRight(rect: IRect): Application {
 		const view = this._piximData.view;
 		
-		view.style.left = `${rect.width - this._getFrameRect().width + rect.x}px`;
+		view.style.left = `${rect.width - this._getViewRect().width + rect.x}px`;
 		
 		return this;
 	}
@@ -422,7 +360,7 @@ export class Application extends Emitter {
 	toMiddle(rect: IRect): Application {
 		const view = this._piximData.view;
 		
-		view.style.top = `${(rect.height - this._getFrameRect().height) / 2 + rect.y}px`;
+		view.style.top = `${(rect.height - this._getViewRect().height) / 2 + rect.y}px`;
 		
 		return this;
 	}
@@ -433,12 +371,12 @@ export class Application extends Emitter {
 	toBottom(rect: IRect): Application {
 		const view = this._piximData.view;
 		
-		view.style.top = `${rect.height - this._getFrameRect().height + rect.y}px`;
+		view.style.top = `${rect.height - this._getViewRect().height + rect.y}px`;
 		
 		return this;
 	}
 	
-	private _getFrameRect(): IRect {
+	private _getViewRect(): IRect {
 		const view = this._piximData.view;
 		
 		return {

@@ -1,11 +1,11 @@
 import * as PIXI from 'pixi.js';
 
-export type ResourceManifests = { [name: string]: string};
+export type TManifests = { [name: string]: string};
 
 /**
  * @private
  */
-interface IManifest {
+interface IPreManifest {
 	url: string;
 	unrequired: boolean;
 }
@@ -13,34 +13,50 @@ interface IManifest {
 /**
  * @private
  */
-type Manifests = { [name: string]: IManifest };
+type TPreManifests = { [name: string]: IPreManifest };
 
 /**
  * @private
  */
-interface ILodableManifest extends IManifest {
+interface IPostManifest extends IPreManifest {
 	name: string;
 }
 
-export type LodableManifests = { [name: string]: ILodableManifest };
+/**
+ * @protected
+ */
+export type TPostManifests = { [name: string]: IPostManifest };
 
-export interface IContentResrouceOption {
+export interface IContentManifestOption {
 	unrequired?: boolean
 }
 
+/**
+ * @protected
+ */
 export interface ILoadedResource {
 	resource: any;
 	error: boolean;
 }
 
-export type LoadedResources = { [name: string]: ILoadedResource };
+/**
+ * @private
+ */
+type TLoadedResources = { [name: string]: ILoadedResource };
 
-export type Resources = { [name: string]: any};
+export type TResources = { [name: string]: any};
 
-export class ContentResource {
-	private static _cache: Resources = {};
+export type TContentResources = { [name: string]: TResources };
+
+/**
+ * @ignore
+ */
+const _cache: TResources = {};
+
+export class ContentManifestBase {
+	static manifestKey: string = 'base';
 	
-	private _manifests: Manifests = {};
+	private _manifests: TPreManifests = {};
 	
 	/**
 	 * Registered manifests.
@@ -48,7 +64,7 @@ export class ContentResource {
 	 * @param manifests Defined manifests.
 	 * @param option Manifest option data.
 	 */
-	add(manifests: ResourceManifests, options: IContentResrouceOption = {}) {
+	add(manifests: TManifests, options: IContentManifestOption = {}) {
 		const unrequired: boolean = options.unrequired || false;
 		
 		for (let i in manifests) {
@@ -65,16 +81,18 @@ export class ContentResource {
 	 * @async
 	 * @param basepath Basement directory path of assets.
 	 */
-	getAsync(basepath: string): Promise<Resources> {
-		const manifests: Manifests = this._manifests;
+	getAsync(basepath: string): Promise<TResources> {
+		const manifests: TPreManifests = this._manifests;
 		
-		const resources: Resources = {};
-		const loadable: LodableManifests = {};
-		const cache = ContentResource._cache;
+		const resources: TResources = {};
+		const loadable: TPostManifests = {};
+		const cache = _cache;
 		
 		for (let i in manifests) {
-			const manifest: IManifest = manifests[i];
+			const manifest: IPreManifest = manifests[i];
 			const url: string = this._resolvePath(basepath, manifest.url);
+			
+			// query parameter is invalid for resource cache
 			const name: string = url.replace(/\?.*/, '');
 			
 			if (cache[name]) {
@@ -94,7 +112,7 @@ export class ContentResource {
 		}
 		
 		return this._loadAsync(loadable)
-			.then((res: LoadedResources) => {
+			.then((res: TLoadedResources) => {
 				for (let i in res) {
 					resources[i] = res[i].resource;
 					
@@ -113,7 +131,7 @@ export class ContentResource {
 	 * @abstruct
 	 * @async
 	 */
-	protected _loadAsync(manifests: LodableManifests): Promise<LoadedResources> {
+	protected _loadAsync(manifests: TPostManifests): Promise<TLoadedResources> {
 		return Promise.resolve({});
 	}
 	

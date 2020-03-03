@@ -1,8 +1,10 @@
-import { Emitter } from './Emitter.js';
-import { ContentLibrary } from './Content';
-import { LoadedResources } from './ContentResource';
+import * as PIXI from 'pixi.js';
+import { Container } from './Container';
+import { TContentResources } from './ContentManifestBase';
 
-export type Vars = { [name: string]: any };
+export type TContentLibrary = { [name: string]: typeof PIXI.Container | typeof Container };
+
+export type TVars = { [name: string]: any };
 
 /**
  * @private
@@ -11,69 +13,64 @@ interface IContentDeliverData {
 	fps: number,
 	width: number,
 	height: number,
-	lib: ContentLibrary,
-	resources: LoadedResources,
-	vars: Vars
+	lib: TContentLibrary,
+	resources: TContentResources,
+	vars: TVars
 }
 
-export class ContentDeliver extends Emitter {
-	private _fps: number;
-	private _width: number;
-	private _height: number;
-	private _lib: ContentLibrary;
-	private _resources: LoadedResources;
-	private _vars: Vars;
+export class ContentDeliver {
+	private _piximData: IContentDeliverData;
 	
 	constructor(data: IContentDeliverData) {
-		super();
-		
-		this._fps = data.fps;
-		this._width = data.width;
-		this._height = data.height;
-		this._lib = data.lib;
-		this._resources = data.resources;
-		this._vars = data.vars;
+		this._piximData = {
+			fps: data.fps,
+			width: data.width,
+			height: data.height,
+			lib: data.lib,
+			resources: data.resources,
+			vars: data.vars
+		};
 	}
 	
 	/**
 	 * Content FPS.
 	 */
 	get fps(): number {
-		return this._fps;
+		return this._piximData.fps;
 	}
 	
 	/**
 	 * Content width.
 	 */
 	get width(): number {
-		return this._width;
+		return this._piximData.width;
 	}
 	
 	/**
 	 * Content height.
 	 */
 	get height(): number {
-		return this._height;
+		return this._piximData.height;
 	}
 	
 	/**
 	 * Defined classes in content.
 	 */
-	get lib(): ContentLibrary {
-		return this._lib;
+	get lib(): TContentLibrary {
+		return this._piximData.lib;
 	}
 	
 	/**
 	 * Loaded resources.
 	 */
-	get resources(): LoadedResources {
-		return this._resources;
+	get resources(): TContentResources {
+		return this._piximData.resources;
 	}
 	
 	/**
 	 * Defined variables by framework.
 	 */
-	get vars(): Vars {
-		return this._vars;
+	get vars(): TVars {
+		return this._piximData.vars;
 	}
 }

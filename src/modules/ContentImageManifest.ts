@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ContentResource, ResourceManifests, IContentResrouceOption, LodableManifests, ILoadedResource } from './ContentResource';
+import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
 import { Content } from './Content';
 
 /**
@@ -9,17 +9,22 @@ interface ILoadedImageResource extends ILoadedResource {
 	resource: PIXI.Texture
 }
 
-type LoadedResrouces = { [name: string]: ILoadedImageResource };
+/**
+ * @private
+ */
+type TLoadedImageResources = { [name: string]: ILoadedImageResource };
 
-export class ContentImageResource extends ContentResource {
+export class ContentImageManifest extends ContentManifestBase {
+	static manifestKey = 'images';
+	
 	/**
 	 * Load image resources.
 	 * 
 	 * @override
 	 * @async
 	 */
-	protected _loadAsync(manifests: LodableManifests): Promise<LoadedResrouces> {
-		return new Promise((resolve, reject): void => {
+	protected _loadAsync(manifests: TPostManifests): Promise<TLoadedImageResources> {
+		return new Promise((resolve: (resource: TLoadedImageResources) => void, reject: (manifest: TManifests) => void): void => {
 			const loader: PIXI.Loader = new PIXI.Loader();
 			
 			for (let i in manifests) {
@@ -28,18 +33,18 @@ export class ContentImageResource extends ContentResource {
 				});
 			}
 			
-			const res: LoadedResrouces = {};
+			const res: TLoadedImageResources = {};
 			loader.load((loader, resources): void => {
 				for (let i in resources) {
 					const resource: PIXI.LoaderResource | undefined = resources[i];
 					
 					if (!resource) {
-						reject(manifests[i]);
+						reject({ [i]: manifests[i].url});
 						return;
 					}
 					
 					if (resource.error && !manifests[i].unrequired) {
-						reject(manifests[i]);
+						reject({ [i]: manifests[i].url});
 						return;
 					}
 					
@@ -60,10 +65,8 @@ Object.defineProperties(Content, {
 	 * Define manifests of image.
 	 */
 	defineImages: {
-		value: function(data: ResourceManifests, options: IContentResrouceOption = {}): typeof Content {
-			console.log(this)
-			this._piximData.manifests.images = this._piximData.manifests.images || new ContentImageResource();
-			this._piximData.manifests.images.add(data, options);
+		value: function(data: TManifests, options: IContentManifestOption = {}): typeof Content {
+			this._piximData.manifests[ContentImageManifest.manifestKey].add(data, options);
 			
 			return this;
 		}
@@ -75,9 +78,8 @@ Object.defineProperties(Content.prototype, {
 	 * Add manifests of image.
 	 */
 	addImages: {
-		value: function(data: ResourceManifests, options: IContentResrouceOption = {}): Content {
-			this._piximData.additionalManifests.images = this._piximData.additionalManifests.images || new ContentImageResource();
-			this._piximData.additionalManifests.images.add(data, options);
+		value: function(data: TManifests, options: IContentManifestOption = {}): Content {
+			this._piximData.additionalManifests[ContentImageManifest.manifestKey].add(data, options);
 			
 			return this;
 		}

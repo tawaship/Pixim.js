@@ -1,8 +1,16 @@
 import * as PIXI from 'pixi.js';
-import { Emitter } from './Emitter';
-import { ContentDeliver, Vars } from './ContentDeliver';
-import { ContentResource, Resources } from './ContentResource';
-import { Container } from './Container';
+import { ContentDeliver, TContentLibrary } from './ContentDeliver';
+import { ContentManifestBase, TResources, TContentResources, TManifests } from './ContentManifestBase';
+
+/**
+ * @private
+ */
+type TContentManifestClasses = { [name: string]: typeof ContentManifestBase };
+
+/**
+ * @private
+ */
+type TContentManifests = { [name: string]: ContentManifestBase };
 
 export interface IContentConfigData {
 	fps: number,
@@ -10,23 +18,15 @@ export interface IContentConfigData {
 	height: number
 }
 
-export type ContentLibrary = { [name: string]: typeof PIXI.Container | typeof Container };
-
 /**
  * @private
  */
-interface IContentStaticData {
-	config: IContentConfigData,
-	manifests: ContentResources;
-	lib: ContentLibrary;
-}
-
-export interface IContentData {
-	contentID: number;
+interface IContentData {
+	contentID: string;
 	basepath: string;
 	$: ContentDeliver;
-	manifests: ContentResources;
-	additionalManifests: ContentResources;
+	manifests: TContentManifests;
+	additionalManifests: TContentManifests;
 	preloadPromise: Promise<void> | null;
 	postloadPromise: Promise<void> | null;
 }
@@ -34,44 +34,62 @@ export interface IContentData {
 /**
  * @private
  */
-type Contents = { [name: string]: typeof Content };
+type TContents = { [name: string]: typeof Content };
 
 /**
  * @property basepath Asset root path.
  */
-export type ContentOption = {
+export type TContentOption = {
 	basepath?: string
 }
 
 /**
+ * @ignore
+ */
+const _contents: TContents = {};
+
+/**
+ * @ignore
+ */
+let _contentID: number = 0;
+
+/**
  * @private
  */
-type ContentResources = { [name: string]: ContentResource};
+interface IContentStaticData {
+	config: IContentConfigData;
+	manifests: TContentManifests;
+	lib: TContentLibrary;
+}
 
-export class Content extends Emitter {
-	private static _contents: Contents = {};
+/**
+ * @ignore
+ */
+const _registeredManifestClasses: TContentManifestClasses = {};
+
+/**
+ * @ignore
+ */
+function createManifests(): TContentManifests {
+	const res: TContentManifests = {};
 	
-	private static _contentID: number = 0;
+	for (let i in _registeredManifestClasses) {
+		res[i] = new _registeredManifestClasses[i]();
+	}
 	
-	private static _piximData: IContentStaticData = {
-		config: {
-			fps: 60,
-			width: 450,
-			height: 800
-		},
-		manifests: {},
-		lib: {}
-	};
+	return res;
+}
+
+export class Content {
+	protected static _piximData: IContentStaticData;
 	
 	private _piximData: IContentData;
 	
-	constructor(options: ContentOption = {}, piximData: IContentStaticData) {
-		super();
-		
+	constructor(options: TContentOption = {}, piximData: IContentStaticData) {
 		const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 		
 		this._piximData = {
-			contentID: ++Content._contentID,
+			contentID: (++_contentID).toString(),
 			basepath,
 			$: new ContentDeliver({
 				fps: piximData.config.fps,
@@ -82,32 +100,10 @@ export class Content extends Emitter {
 				vars: {}
 			}),
 			manifests: piximData.manifests,
-			additionalManifests: {},
+			additionalManifests: createManifests(),
 			preloadPromise: null,
 			postloadPromise: null
 		}
-	}
-	
-	/**
-	 * @typedef Pixim.Content~OptionData {object}
-	 * @property basepath {string} Asset root path.
-	 */
-	
-	/**
-	 * Get content.
-	 */
-	static getContent(key: string): typeof Content {
-		return this._contents[key];
-	}
-	
-	/**
-	 * Remove content.
-	 * 
-	 * @function Pixim.Content.removeContent
-	 * @param key {string}
-	 */
-	static removeContent(key: string): void {
-		delete(this._contents[key]);
 	}
 	
 	/**
@@ -117,12 +113,22 @@ export class Content extends Emitter {
 	 * @return Created content class.
 	 */
 	static create(key: string): typeof Content {
-		if (key && key in Content._contents) {
+		if (key && key in _contents) {
 			throw new Error(`Content key '${key}' has already exists.`);
 		}
 		
 		class ContentClone extends Content {
-			constructor(options: ContentOption = {}) {
+			protected static _piximData: IContentStaticData = {
+				config: {
+					fps: 60,
+					width: 450,
+					height: 800
+				},
+				manifests: createManifests(),
+				lib: {}
+			}
+			
+			constructor(options: TContentOption = {}) {
 				super(options, ContentClone._piximData);
 			}
 		}
@@ -131,7 +137,31 @@ export class Content extends Emitter {
 			return ContentClone;
 		}
 		
-		return this._contents[key] = ContentClone;
+		return _contents[key] = ContentClone;
+	}
+	
+	/**
+	 * Get content.
+	 */
+	static getContent(key: string): typeof Content {
+		return _contents[key];
+	}
+	
+	/**
+	 * Remove content.
+	 * 
+	 * @function Pixim.Content.removeContent
+	 * @param key {string}
+	 */
+	static removeContent(key: string): void {
+		delete(_contents[key]);
+	}
+	
+	/**
+	 * Register custom manifest class.
+	 */
+	static useManifestClass(cls: typeof ContentManifestBase) {
+		_registeredManifestClasses[cls.manifestKey] = cls;
 	}
 	
 	/**
@@ -156,7 +186,7 @@ export class Content extends Emitter {
 	 * @param data Library data.
 	 * @return Returns itself for the method chaining.
 	 */
-	static defineLibraries(data: ContentLibrary): typeof Content {
+	static defineLibraries(data: TContentLibrary): typeof Content {
 		for (let i in data) {
 			this._piximData.lib[i] = data[i];
 		}
@@ -167,7 +197,7 @@ export class Content extends Emitter {
 	/**
 	 * ID of this content.
 	 */
-	get contentID(): number {
+	get contentID(): string {
 		return this._piximData.contentID;
 	}
 	
@@ -223,7 +253,7 @@ export class Content extends Emitter {
 		}
 		
 		return this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests)
-			.catch(e => {
+			.catch((e: TManifests) => {
 				this._piximData.preloadPromise = null;
 				
 				throw e;
@@ -244,16 +274,16 @@ export class Content extends Emitter {
 			.then(() => {
 				this._piximData.postloadPromise = null;
 			})
-			.catch(e => {
+			.catch((e: TManifests) => {
 				this._piximData.postloadPromise = null;
 				
 				throw e;
 			});
 	}
 	
-	private _loadAssetAsync(manifests: ContentResources) {
+	private _loadAssetAsync(manifests: TContentManifests): Promise<void> {
 		const basepath: string = this._piximData.basepath;
-		const resources: { [name: string]: Resources } = this._piximData.$.resources;
+		const resources: TContentResources = this._piximData.$.resources;
 		
 		const loaderCount = Object.keys(manifests).length;
 		
@@ -261,7 +291,7 @@ export class Content extends Emitter {
 			return Promise.resolve();
 		}
 		
-		const promises: Promise<Resources>[] = [];
+		const promises: Promise<TResources>[] = [];
 		const keys: string[] = [];
 		for (let i in manifests) {
 			keys.push(i);
@@ -269,7 +299,7 @@ export class Content extends Emitter {
 		}
 		
 		return Promise.all(promises)
-			.then((resolver: Resources) => {
+			.then((resolver: TResources) => {
 				for (let i: number = 0; i < resolver.length;i++) {
 					resources[keys[i]] = resources[keys[i]] || {};
 					
@@ -278,10 +308,12 @@ export class Content extends Emitter {
 					}
 				}
 			})
-			.catch(manifest => {
-				console.error(`Asset '${manifest.url}' cannot load.`);
+			.catch((e: TManifests) => {
+				for (let i in e) {
+					console.error(`Asset '${i}: ${e[i]}' cannot load.`);
+				}
 				
-				throw manifest;
+				throw e;
 			});
 	}
 }

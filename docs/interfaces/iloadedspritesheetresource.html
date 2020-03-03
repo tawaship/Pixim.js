@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ISize | @tawaship/pixim.js</title>
+	<title>ILoadedSpritesheetResource | @tawaship/pixim.js</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,24 +56,28 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="isize.html">ISize</a>
+					<a href="iloadedspritesheetresource.html">ILoadedSpritesheetResource</a>
 				</li>
 			</ul>
-			<h1>Interface ISize</h1>
+			<h1>Interface ILoadedSpritesheetResource</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ISize</span>
+						<a href="iloadedresource.html" class="tsd-signature-type">ILoadedResource</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="irect.html" class="tsd-signature-type">IRect</a>
+								<span class="target">ILoadedSpritesheetResource</span>
 							</li>
 						</ul>
 					</li>
@@ -86,8 +90,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="isize.html#height" class="tsd-kind-icon">height</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="isize.html#width" class="tsd-kind-icon">width</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iloadedspritesheetresource.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="iloadedspritesheetresource.html#resource" class="tsd-kind-icon">resource</a></li>
 							</ul>
 						</section>
 					</div>
@@ -95,23 +99,25 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="height" class="tsd-anchor"></a>
-					<h3>height</h3>
-					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="error" class="tsd-anchor"></a>
+					<h3>error</h3>
+					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="iloadedresource.html">ILoadedResource</a>.<a href="iloadedresource.html#error">error</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L39">src/modules/Application.ts:39</a></li>
+							<li>Defined in src/modules/ContentManifestBase.ts:39</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="width" class="tsd-anchor"></a>
-					<h3>width</h3>
-					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+					<a name="resource" class="tsd-anchor"></a>
+					<h3>resource</h3>
+					<div class="tsd-signature tsd-kind-icon">resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ITextureDictionary</span></div>
 					<aside class="tsd-sources">
+						<p>Overrides <a href="iloadedresource.html">ILoadedResource</a>.<a href="iloadedresource.html#resource">resource</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L38">src/modules/Application.ts:38</a></li>
+							<li>Defined in src/modules/ContentSpritesheetManifest.ts:9</li>
 						</ul>
 					</aside>
 				</section>
@@ -129,14 +135,14 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface">
-						<a href="isize.html" class="tsd-kind-icon">ISize</a>
+					<li class="current tsd-kind-interface tsd-is-private">
+						<a href="iloadedspritesheetresource.html" class="tsd-kind-icon">ILoaded<wbr>Spritesheet<wbr>Resource</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="isize.html#height" class="tsd-kind-icon">height</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iloadedspritesheetresource.html#error" class="tsd-kind-icon">error</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="isize.html#width" class="tsd-kind-icon">width</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
+								<a href="iloadedspritesheetresource.html#resource" class="tsd-kind-icon">resource</a>
 							</li>
 						</ul>
 					</li>
