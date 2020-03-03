@@ -50,10 +50,11 @@ export type TContentResources = { [name: string]: TResources };
 
 /**
  * @ignore
+ * @abstract
  */
 const _cache: TResources = {};
 
-export class ContentManifestBase {
+export abstract class ContentManifestBase {
 	static manifestKey: string = 'base';
 	
 	private _manifests: TPreManifests = {};
@@ -131,9 +132,7 @@ export class ContentManifestBase {
 	 * @abstruct
 	 * @async
 	 */
-	protected _loadAsync(manifests: TPostManifests): Promise<TLoadedResources> {
-		return Promise.resolve({});
-	}
+	protected abstract _loadAsync(manifests: TPostManifests): Promise<TLoadedResources>;
 	
 	/**
 	 * Normalize asset path.
