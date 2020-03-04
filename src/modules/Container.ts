@@ -24,7 +24,6 @@ export class Container extends PIXI.Container {
 		});
 		
 		this.on('removed', () => {
-			console.log(1)
 			Task.remove(this._piximData.task);
 		});
 	}

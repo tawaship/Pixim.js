@@ -37,9 +37,13 @@
 	console.log(Pixim.Content)
 	const A = Pixim.Content.create("A");
 	const B = Pixim.Content.create("B");
-	
 	A.defineImages({
-		hoge: "fonts.png"
+	//	hoge: "fonts.apng"
+	})
+	A.defineSpritesheets({
+		hoge: "fonts.json"
+	},{
+	//	unrequired: true
 	})
 	/*
 	A.defineImages({
@@ -82,7 +86,7 @@
 					
 				},2000)
 				
-				this.addChild(new PIXI.Sprite($.resources.images.hoge))
+				this.addChild(new PIXI.Sprite($.resources.spritesheets.hoge[50]))
 			}
 		}
 	});
@@ -91,38 +95,22 @@
 		root: class B extends PIXI.Container {
 			constructor($) {
 				super();
-				console.log($.resources.images)
+				
 				const g = this.addChild(new PIXI.Graphics())
 				g.beginFill(0xFFFFFF, 1);
 				g.drawRect(0, 0, 100, 100);
 			}
 		}
 	});
-	console.log(5)
 	const a = new A();
 	
-	a.addImages({
-		hoge: "fonts.png"
+	a.addSpritesheets({
+		hoge2: "fonts_w.json"
 	})
 	
-	a.prepareAsync()
-	.then(()=>{
-	
-	a.addImages({
-		a: "fonts_w.png"
-	})
-	})
-	.then(()=>{
-	const aaa = new A();
-	//aaa._pixim.$.lib.root = null
-	
-	console.log(A._piximData.lib)
-	
-	console.log(A._piximData === B._piximData)
 	app.addLayer("A");
 	const aa = new A();
 	const bb = new B();
-	console.log(aa._piximData.manifests.images)
 	
 	app.attachAsync(a)
 		.then(()=>{
@@ -139,7 +127,9 @@
 				app.attachAsync(bb)
 				//console.log(app.view.toDataURL())
 			}, 1500);
-		});
-	});
+		})
+		.catch(e => {
+			console.log(e)
+		})
 </script>
 </body>

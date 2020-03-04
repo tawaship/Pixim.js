@@ -6,7 +6,7 @@ import { Content } from './Content';
  * @private
  */
 interface ILoadedSpritesheetResource extends ILoadedResource {
-	resource: never[] | PIXI.ITextureDictionary
+	resource: PIXI.ITextureDictionary
 }
 
 /**
@@ -36,6 +36,10 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 			const res: TLoadedSpritesheetResources = {};
 			loader.load((loader, resources): void => {
 				for (let i in resources) {
+					if (!manifests[i]) {
+						continue;
+					}
+					
 					const resource: PIXI.LoaderResource | undefined = resources[i];
 					
 					if (!resource) {
@@ -43,20 +47,16 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 						return;
 					}
 					
-					const error: boolean = !!resource.error || !resource.texture;
+					const textures: PIXI.ITextureDictionary = resource.textures || {};
 					
-					if (error && !manifests[i].unrequired) {
-						reject({ [i]: manifests[i].url});
-						return;
-					}
-					
-					if (!resource.textures) {
+					const error: boolean = !!resource.error;
+					if (resource.error && !manifests[i].unrequired) {
 						reject({ [i]: manifests[i].url});
 						return;
 					}
 					
 					res[i] = {
-						resource: (error || resource.textures) ? {} : resource.textures,
+						resource: textures,
 						error: !!resource.error
 					};
 				}

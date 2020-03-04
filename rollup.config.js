@@ -73,8 +73,8 @@ export default (async () => {
 				buble(),
 				terser({
 					compress: {
-						defaults: false,
-						drop_console: true
+						//drop_console: true
+						pure_funcs: ['console.log']
 					},
 					mangle: false,
 					output: {
@@ -107,7 +107,8 @@ export default (async () => {
 				buble(),
 				terser({
 					compress: {
-						drop_console: true
+						//drop_console: true,
+						pure_funcs: ['console.log']
 					}
 				})
 			]
