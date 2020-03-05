@@ -1,6 +1,6 @@
 # pixim.js
 
-**A little useful emitter.**
+pixim.js is a little useful pixi.js wrapper.
 
 [![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
@@ -10,9 +10,13 @@
 
 ## How to install
 
+### for NPM
+
 ```sh
 cd /path/to
-npm install --save @tawaship/emitter
+git clone https://github.com/tawaship/Pixim.js
+cd Pixim.js
+npm run build
 ```
 
 ### for NPM
@@ -21,31 +25,39 @@ npm install --save @tawaship/emitter
 import Emitter from '@tawaship/emitter';
 ```
 
-or
-
-```javascript
-const Emitter = require('@tawaship/emitter');
-```
-
 ### for Browser
 
 ```html
-<script src="/path/to/dist/Emitter.min.js"></script>
+<script src="/path/to/dist/Pixim.min.js"></script>
 ```
 
 ## Usage
 
 ### Basic
 ```javascript
-const f = a => {
-	console.log('ev', a);
-};
+const app = new Pixim.Application();
 
-new Emitter()
-	.on('ev', f)
-	.emit('ev', 1) // ev 1
-	.off('ev', f)
-	.emit('ev', 1) // (nothing)
+const Test = Pixim.Content.create();
+
+Test.defineLibraries({
+	root: class Root extends PIXI.Container {
+		constructor() {
+			super();
+			
+			this.addChild(new PIXI.Graphics())
+				.beginFill(0xFFFFFF, 1)
+				.drawRect(0, 0, 50, 50);
+		}
+	}
+});
+
+const test = new Test();
+
+app.attachAsync(test)
+	.then(() => {
+		app.play();
+	});
+
 ```
 
 ### Basic once

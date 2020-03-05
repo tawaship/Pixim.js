@@ -9,8 +9,8 @@
     "rollup": "rollup -c",
     "d": "tsc --target ES5 --emitDeclarationOnly",
     "docs": "typedoc src/",
-    "test": "npm run check",
-    "test-b": "npm run check -- --debug",
+    "test": "npm run rollup && npm run check",
+    "test-browser": "npm run rollup && npm run check -- --debug",
     "check": "floss --path test/ --reporter=tap",
     "watch": "run-p \"rollup -- -w\" \"check -- -w --watch-files **/Emitter.cjs.js\"",
     "build": "ENV PROD=1 npm run rollup && npm run check && npm run docs && npm run d && echo done."

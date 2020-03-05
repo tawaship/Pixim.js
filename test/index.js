@@ -16,16 +16,18 @@ describe('Pixim.js', () => {
 				autoAdjust: true
 			});
 			
-			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
-			
-			app.view.parentNode.removeChild(app.view);
+			exec(() => {
+				assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+			}, app);
 		});
 		
 		it('fullscreen', () => {
 			const app = new Pixim.Application();
 			app.fullScreen();
 			
-			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+			exec(() => {
+				assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+			}, app);
 		});
 		
 		it('layered', () => {
@@ -35,9 +37,9 @@ describe('Pixim.js', () => {
 			app.addLayer('2');
 			app.removeLayer('1');
 			
-			assert.equal(app.app.stage.children.length, 1);
-			
-			app.view.parentNode.removeChild(app.view);
+			exec(() => {
+				assert.equal(app.app.stage.children.length, 1);
+			}, app);
 		});
 		
 		it('attach and detach content', () => {
@@ -207,7 +209,7 @@ describe('Pixim.js', () => {
 			});
 		});
 		
-		it('define and add spritesheets', () => {
+		it('unrequire define and add spritesheets', () => {
 			return new Promise((resolve, reject) => {
 				const app = new Pixim.Application();
 				
