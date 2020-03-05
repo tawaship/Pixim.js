@@ -1,135 +1,372 @@
 <body style="margin: 0; overflow: hidden;">
-	<div>
-		<canvas id="a"></canvas>
-	</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.js"></script>
 <script src="../dist/Pixim.js"></script>
 
 <script>
-	/*
-	new PIXI.Loader()
-		.add("hoge", "fonts.png")
-		.add("moge", "fonts_w.json")
-		.load((loader,resources) => {
-			console.log(resources)
+	const __dirname = location.href;
+	const path = {
+		resolve: (a, b) => {
+			return (a + b).replace(/\/\//g, '/');
+		}
+	}
+	const describe = (name, func) => {
+		func();
+	};
+	
+	const it = (tag, func) => {
+		try {
+			const res = func();
+			if (!res) {
+				console.log(`Success test: ${tag}`);
+				return;
+			}
+			
+			res.then(() => {
+				console.log(`Success test: ${tag}`);
+			})
+			.catch(e => {
+				console.error(`Failed test: ${tag}`);
+			});
+		} catch (e) {
+			console.error(`Failed test: ${tag}`);
+		}
+	};
+	
+	const assert = {
+		equal: (a, b) => {
+			if (a !== b) {
+				throw new Error();
+			}
+		},
+		ok: a => {
+			if (!a) {
+				throw new Error();
+			}
+		}
+	};
+</script>
+<script>
+console.warn = () => {};
+
+describe('Pixim.js', () => {
+	const exec = (done, app) => {
+		app.view.parentNode.removeChild(app.view);
+		done();
+	};
+	
+	describe('Application', () => {
+		it('auto resize', () => {
+			const app = new Pixim.Application({}, {
+				autoAdjust: true
+			});
+			
+			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+			
+			app.view.parentNode.removeChild(app.view);
 		});
 		
-	*/
-	/*
-	class G {
-		static a = {a:0}
-		static k() {
-			return this.a;
-		}
-	}
-	
-	class GG extends G{
-		static a = {a:1}
-	}
-	class HH extends G{}
-	console.log(HH.k())
-	console.log(GG.k() === HH.k())
-	*/
-	
-	const app = new Pixim.Application({width: 400, height: 400, view: document.getElementById("a"), resolution: 1, preserveDrawingBuffer: true}, {autoAdjust: true,container:document.body});
-	//app.fullScreen({width: innerWidth, height:innerHeight})
-	app.play();
-	console.log(Pixim.Content)
-	const A = Pixim.Content.create("A");
-	const B = Pixim.Content.create("B");
-	A.defineImages({
-	//	hoge: "fonts.apng"
-	})
-	A.defineSpritesheets({
-		hoge: "fonts.json"
-	},{
-	//	unrequired: true
-	})
-	/*
-	A.defineImages({
-		ae: "fonts_w.png"
-	})
-	*/
-	A.defineLibraries({
-		root: class A extends PIXI.Container {
-			constructor($) {
-				super();
+		it('fullscreen', () => {
+			const app = new Pixim.Application();
+			app.fullScreen();
+			
+			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+		});
+		
+		it('layered', () => {
+			const app = new Pixim.Application();
+			
+			app.addLayer('1');
+			app.addLayer('2');
+			app.removeLayer('1');
+			
+			assert.equal(app.app.stage.children.length, 1);
+			
+			app.view.parentNode.removeChild(app.view);
+		});
+		
+		it('attach and detach content', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
 				
-				const g = this.addChild(new PIXI.Graphics())
-				g.beginFill(0xFF0000, 1);
-				g.drawRect(0, 0, 50, 50);
+				app.addLayer('1');
 				
-				const c = g.addChild(new Pixim.Container());
-				c.task.on("A", () => {
-					g.x += 1;
-				})
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {}
+				});
 				
-				const c2 = g.addChild(new Pixim.Container());
-				c2.task.on("A", () => {
-					g.x += 0.5;
-				})
-				
-				setTimeout(()=>{
-					c.task.tickEnabled = false;
-					//app.pause(true);
-				},1000)
-				
-				setTimeout(()=>{
-					c.task.tickEnabled = true;
-					//app.pause(false);
-					
-				},2000)
-				
-				setTimeout(()=>{
-					c.task.tickEnabled = true;
-					//app.pause(false);
-					
-				},2000)
-				
-				this.addChild(new PIXI.Sprite($.resources.spritesheets.hoge[50]))
-			}
-		}
+				const test = new Test();
+				app.attachAsync(test, '1')
+					.then(root => {
+						if (root.parent !== app.app.stage.children[0]) {
+							exec(reject, app);
+							return;
+						}
+					})
+					.then(() => {
+						app.detach(test);
+						
+						if (app.app.stage.children[0].children.length === 1) {
+							exec(reject, app);
+							return;
+						}
+						
+						exec(resolve, app);
+					})
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 	});
 	
-	B.defineLibraries({
-		root: class B extends PIXI.Container {
-			constructor($) {
-				super();
+	describe('Content', () => {
+		it('define and add images', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
 				
-				const g = this.addChild(new PIXI.Graphics())
-				g.beginFill(0xFFFFFF, 1);
-				g.drawRect(0, 0, 100, 100);
-			}
-		}
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.images.fonts instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.images.fonts_w instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineImages({
+					fonts: path.resolve(__dirname, 'fonts.png')
+				});
+				
+				const test = new Test();
+				
+				test.addImages({
+					fonts_w: path.resolve(__dirname, 'fonts_w.png')
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('define and add spritesheets', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.spritesheets.fonts[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.spritesheets.fonts_w[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSpritesheets({
+					fonts: path.resolve(__dirname, 'fonts.json')
+				});
+				
+				const test = new Test();
+				
+				test.addSpritesheets({
+					fonts_w: path.resolve(__dirname, 'fonts_w.json')
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('unrequire define and add images', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.images.fonts instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.images.fonts_w instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineImages({
+					fonts: path.resolve(__dirname, 'fonts.pnga')
+				}, {
+					unrequired: true
+				});
+				
+				const test = new Test();
+				
+				test.addImages({
+					fonts_w: path.resolve(__dirname, 'fonts_w.pnga')
+				}, {
+					unrequired: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('define and add spritesheets', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.spritesheets.fonts[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.spritesheets.fonts_w[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSpritesheets({
+					fonts: path.resolve(__dirname, 'fonts.jsona')
+				}, {
+					unrequired: true
+				});
+				
+				const test = new Test();
+				
+				test.addSpritesheets({
+					fonts_w: path.resolve(__dirname, 'fonts_w.jsona')
+				}, {
+					unrequired: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('define vars', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if (!$.vars.check) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				test.defineVars({
+					check: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('activate and deactivate task', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends Pixim.Container {
+						constructor($) {
+							super();
+							
+							this.task.on('dummy', e => {
+								this.task.clear();
+								exec(reject, app);
+							})
+							.on('task', e => {
+								this.x += e.delta;
+								
+								if (this.x > 10) {
+									this.task.clear();
+									exec(resolve, app);
+								}
+							})
+							.clear('dummy');
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				app.play()
+					.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 	});
-	const a = new A();
-	
-	a.addSpritesheets({
-		hoge2: "fonts_w.json"
-	})
-	
-	app.addLayer("A");
-	const aa = new A();
-	const bb = new B();
-	
-	app.attachAsync(a)
-		.then(()=>{
-			return app.attachAsync(bb,"A");
-		})
-		.then(() => {
-			app.play();
-			
-			setTimeout(()=>{
-				app.detach(bb)
-			}, 1000);
-			
-			setTimeout(()=>{
-				app.attachAsync(bb)
-				//console.log(app.view.toDataURL())
-			}, 1500);
-		})
-		.catch(e => {
-			console.log(e)
-		})
+});
 </script>
 </body>

@@ -1,140 +1,326 @@
 const assert = require('assert');
+const PIXI = require('pixi.js');
+const Pixim = require('../');
+const path = require('path');
+console.warn = () => {};
 
-//const Emitter = require('../dist/Pixim.cjs.js');
-/*
-describe('Emitter', () => {
-	it('basic', () => {
-		let total = 0;
+describe('Pixim.js', () => {
+	const exec = (done, app) => {
+		app.view.parentNode.removeChild(app.view);
+		done();
+	};
+	
+	describe('Application', () => {
+		it('auto resize', () => {
+			const app = new Pixim.Application({}, {
+				autoAdjust: true
+			});
+			
+			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+			
+			app.view.parentNode.removeChild(app.view);
+		});
 		
-		const f = a => {
-			total += a;
-		};
+		it('fullscreen', () => {
+			const app = new Pixim.Application();
+			app.fullScreen();
+			
+			assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+		});
 		
-		new Emitter()
-			.on('ev', f)
-			.emit('ev', 1)
-			.off('ev', f)
-			.emit('ev', 1);
+		it('layered', () => {
+			const app = new Pixim.Application();
+			
+			app.addLayer('1');
+			app.addLayer('2');
+			app.removeLayer('1');
+			
+			assert.equal(app.app.stage.children.length, 1);
+			
+			app.view.parentNode.removeChild(app.view);
+		});
 		
-		assert.equal(total, 1);
+		it('attach and detach content', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				app.addLayer('1');
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {}
+				});
+				
+				const test = new Test();
+				app.attachAsync(test, '1')
+					.then(root => {
+						if (root.parent !== app.app.stage.children[0]) {
+							exec(reject, app);
+							return;
+						}
+					})
+					.then(() => {
+						app.detach(test);
+						
+						if (app.app.stage.children[0].children.length === 1) {
+							exec(reject, app);
+							return;
+						}
+						
+						exec(resolve, app);
+					})
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 	});
 	
-	it('basic once', () => {
-		let total = 0;
+	describe('Content', () => {
+		it('define and add images', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.images.fonts instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.images.fonts_w instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineImages({
+					fonts: path.resolve(__dirname, 'fonts.png')
+				});
+				
+				const test = new Test();
+				
+				test.addImages({
+					fonts_w: path.resolve(__dirname, 'fonts_w.png')
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 		
-		new Emitter()
-			.once('ev', a => {
-				total += a;
-			})
-			.emit('ev', 1)
-			.emit('ev', 1);
+		it('define and add spritesheets', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.spritesheets.fonts[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.spritesheets.fonts_w[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSpritesheets({
+					fonts: path.resolve(__dirname, 'fonts.json')
+				});
+				
+				const test = new Test();
+				
+				test.addSpritesheets({
+					fonts_w: path.resolve(__dirname, 'fonts_w.json')
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 		
-		assert.equal(total, 1);
-	});
-	
-	it('repeatable', () => {
-		let total = 0;
+		it('unrequire define and add images', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.images.fonts instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.images.fonts_w instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineImages({
+					fonts: path.resolve(__dirname, 'fonts.pnga')
+				}, {
+					unrequired: true
+				});
+				
+				const test = new Test();
+				
+				test.addImages({
+					fonts_w: path.resolve(__dirname, 'fonts_w.pnga')
+				}, {
+					unrequired: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 		
-		new Emitter()
-			.on('ev', (...args) => {
-				total += args.reduce((a, b) => a + b);
-			})
-			.emit('ev', 1, 2, 3, 4, 5, 6, 7);
+		it('define and add spritesheets', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.spritesheets.fonts[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.spritesheets.fonts_w[50] instanceof PIXI.Texture)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSpritesheets({
+					fonts: path.resolve(__dirname, 'fonts.jsona')
+				}, {
+					unrequired: true
+				});
+				
+				const test = new Test();
+				
+				test.addSpritesheets({
+					fonts_w: path.resolve(__dirname, 'fonts_w.jsona')
+				}, {
+					unrequired: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 		
-		assert.equal(total, [1, 2, 3, 4, 5, 6, 7].reduce((a, b) => a + b));
-	});
-	
-	it('context in function', () => {
-		const emitter = new Emitter();
+		it('define vars', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if (!$.vars.check) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				test.defineVars({
+					check: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 		
-		emitter.on('ev', function() {
-				assert.equal(this, emitter);
-			})
-			.emit('ev');
-	});
-	
-	it('context in arrow function', () => {
-		const emitter = new Emitter();
-		const self = this;
-		
-		emitter.on('ev', () => {
-				assert.equal(this, self);
-			})
-			.emit('ev');
-	});
-	
-	it('clear group', () => {
-		let total = 0;
-		
-		new Emitter()
-			.on('ev', a => {
-				total += a;
-			})
-			.on('ev', a => {
-				total += a;
-			})
-			.on('ev2', a => {
-				total += a;
-			})
-			.on('ev2', a => {
-				total += a;
-			})
-			.clear('ev')
-			.emit('ev', 1)
-			.emit('ev2', 1);
-		
-		assert.equal(total, 2);
-	});
-	
-	it('clear all', () => {
-		let total = 0;
-		
-		new Emitter()
-			.on('ev', a => {
-				total += a;
-			})
-			.on('ev2', a => {
-				total += a;
-			})
-			.on('ev3', a => {
-				total += a;
-			})
-			.on('ev4', a => {
-				total += a;
-			})
-			.clear()
-			.emit('ev', 1)
-			.emit('ev2', 1)
-			.emit('ev3', 1)
-			.emit('ev4', 1);
-		
-		assert.equal(total, 0);
-	});
-	
-	it('emit all events', () => {
-		let total = 0;
-		
-		const emitter = new Emitter()
-			.on('ev', a => {
-				total += a;
-			})
-			.on('ev2', a => {
-				total += a;
-			})
-			.on('ev3', a => {
-				total += a;
-			})
-			.on('ev4', a => {
-				total += a;
-			})
-			.clear('ev4');
-		
-		const eventNames = emitter.eventNames;
-		for (let i = 0; i < eventNames.length; i++) {
-			emitter.emit(eventNames[i], 1);
-		}
-		
-		assert.equal(total, 3);
+		it('activate and deactivate task', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends Pixim.Container {
+						constructor($) {
+							super();
+							
+							this.task.on('dummy', e => {
+								this.task.clear();
+								exec(reject, app);
+							})
+							.on('task', e => {
+								this.x += e.delta;
+								
+								if (this.x > 10) {
+									this.task.clear();
+									exec(resolve, app);
+								}
+							})
+							.clear('dummy');
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				app.play()
+					.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
 	});
 });
-*/

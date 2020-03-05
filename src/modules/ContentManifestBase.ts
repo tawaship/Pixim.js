@@ -90,7 +90,7 @@ export class ContentManifestBase {
 		
 		for (let i in manifests) {
 			const manifest: IPreManifest = manifests[i];
-			const url: string = this._resolvePath(basepath, manifest.url);
+			const url: string = this._resolvePath(manifest.url, basepath);
 			
 			// query parameter is invalid for resource cache
 			const name: string = url.replace(/\?.*/, '');

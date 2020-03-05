@@ -70,7 +70,7 @@ export class Application extends Emitter {
 		const stage: PIXI.Container = app.stage;
 		
 		const view: HTMLCanvasElement = app.view;
-		view.style.position = 'relative';
+		view.style.position = 'absolute';
 		
 		if (piximOptions.container) {
 			piximOptions.container.appendChild(view);
@@ -108,6 +108,14 @@ export class Application extends Emitter {
 		} else {
 			this.fullScreen({ x: 0, y: 0, width: view.width, height: view.height });
 		}
+	}
+	
+	get app(): PIXI.Application {
+		return this._piximData.app;
+	}
+	
+	get stage(): PIXI.Container {
+		return this._piximData.stage;
 	}
 	
 	get view(): HTMLCanvasElement {
