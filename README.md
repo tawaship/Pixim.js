@@ -9,18 +9,37 @@
 
 ## How to install
 
+1. on you npm project
+
 ```sh
-cd /path/to
-npm install --save @tawaship/pixim.js
+npm install --save @tawaship/emitter
 ```
 
-### for NPM
+2. on your code
 
 ```javascript
 import * as Pixim from '@tawaship/pixim.js';
+
+// or
+
+const Pixim = require('@tawaship/pixim.js');
 ```
 
-### for Browser
+## How to build
+
+```sh
+git clone https://github.com/tawaship/Pixim.js
+
+cd Pixim.js
+
+npm install
+
+npm run build
+```
+
+## How to load on browser
+
+After [install](#how-to-install) or [build](#how-to-build)
 
 ```html
 <script src="/path/to/dist/Pixim.min.js"></script>
