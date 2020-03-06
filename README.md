@@ -11,15 +11,13 @@
 
 ```sh
 cd /path/to
-git clone https://github.com/tawaship/Pixim.js
-cd Pixim.js
-npm run build
+npm install --save @tawaship/pixim.js
 ```
 
 ### for NPM
 
 ```javascript
-import Pixim from '@tawaship/pixim.js';
+import * as Pixim from '@tawaship/pixim.js';
 ```
 
 ### for Browser
