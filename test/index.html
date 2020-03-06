@@ -3,27 +3,27 @@
 <script src="../dist/Pixim.js"></script>
 
 <script>
-	const app = new Pixim.Application();
-	
-	const Test = Pixim.Content.create();
-	
-	Test.defineLibraries({
-		root: class Root extends PIXI.Container {
-			constructor() {
-				super();
-				
-				this.addChild(new PIXI.Graphics())
-					.beginFill(0xFFFFFF, 1)
-					.drawRect(0, 0, 50, 50);
-			}
+const app = new Pixim.Application();
+
+const Test = Pixim.Content.create();
+
+Test.defineLibraries({
+	root: class Root extends PIXI.Container {
+		constructor() {
+			super();
+			
+			this.addChild(new PIXI.Graphics())
+				.beginFill(0xFFFFFF, 1)
+				.drawRect(0, 0, 50, 50);
 		}
+	}
+});
+
+const test = new Test();
+
+app.attachAsync(test)
+	.then(() => {
+		app.play();
 	});
-	
-	const test = new Test();
-	
-	app.attachAsync(test)
-		.then(() => {
-			app.play();
-		});
 </script>
 </body>

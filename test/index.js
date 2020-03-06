@@ -105,13 +105,13 @@ describe('Pixim.js', () => {
 				});
 				
 				Test.defineImages({
-					fonts: path.resolve(__dirname, 'fonts.png')
+					fonts: path.resolve(__dirname, 'img/image_1.png')
 				});
 				
 				const test = new Test();
 				
 				test.addImages({
-					fonts_w: path.resolve(__dirname, 'fonts_w.png')
+					fonts_w: path.resolve(__dirname, 'img/image_2.png')
 				});
 				
 				app.attachAsync(test)
@@ -147,13 +147,13 @@ describe('Pixim.js', () => {
 				});
 				
 				Test.defineSpritesheets({
-					fonts: path.resolve(__dirname, 'fonts.json')
+					fonts: path.resolve(__dirname, 'img/ss_1.json')
 				});
 				
 				const test = new Test();
 				
 				test.addSpritesheets({
-					fonts_w: path.resolve(__dirname, 'fonts_w.json')
+					fonts_w: path.resolve(__dirname, 'img/ss_2.json')
 				});
 				
 				app.attachAsync(test)
@@ -189,7 +189,7 @@ describe('Pixim.js', () => {
 				});
 				
 				Test.defineImages({
-					fonts: path.resolve(__dirname, 'fonts.pnga')
+					fonts: path.resolve(__dirname, 'img/image_3.png')
 				}, {
 					unrequired: true
 				});
@@ -197,7 +197,7 @@ describe('Pixim.js', () => {
 				const test = new Test();
 				
 				test.addImages({
-					fonts_w: path.resolve(__dirname, 'fonts_w.pnga')
+					fonts_w: path.resolve(__dirname, 'img/image_4.pnga')
 				}, {
 					unrequired: true
 				});
@@ -235,7 +235,7 @@ describe('Pixim.js', () => {
 				});
 				
 				Test.defineSpritesheets({
-					fonts: path.resolve(__dirname, 'fonts.jsona')
+					fonts: path.resolve(__dirname, 'img/ss_3.json')
 				}, {
 					unrequired: true
 				});
@@ -243,7 +243,7 @@ describe('Pixim.js', () => {
 				const test = new Test();
 				
 				test.addSpritesheets({
-					fonts_w: path.resolve(__dirname, 'fonts_w.jsona')
+					fonts_w: path.resolve(__dirname, 'img/ss_4.json')
 				}, {
 					unrequired: true
 				});
