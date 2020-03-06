@@ -10,7 +10,6 @@ export type TVars = { [name: string]: any };
  * @private
  */
 interface IContentDeliverData {
-	fps: number,
 	width: number,
 	height: number,
 	lib: TContentLibrary,
@@ -23,20 +22,12 @@ export class ContentDeliver {
 	
 	constructor(data: IContentDeliverData) {
 		this._piximData = {
-			fps: data.fps,
 			width: data.width,
 			height: data.height,
 			lib: data.lib,
 			resources: data.resources,
 			vars: data.vars
 		};
-	}
-	
-	/**
-	 * Content FPS.
-	 */
-	get fps(): number {
-		return this._piximData.fps;
 	}
 	
 	/**

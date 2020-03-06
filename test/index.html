@@ -3,24 +3,80 @@
 <script src="../dist/Pixim.js"></script>
 
 <script>
-const app = new Pixim.Application();
 
 const Test = Pixim.Content.create();
 
+Test.setConfig({
+	width: 300,
+	height: 300
+});
+
 Test.defineLibraries({
 	root: class Root extends PIXI.Container {
-		constructor() {
+		constructor($) {
 			super();
 			
 			this.addChild(new PIXI.Graphics())
+				.beginFill(0xFFEEEE, 1)
+				.drawRect(0, 0, $.width, $.height);
+			
+			this.addChild(new $.lib.main($))
+		}
+	},
+	
+	main: class Root extends Pixim.Container {
+		constructor($) {
+			super();
+			
+			
+			//*
+			this.addChild(new PIXI.Graphics())
 				.beginFill(0xFFFFFF, 1)
-				.drawRect(0, 0, 50, 50);
+				.drawRect(0, 0, 100, 100);
+			//*/
+			
+			/*
+			this.addChild(new PIXI.Sprite($.resources.images.image_1));
+			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = 105;
+			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
+			//*/
+			
+			/*
+			this.addChild(new PIXI.Sprite($.resources.images.image_2));
+			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = 105;
+			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
+			//*/
+			
+			/*
+			this.task.on('anim', e => {
+				this.x += e.delta;
+			});
+			//*/
 		}
 	}
 });
 
-const test = new Test();
+Test.defineImages({
+	image_1: 'img/image_1.png'
+});
 
+Test.defineSpritesheets({
+	ss_1: 'img/ss_1.json'
+});
+
+const test = new Test();
+test.addImages({
+	image_2: 'img/image_2.png'
+});
+
+test.addSpritesheets({
+	ss_2: 'img/ss_2.json'
+});
+
+const app = new Pixim.Application({width: 300, height: 300});
+
+const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};
+app.toRight(rect).toBottom(rect);
 app.attachAsync(test)
 	.then(() => {
 		app.play();

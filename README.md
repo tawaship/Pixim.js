@@ -1,16 +1,13 @@
-# pixim.js
+# @tawaship/pixim.js
 
-pixim.js is a little useful pixi.js wrapper.
+**pixim.js is a little useful pixi.js wrapper framework.**
 
 [![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 ---
 
-
 ## How to install
-
-### for NPM
 
 ```sh
 cd /path/to
@@ -22,7 +19,7 @@ npm run build
 ### for NPM
 
 ```javascript
-import Emitter from '@tawaship/emitter';
+import Pixim from '@tawaship/pixim.js';
 ```
 
 ### for Browser
@@ -34,109 +31,135 @@ import Emitter from '@tawaship/emitter';
 ## Usage
 
 ### Basic
-```javascript
-const app = new Pixim.Application();
 
+1.  Create content 
+
+```javascript
+Pixim.Content.create('test');
+const Test = Pixim.Content.get('test');
+```
+
+or 
+
+```javascript
 const Test = Pixim.Content.create();
+```
+
+2. Define content settings and libraries
+
+```javascript
+
+Test.setConfig({
+	width: 300,
+	height: 300
+});
 
 Test.defineLibraries({
 	root: class Root extends PIXI.Container {
-		constructor() {
+		constructor($) {
 			super();
 			
 			this.addChild(new PIXI.Graphics())
-				.beginFill(0xFFFFFF, 1)
-				.drawRect(0, 0, 50, 50);
+				.beginFill(0xFFEEEE, 1)
+				.drawRect(0, 0, $.width, $.height);
+			
+			this.addChild(new $.lib.main($))
+		}
+	},
+	
+	main: class Root extends PIXI.Container {
+		constructor($) {
+			super();
+			
+			this.addChild(new PIXI.Graphics())
+				.beginFill(0, 1)
+				.drawRect(0, 0, 100, 100);
 		}
 	}
 });
+```
 
-const test = new Test();
+3. Create application
 
-app.attachAsync(test)
+```javascript
+const app = new Pixim.Application({width: 300, height: 300});
+```
+
+4. Attach content to application and run application
+
+```javascript
+app.attachAsync(new Test())
 	.then(() => {
 		app.play();
 	});
-
 ```
 
-### Basic once
+![1](https://raw.github.com/tawaship/Pixim.js/screenshot/img/1.png)
+
+### Advanced content
+
+#### Class assets to preload
+
+1. Define assets
+
 ```javascript
-new Emitter()
-	.once('ev', a => {
-		console.log('ev', a);
-	})
-	.emit('ev', 1) // ev 1
-	.emit('ev', 1) // (nothing)
+Test.defineImages({
+	image_1: 'img/image_1.png'
+});
+
+Test.defineSpritesheets({
+	ss_1: 'img/ss_1.json'
+});
 ```
 
-### Repeatable arguments
+2. Use assets
+
 ```javascript
-new Emitter()
-	.on('ev', (...args) => {
-		console.log('ev', ...args);
-	})
-	.emit('ev', 1, 2, 3, 4, 5, 6, 7) // ev 1 2 3 4 5 6 7
+// in content library
+
+this.addChild(new PIXI.Sprite($.resources.images.image_1));
+this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = 105;
+this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
 ```
 
-### Specify the context
+![2](https://raw.github.com/tawaship/Pixim.js/screenshot/img/2.png)
+
+#### Instance assets to preload
+
+1. Define assets
+
 ```javascript
-new Emitter()
-	.on('ev', function(a) {
-		console.log(this, a);
-	})
-	.cemit('ev', {hoge: 1}, 2) // {hoge: 1} 2
+const test = new Test();
+
+test.addImages({
+	image_2: 'img/image_2.png'
+});
+
+test.addSpritesheets({
+	ss_2: 'img/ss_2.json'
+});
 ```
 
-However, using the arrow function invalidates the context specification.
+2. Use assets
 
 ```javascript
-// on window
-new Emitter()
-	.on('ev', a => {
-		console.log(this, a);
-	})
-	.cemit('ev', {hoge: 1}, 2) // Window 2
+// in content library
+
+this.addChild(new PIXI.Sprite($.resources.images.image_2));
+this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = 105;
+this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
 ```
 
-### Events delete in groups
-```javascript
-new Emitter()
-	.on('ev', a => {
-		console.log('ev', a);
-	})
-	.on('ev', a => {
-		console.log('ev', a);
-	})
-	.on('ev2', a => {
-		console.log('ev', a);
-	})
-	.on('ev2', a => {
-		console.log('ev', a);
-	})
-	.clear('ev')
-	.emit('ev', 1) // (nothing)
-	.emit('ev2', 1) // ev 1, ev 1
-```
+![3](https://raw.github.com/tawaship/Pixim.js/screenshot/img/3.png)
 
-### All events delete at once
+#### Task processing
+
+If the library class inherits Pixi.Container, you can use tasks that are executed for each ticker process of the application.
+
 ```javascript
-new Emitter()
-	.on('ev', a => {
-		console.log('ev', a);
-	})
-	.on('ev2', a => {
-		console.log('ev', a);
-	})
-	.on('ev3', a => {
-		console.log('ev', a);
-	})
-	.on('ev4', a => {
-		console.log('ev', a);
-	})
-	.clear()
-	.emit('ev', 1) // (nothing)
-	.emit('ev2', 1) // (nothing)
-	.emit('ev3', 1) // (nothing)
-	.emit('ev4', 1) // (nothing)
+// in content library
+
+this.task.on('anim', e => {
+	this.x += e.delta;
+});
 ```

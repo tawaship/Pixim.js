@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@tawaship/pixim.js</title>
+	<title>@tawaship/pixim.js - v1.0.0</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@tawaship/pixim.js</a>
+					<a href="index.html" class="title">@tawaship/pixim.js - v1.0.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1>@tawaship/pixim.js</h1>
+			<h1>@tawaship/pixim.js - v1.0.0</h1>
 		</div>
 	</div>
 </header>
@@ -64,10 +64,10 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#piximjs" id="piximjs" style="color: inherit; text-decoration: none;">
-					<h1>pixim.js</h1>
+				<a href="#tawashippiximjs" id="tawashippiximjs" style="color: inherit; text-decoration: none;">
+					<h1>@tawaship/pixim.js</h1>
 				</a>
-				<p><strong>A little useful emitter.</strong></p>
+				<p><strong>pixim.js is a little useful pixi.js wrapper framework.</strong></p>
 				<p><a href="https://travis-ci.org/tawaship/Pixim.js"><img src="https://travis-ci.org/tawaship/Pixim.js.svg?branch=master" alt="Build Status"></a>
 				<a href="LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="MIT License"></a></p>
 				<hr>
@@ -75,104 +75,132 @@
 					<h2>How to install</h2>
 				</a>
 				<pre><code class="language-sh"><span class="hljs-built_in">cd</span> /path/to
-npm install --save @tawaship/emitter</code></pre>
+git <span class="hljs-built_in">clone</span> https://github.com/tawaship/Pixim.js
+<span class="hljs-built_in">cd</span> Pixim.js
+npm run build</code></pre>
 				<a href="#for-npm" id="for-npm" style="color: inherit; text-decoration: none;">
 					<h3>for NPM</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> Emitter <span class="hljs-keyword">from</span> <span class="hljs-string">'@tawaship/emitter'</span>;</code></pre>
-				<p>or</p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> Emitter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@tawaship/emitter'</span>);</code></pre>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> Pixim <span class="hljs-keyword">from</span> <span class="hljs-string">'@tawaship/pixim.js'</span>;</code></pre>
 				<a href="#for-browser" id="for-browser" style="color: inherit; text-decoration: none;">
 					<h3>for Browser</h3>
 				</a>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/path/to/dist/Emitter.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/path/to/dist/Pixim.min.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
 				<a href="#basic" id="basic" style="color: inherit; text-decoration: none;">
 					<h3>Basic</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> f = <span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-};
+				<ol>
+					<li>Create content </li>
+				</ol>
+				<pre><code class="language-javascript">Pixim.Content.create(<span class="hljs-string">'test'</span>);
+<span class="hljs-keyword">const</span> Test = Pixim.Content.get(<span class="hljs-string">'test'</span>);</code></pre>
+				<p>or </p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> Test = Pixim.Content.create();</code></pre>
+				<ol start="2">
+					<li>Define content settings and libraries</li>
+				</ol>
+				<pre><code class="language-javascript">
+Test.setConfig({
+    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>
+});
 
-<span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, f)
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// ev 1</span>
-    .off(<span class="hljs-string">'ev'</span>, f)
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span></code></pre>
-				<a href="#basic-once" id="basic-once" style="color: inherit; text-decoration: none;">
-					<h3>Basic once</h3>
+Test.defineLibraries({
+    <span class="hljs-attr">root</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PIXI</span>.<span class="hljs-title">Container</span> </span>{
+        <span class="hljs-keyword">constructor</span>($) {
+            <span class="hljs-keyword">super</span>();
+
+            <span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
+                .beginFill(<span class="hljs-number">0xFFEEEE</span>, <span class="hljs-number">1</span>)
+                .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, $.width, $.height);
+
+            <span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> $.lib.main($))
+        }
+    },
+
+    <span class="hljs-attr">main</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PIXI</span>.<span class="hljs-title">Container</span> </span>{
+        <span class="hljs-keyword">constructor</span>($) {
+            <span class="hljs-keyword">super</span>();
+
+            <span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
+                .beginFill(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)
+                .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>);
+        }
+    }
+});</code></pre>
+				<ol start="3">
+					<li>Create application</li>
+				</ol>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Pixim.Application({<span class="hljs-attr">width</span>: <span class="hljs-number">300</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>});</code></pre>
+				<ol start="4">
+					<li>Attach content to application and run application</li>
+				</ol>
+				<pre><code class="language-javascript">app.attachAsync(<span class="hljs-keyword">new</span> Test())
+    .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        app.play();
+    });</code></pre>
+				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/1.png" alt="1"></p>
+				<a href="#advanced-content" id="advanced-content" style="color: inherit; text-decoration: none;">
+					<h3>Advanced content</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">new</span> Emitter()
-    .once(<span class="hljs-string">'ev'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// ev 1</span>
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span></code></pre>
-				<a href="#repeatable-arguments" id="repeatable-arguments" style="color: inherit; text-decoration: none;">
-					<h3>Repeatable arguments</h3>
+				<a href="#class-assets-to-preload" id="class-assets-to-preload" style="color: inherit; text-decoration: none;">
+					<h4>Class assets to preload</h4>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, (...args) =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, ...args);
-    })
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>) <span class="hljs-comment">// ev 1 2 3 4 5 6 7</span></code></pre>
-				<a href="#specify-the-context" id="specify-the-context" style="color: inherit; text-decoration: none;">
-					<h3>Specify the context</h3>
+				<ol>
+					<li>Define assets</li>
+				</ol>
+				<pre><code class="language-javascript">Test.defineImages({
+    <span class="hljs-attr">image_1</span>: <span class="hljs-string">'img/image_1.png'</span>
+});
+
+Test.defineSpritesheets({
+    <span class="hljs-attr">ss_1</span>: <span class="hljs-string">'img/ss_1.json'</span>
+});</code></pre>
+				<ol start="2">
+					<li>Use assets</li>
+				</ol>
+				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_1));
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = <span class="hljs-number">105</span>;</code></pre>
+				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/2.png" alt="2"></p>
+				<a href="#instance-assets-to-preload" id="instance-assets-to-preload" style="color: inherit; text-decoration: none;">
+					<h4>Instance assets to preload</h4>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>, a);
-    })
-    .cemit(<span class="hljs-string">'ev'</span>, {<span class="hljs-attr">hoge</span>: <span class="hljs-number">1</span>}, <span class="hljs-number">2</span>) <span class="hljs-comment">// {hoge: 1} 2</span></code></pre>
-				<p>However, using the arrow function invalidates the context specification.</p>
-				<pre><code class="language-javascript"><span class="hljs-comment">// on window</span>
-<span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>, a);
-    })
-    .cemit(<span class="hljs-string">'ev'</span>, {<span class="hljs-attr">hoge</span>: <span class="hljs-number">1</span>}, <span class="hljs-number">2</span>) <span class="hljs-comment">// Window 2</span></code></pre>
-				<a href="#events-delete-in-groups" id="events-delete-in-groups" style="color: inherit; text-decoration: none;">
-					<h3>Events delete in groups</h3>
+				<ol>
+					<li>Define assets</li>
+				</ol>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> test = <span class="hljs-keyword">new</span> Test();
+
+test.addImages({
+    <span class="hljs-attr">image_2</span>: <span class="hljs-string">'img/image_2.png'</span>
+});
+
+test.addSpritesheets({
+    <span class="hljs-attr">ss_2</span>: <span class="hljs-string">'img/ss_2.json'</span>
+});</code></pre>
+				<ol start="2">
+					<li>Use assets</li>
+				</ol>
+				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_2));
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = <span class="hljs-number">105</span>;
+<span class="hljs-keyword">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = <span class="hljs-number">105</span>;</code></pre>
+				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/3.png" alt="3"></p>
+				<a href="#task-processing" id="task-processing" style="color: inherit; text-decoration: none;">
+					<h4>Task processing</h4>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev2'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev2'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .clear(<span class="hljs-string">'ev'</span>)
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span>
-    .emit(<span class="hljs-string">'ev2'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// ev 1, ev 1</span></code></pre>
-				<a href="#all-events-delete-at-once" id="all-events-delete-at-once" style="color: inherit; text-decoration: none;">
-					<h3>All events delete at once</h3>
-				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">new</span> Emitter()
-    .on(<span class="hljs-string">'ev'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev2'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev3'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .on(<span class="hljs-string">'ev4'</span>, a =&gt; {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ev'</span>, a);
-    })
-    .clear()
-    .emit(<span class="hljs-string">'ev'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span>
-    .emit(<span class="hljs-string">'ev2'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span>
-    .emit(<span class="hljs-string">'ev3'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span>
-    .emit(<span class="hljs-string">'ev4'</span>, <span class="hljs-number">1</span>) <span class="hljs-comment">// (nothing)</span></code></pre>
+				<p>If the library class inherits Pixi.Container, you can use tasks that are executed for each ticker process of the application.</p>
+				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+
+<span class="hljs-keyword">this</span>.task.on(<span class="hljs-string">'anim'</span>, e =&gt; {
+    <span class="hljs-keyword">this</span>.x += e.delta;
+});</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

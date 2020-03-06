@@ -10,7 +10,8 @@
     "mode": "file",
     "out": "docs",
     "moduleResolution": "node",
-    "gitRevision": "master"
+    "gitRevision": "master",
+    "includeVersion": true
   },
   "exclude": ["node_modules", "src/**/*.d.ts"]
 }

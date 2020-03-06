@@ -13,7 +13,6 @@ type TContentManifestClasses = { [name: string]: typeof ContentManifestBase };
 type TContentManifests = { [name: string]: ContentManifestBase };
 
 export interface IContentConfigData {
-	fps: number,
 	width: number,
 	height: number
 }
@@ -92,7 +91,6 @@ export class Content {
 			contentID: (++_contentID).toString(),
 			basepath,
 			$: new ContentDeliver({
-				fps: piximData.config.fps,
 				width: piximData.config.width,
 				height: piximData.config.height,
 				lib: piximData.lib,
@@ -120,7 +118,6 @@ export class Content {
 		class ContentClone extends Content {
 			protected static _piximData: IContentStaticData = {
 				config: {
-					fps: 60,
 					width: 450,
 					height: 800
 				},
@@ -141,19 +138,19 @@ export class Content {
 	}
 	
 	/**
-	 * Get content.
+	 * Get defined content.
 	 */
-	static getContent(key: string): typeof Content {
+	static get(key: string): typeof Content {
 		return _contents[key];
 	}
 	
 	/**
-	 * Remove content.
+	 * Remove defined content.
 	 * 
 	 * @function Pixim.Content.removeContent
 	 * @param key {string}
 	 */
-	static removeContent(key: string): void {
+	static remove(key: string): void {
 		delete(_contents[key]);
 	}
 	
@@ -171,7 +168,7 @@ export class Content {
 	 * @return Returns itself for the method chaining.
 	 */
 	static setConfig(data: IContentConfigData): typeof Content {
-		this._piximData.config.fps = data.fps;
+		//this._piximData.config.fps = data.fps;
 		this._piximData.config.width = data.width;
 		this._piximData.config.height = data.height;
 		

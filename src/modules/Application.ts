@@ -276,7 +276,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	fullScreen(rect: IRect = { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight}): Application {
+	fullScreen(rect: IRect = { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight}): this {
 		const view: HTMLCanvasElement = this._piximData.view;
 		
 		if (rect.width / rect.height > view.width / view.height) {
@@ -291,7 +291,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	adjustWidth(width: number): Application {
+	adjustWidth(width: number): this {
 		const view: HTMLCanvasElement = this._piximData.view;
 		const h: number = width / view.width * view.height;
 		
@@ -307,7 +307,7 @@ export class Application extends Emitter {
 	 * 
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	adjustHeight(height: number): Application {
+	adjustHeight(height: number): this {
 		const view = this._piximData.view;
 		const w = height / view.height * view.width;
 		
@@ -321,7 +321,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toLeft(rect: IRect): Application {
+	toLeft(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.left = `${rect.x}px`;
@@ -332,7 +332,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toCenter(rect: IRect): Application {
+	toCenter(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.left = `${(rect.width - this._getViewRect().width) / 2 + rect.x}px`;
@@ -343,7 +343,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toRight(rect: IRect): Application {
+	toRight(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.left = `${rect.width - this._getViewRect().width + rect.x}px`;
@@ -354,7 +354,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toTop(rect: IRect): Application {
+	toTop(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.top = `${rect.y}px`;
@@ -365,7 +365,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toMiddle(rect: IRect): Application {
+	toMiddle(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.top = `${(rect.height - this._getViewRect().height) / 2 + rect.y}px`;
@@ -376,7 +376,7 @@ export class Application extends Emitter {
 	/**
 	 * @return {Pixim.Application} Returns itself for the method chaining.
 	 */
-	toBottom(rect: IRect): Application {
+	toBottom(rect: IRect): this {
 		const view = this._piximData.view;
 		
 		view.style.top = `${rect.height - this._getViewRect().height + rect.y}px`;
