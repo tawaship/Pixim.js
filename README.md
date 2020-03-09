@@ -1,6 +1,6 @@
 # @tawaship/pixim.js
 
-**pixim.js is a little useful pixi.js wrapper framework.**
+**"pixim.js" is a little useful "[pixi.js](https://github.com/pixijs/pixi.js)" wrapper framework.**
 
 [![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
