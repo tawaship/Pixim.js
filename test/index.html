@@ -12,7 +12,7 @@ Test.setConfig({
 });
 
 Test.defineLibraries({
-	root: class Root extends PIXI.Container {
+	root: class Root extends Pixim.Container {
 		constructor($) {
 			super();
 			
@@ -73,7 +73,7 @@ test.addSpritesheets({
 	ss_2: 'img/ss_2.json'
 });
 
-const app = new Pixim.Application({width: 300, height: 300});
+const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: true});
 
 const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};
 app.toRight(rect).toBottom(rect);

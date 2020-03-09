@@ -73,7 +73,7 @@ Test.setConfig({
 });
 
 Test.defineLibraries({
-	root: class Root extends PIXI.Container {
+	root: class Root extends Pixim.Container {
 		constructor($) {
 			super();
 			
@@ -85,7 +85,7 @@ Test.defineLibraries({
 		}
 	},
 	
-	main: class Root extends PIXI.Container {
+	main: class Root extends Pixim.Container {
 		constructor($) {
 			super();
 			
@@ -172,7 +172,7 @@ this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
 
 #### Task processing
 
-If the library class inherits Pixi.Container, you can use tasks that are executed for each ticker process of the application.
+If the library class inherits Pixim.Container, you can use tasks that are executed for each ticker process of the application.
 
 ```javascript
 // in content library
