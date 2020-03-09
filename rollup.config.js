@@ -10,6 +10,7 @@ const banner = [
 	'/*!',
 	` * @tawaship/pixim.js - v${version}`,
 	' * ',
+	' * @require pixi.js v5.2.1',
 	' * @author tawaship (makazu.mori@gmail.com)',
 	' * @license MIT',
 	' */',
