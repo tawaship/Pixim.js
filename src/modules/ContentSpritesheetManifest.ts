@@ -70,6 +70,8 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 Object.defineProperties(Content, {
 	/**
 	 * Define manifests of spritesheet.
+	 * 
+	 * @return Returns itself for the method chaining.
 	 */
 	defineSpritesheets: {
 		value: function(data: TManifests, options: IContentManifestOption = {}): typeof Content {
@@ -83,6 +85,8 @@ Object.defineProperties(Content, {
 Object.defineProperties(Content.prototype, {
 	/**
 	 * Add manifests of spritesheet.
+	 * 
+	 * @return Returns itself for the method chaining.
 	 */
 	addSpritesheets: {
 		value: function(data: TManifests, options: IContentManifestOption = {}): Content {

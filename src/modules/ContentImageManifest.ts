@@ -63,6 +63,8 @@ export class ContentImageManifest extends ContentManifestBase {
 Object.defineProperties(Content, {
 	/**
 	 * Define manifests of image.
+	 * 
+	 * @return Returns itself for the method chaining.
 	 */
 	defineImages: {
 		value: function(data: TManifests, options: IContentManifestOption = {}): typeof Content {
@@ -76,6 +78,8 @@ Object.defineProperties(Content, {
 Object.defineProperties(Content.prototype, {
 	/**
 	 * Add manifests of image.
+	 * 
+	 * @return Returns itself for the method chaining.
 	 */
 	addImages: {
 		value: function(data: TManifests, options: IContentManifestOption = {}): Content {

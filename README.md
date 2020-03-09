@@ -12,7 +12,7 @@
 1. on you npm project
 
 ```sh
-npm install --save @tawaship/emitter
+npm install --save @tawaship/pixim.js
 ```
 
 2. on your code
@@ -42,7 +42,7 @@ npm run build
 After [install](#how-to-install) or [build](#how-to-build)
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js"></script>
 <script src="/path/to/dist/Pixim.min.js"></script>
 ```
 
