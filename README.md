@@ -42,6 +42,7 @@ npm run build
 After [install](#how-to-install) or [build](#how-to-build)
 
 ```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.js"></script>
 <script src="/path/to/dist/Pixim.min.js"></script>
 ```
 
