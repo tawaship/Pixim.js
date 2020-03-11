@@ -5,8 +5,7 @@
 <script>
 
 const Test = Pixim.Content.create();
-const Test2 = Pixim.Content.create();
-console.log(Test2)
+
 Test.setConfig({
 	width: 300,
 	height: 300
@@ -36,13 +35,13 @@ Test.defineLibraries({
 				.drawRect(0, 0, 100, 100);
 			//*/
 			
-			//*
+			/*
 			this.addChild(new PIXI.Sprite($.resources.images.image_1));
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = 105;
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
 			//*/
 			
-			/*
+			//*
 			this.addChild(new PIXI.Sprite($.resources.images.image_2));
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = 105;
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
@@ -73,6 +72,8 @@ test.addImages({
 test.addSpritesheets({
 	ss_2: 'img/ss_2.json'
 });
+
+const test2 = new Test();
 
 const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: true});
 
