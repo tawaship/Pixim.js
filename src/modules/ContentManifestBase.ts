@@ -54,8 +54,6 @@ export type TContentResources = { [name: string]: TResources };
 const _cache: TResources = {};
 
 export class ContentManifestBase {
-	static manifestKey: string = 'base';
-	
 	private _manifests: TPreManifests = {};
 	
 	/**
