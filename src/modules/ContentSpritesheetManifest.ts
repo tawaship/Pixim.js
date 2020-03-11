@@ -75,7 +75,7 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
  */
 declare module './Content' {
 	interface Content {
-		addSpritesheets(data: TManifests, options?: IContentManifestOption): Content;
+		addSpritesheets(data: TManifests, options?: IContentManifestOption): this;
 	}
 	
 	namespace Content {
@@ -99,7 +99,7 @@ class Content {
 		return _Content;
 	}
 	
-	addSpritesheets(data: TManifests, options: IContentManifestOption = {}): this {
+	addSpritesheets(data: TManifests, options: IContentManifestOption = {}) {
 		return this;
 	}
 }

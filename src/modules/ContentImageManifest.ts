@@ -68,7 +68,7 @@ export class ContentImageManifest extends ContentManifestBase {
  */
 declare module './Content' {
 	interface Content {
-		addImages(data: TManifests, options?: IContentManifestOption): Content;
+		addImages(data: TManifests, options?: IContentManifestOption): this;
 	}
 	
 	namespace Content {
