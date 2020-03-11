@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
-import { Content } from './Content';
+import { Content as _Content } from './Content';
 
 /**
  * @private
@@ -76,12 +76,23 @@ declare module './Content' {
 	}
 }
 
-Content.prototype.addImages = function(data: TManifests, options: IContentManifestOption = {}) {
+_Content.prototype.addImages = function(data: TManifests, options: IContentManifestOption = {}) {
 	return this.addManifests(manifestKey, data, options);
 }
 
-Content.defineImages = function(data: TManifests, options: IContentManifestOption = {}) {
+_Content.defineImages = function(data: TManifests, options: IContentManifestOption = {}) {
 	return this.defineManifests(manifestKey, data, options);
 }
 
-Content.useManifestClass(manifestKey, ContentImageManifest);
+_Content.useManifestClass(manifestKey, ContentImageManifest);
+
+// for docs
+class Content {
+	static defineImages(data: TManifests, options: IContentManifestOption = {}) {
+		return _Content;
+	}
+	
+	addImages(data: TManifests, options: IContentManifestOption = {}) {
+		return this;
+	}
+}

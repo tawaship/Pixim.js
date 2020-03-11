@@ -92,3 +92,14 @@ _Content.defineSpritesheets = function(data: TManifests, options: IContentManife
 }
 
 _Content.useManifestClass(manifestKey, ContentSpritesheetManifest);
+
+// for docs
+class Content {
+	static defineSpritesheets(data: TManifests, options: IContentManifestOption = {}): typeof Content {
+		return this;
+	}
+	
+	addSpritesheets(data: TManifests, options: IContentManifestOption = {}): this {
+		return this;
+	}
+}

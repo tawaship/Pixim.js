@@ -105,10 +105,10 @@ export class Content {
 	}
 	
 	/**
-	 * Initialize contents.
+	 * Create a cloned content class.
 	 * 
-	 * @param key Name when saving content.
-	 * @return Created content class.
+	 * @param key Content name.
+	 * @return Cloned content class.
 	 */
 	static create<T extends Content>(key: string = ''): typeof Content {
 		if (key && key in _contents) {
@@ -138,14 +138,14 @@ export class Content {
 	}
 	
 	/**
-	 * Get defined content.
+	 * Get cloned content.
 	 */
 	static get(key: string) {
 		return _contents[key];
 	}
 	
 	/**
-	 * Remove defined content.
+	 * Remove cloned content.
 	 * 
 	 * @function Pixim.Content.removeContent
 	 * @param key {string}
