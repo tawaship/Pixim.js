@@ -79,12 +79,26 @@ function createManifests(): TContentManifests {
 	return res;
 }
 
+/**
+ * @ignore
+ */
+function createContentStatic(): IContentStaticData {
+	return {
+		config: {
+			width: 450,
+			height: 800
+		},
+		manifests: createManifests(),
+		lib: {}
+	};
+}
+
 export class Content {
 	protected static _piximData: IContentStaticData;
 	
 	private _piximData: IContentData;
 	
-	 constructor(options: TContentOption, piximData: IContentStaticData) {
+	constructor(options: TContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 		const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 		
 		this._piximData = {
@@ -116,19 +130,13 @@ export class Content {
 		}
 		
 		class ContentClone extends Content {
-			protected static _piximData: IContentStaticData = {
-				config: {
-					width: 450,
-					height: 800
-				},
-				manifests: createManifests(),
-				lib: {}
-			}
+			protected static _piximData: IContentStaticData = createContentStatic();
 			
 			constructor(options: TContentOption = {}) {
 				super(options, ContentClone._piximData);
 			}
 		}
+		
 		
 		if (!key) {
 			return ContentClone;
