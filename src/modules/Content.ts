@@ -161,6 +161,10 @@ export class Content {
 		_registeredManifestClasses[key] = cls;
 	}
 	
+	/**
+	 * @since 1.2.0
+	 * @return Returns itself for the method chaining.
+	 */
 	static defineManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
 		if (!this._piximData.manifests[key]) {
 			return this;
@@ -208,6 +212,10 @@ export class Content {
 		return this._piximData.contentID;
 	}
 	
+	/**
+	 * @since 1.2.0
+	 * @return Returns itself for the method chaining.
+	 */
 	addManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
 		if (!this._piximData.additionalManifests[key]) {
 			return this;
