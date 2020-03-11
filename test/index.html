@@ -3,8 +3,10 @@
 <script src="../dist/Pixim.js"></script>
 
 <script>
-const Test = Pixim.Content.create();
 
+const Test = Pixim.Content.create();
+const Test2 = Pixim.Content.create();
+console.log(Test2)
 Test.setConfig({
 	width: 300,
 	height: 300
@@ -34,7 +36,7 @@ Test.defineLibraries({
 				.drawRect(0, 0, 100, 100);
 			//*/
 			
-			/*
+			//*
 			this.addChild(new PIXI.Sprite($.resources.images.image_1));
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = 105;
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
@@ -46,7 +48,7 @@ Test.defineLibraries({
 			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
 			//*/
 			
-			/*
+			//*
 			this.task.on('anim', e => {
 				this.x += e.delta;
 			});

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { ContentDeliver, TContentLibrary } from './ContentDeliver';
-import { ContentManifestBase, TResources, TContentResources, TManifests } from './ContentManifestBase';
+import { ContentManifestBase, TResources, TContentResources, TManifests, IContentManifestOption } from './ContentManifestBase';
 
 /**
  * @private
@@ -84,7 +84,7 @@ export class Content {
 	
 	private _piximData: IContentData;
 	
-	constructor(options: TContentOption = {}, piximData: IContentStaticData) {
+	 constructor(options: TContentOption, piximData: IContentStaticData) {
 		const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 		
 		this._piximData = {
@@ -110,7 +110,7 @@ export class Content {
 	 * @param key Name when saving content.
 	 * @return Created content class.
 	 */
-	static create(key: string): typeof Content {
+	static create<T extends Content>(key: string = ''): typeof Content {
 		if (key && key in _contents) {
 			throw new Error(`Content key '${key}' has already exists.`);
 		}
@@ -140,7 +140,7 @@ export class Content {
 	/**
 	 * Get defined content.
 	 */
-	static get(key: string): typeof Content {
+	static get(key: string) {
 		return _contents[key];
 	}
 	
@@ -157,8 +157,18 @@ export class Content {
 	/**
 	 * Register custom manifest class.
 	 */
-	static useManifestClass(cls: typeof ContentManifestBase) {
-		_registeredManifestClasses[cls.manifestKey] = cls;
+	static useManifestClass(key: string, cls: typeof ContentManifestBase) {
+		_registeredManifestClasses[key] = cls;
+	}
+	
+	static defineManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
+		if (!this._piximData.manifests[key]) {
+			return this;
+		}
+		
+		this._piximData.manifests[key].add(data, options);
+		
+		return this;
 	}
 	
 	/**
@@ -167,7 +177,7 @@ export class Content {
 	 * @param data Config data.
 	 * @return Returns itself for the method chaining.
 	 */
-	static setConfig(data: IContentConfigData): typeof Content {
+	static setConfig(data: IContentConfigData) {
 		//this._piximData.config.fps = data.fps;
 		this._piximData.config.width = data.width;
 		this._piximData.config.height = data.height;
@@ -183,7 +193,7 @@ export class Content {
 	 * @param data Library data.
 	 * @return Returns itself for the method chaining.
 	 */
-	static defineLibraries(data: TContentLibrary): typeof Content {
+	static defineLibraries(data: TContentLibrary) {
 		for (let i in data) {
 			this._piximData.lib[i] = data[i];
 		}
@@ -198,12 +208,22 @@ export class Content {
 		return this._piximData.contentID;
 	}
 	
+	addManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
+		if (!this._piximData.additionalManifests[key]) {
+			return this;
+		}
+		
+		this._piximData.additionalManifests[key].add(data, options);
+		
+		return this;
+	}
+	
 	/**
 	 * Define valriables.
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	defineVars(data: { [name: string]: any }): Content {
+	defineVars(data: { [name: string]: any }) {
 		for (let i in data) {
 			 this._piximData.$.vars[i] = data[i];
 		}

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
-import { Content } from './Content';
+import { Content as _Content } from './Content';
 
 /**
  * @private
@@ -14,9 +14,12 @@ interface ILoadedSpritesheetResource extends ILoadedResource {
  */
 type TLoadedSpritesheetResources = { [name: string]: ILoadedSpritesheetResource };
 
+/**
+ * @ignore
+ */
+const manifestKey: string = 'spritesheets';
+
 export class ContentSpritesheetManifest extends ContentManifestBase {
-	static manifestKey = 'spritesheets';
-	
 	/**
 	 * Load image resources.
 	 * 
@@ -67,32 +70,25 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 	}
 }
 
-Object.defineProperties(Content, {
-	/**
-	 * Define manifests of spritesheet.
-	 * 
-	 * @return Returns itself for the method chaining.
-	 */
-	defineSpritesheets: {
-		value: function(data: TManifests, options: IContentManifestOption = {}): typeof Content {
-			this._piximData.manifests[ContentSpritesheetManifest.manifestKey].add(data, options);
-			
-			return this;
-		}
+/**
+ * @ignore
+ */
+declare module './Content' {
+	interface Content {
+		addSpritesheets(data: TManifests, options?: IContentManifestOption): _Content;
 	}
-});
+	
+	namespace Content {
+		function defineSpritesheets(data: TManifests, options?: IContentManifestOption): typeof Content;
+	}
+}
 
-Object.defineProperties(Content.prototype, {
-	/**
-	 * Add manifests of spritesheet.
-	 * 
-	 * @return Returns itself for the method chaining.
-	 */
-	addSpritesheets: {
-		value: function(data: TManifests, options: IContentManifestOption = {}): Content {
-			this._piximData.additionalManifests[ContentSpritesheetManifest.manifestKey].add(data, options);
-			
-			return this;
-		}
-	}
-});
+_Content.prototype.addSpritesheets = function(data: TManifests, options: IContentManifestOption = {}) {
+	return this.addManifests(manifestKey, data, options);
+}
+
+_Content.defineSpritesheets = function(data: TManifests, options: IContentManifestOption = {}) {
+	return this.defineManifests(manifestKey, data, options);
+}
+
+_Content.useManifestClass(manifestKey, ContentSpritesheetManifest);

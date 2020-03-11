@@ -14,9 +14,12 @@ interface ILoadedImageResource extends ILoadedResource {
  */
 type TLoadedImageResources = { [name: string]: ILoadedImageResource };
 
+/**
+ * @ignore
+ */
+const manifestKey: string = 'images';
+
 export class ContentImageManifest extends ContentManifestBase {
-	static manifestKey = 'images';
-	
 	/**
 	 * Load image resources.
 	 * 
@@ -60,32 +63,25 @@ export class ContentImageManifest extends ContentManifestBase {
 	}
 }
 
-Object.defineProperties(Content, {
-	/**
-	 * Define manifests of image.
-	 * 
-	 * @return Returns itself for the method chaining.
-	 */
-	defineImages: {
-		value: function(data: TManifests, options: IContentManifestOption = {}): typeof Content {
-			this._piximData.manifests[ContentImageManifest.manifestKey].add(data, options);
-			
-			return this;
-		}
+/**
+ * @ignore
+ */
+declare module './Content' {
+	interface Content {
+		addImages(data: TManifests, options?: IContentManifestOption): Content;
 	}
-});
+	
+	namespace Content {
+		function defineImages(data: TManifests, options?: IContentManifestOption): typeof Content;
+	}
+}
 
-Object.defineProperties(Content.prototype, {
-	/**
-	 * Add manifests of image.
-	 * 
-	 * @return Returns itself for the method chaining.
-	 */
-	addImages: {
-		value: function(data: TManifests, options: IContentManifestOption = {}): Content {
-			this._piximData.additionalManifests[ContentImageManifest.manifestKey].add(data, options);
-			
-			return this;
-		}
-	}
-});
+Content.prototype.addImages = function(data: TManifests, options: IContentManifestOption = {}) {
+	return this.addManifests(manifestKey, data, options);
+}
+
+Content.defineImages = function(data: TManifests, options: IContentManifestOption = {}) {
+	return this.defineManifests(manifestKey, data, options);
+}
+
+Content.useManifestClass(manifestKey, ContentImageManifest);
