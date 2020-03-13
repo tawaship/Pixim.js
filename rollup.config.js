@@ -41,7 +41,7 @@ export default (async () => {
 					sourcemap: true
 				}
 			],
-			external: ['pixi.js', '@tawaship/emitter'],
+			external: ['pixi.js', '@tawaship/emitter', 'howler'],
 			watch: {
 				clearScreen: false
 			},
@@ -62,11 +62,12 @@ export default (async () => {
 					name: 'Pixim',
 					sourcemap: true,
 					globals: {
+						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',
 						'pixi.js': 'PIXI'
 					}
 				}
 			],
-			external: ['pixi.js'],
+			external: ['pixi.js', 'howler'],
 			plugins: [
 				nodeResolve(),
 				commonjs(),
@@ -95,12 +96,13 @@ export default (async () => {
 					format: 'iife',
 					name: 'Pixim',
 					globals: {
+						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',
 						'pixi.js': 'PIXI'
 					},
 					compact: true
 				}
 			],
-			external: ['pixi.js'],
+			external: ['pixi.js', 'howler'],
 			plugins: [
 				nodeResolve(),
 				commonjs(),

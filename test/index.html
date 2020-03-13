@@ -4,6 +4,8 @@
 
 <script>
 
+console.log(Pixim)
+
 const Test = Pixim.Content.create();
 
 Test.setConfig({
@@ -28,6 +30,9 @@ Test.defineLibraries({
 		constructor($) {
 			super();
 			
+			$.resources.sounds.a.play();
+			$.resources.sounds.a.loop(true);
+			$.resources.sounds.b.play();
 			
 			//*
 			this.addChild(new PIXI.Graphics())
@@ -64,6 +69,10 @@ Test.defineSpritesheets({
 	ss_1: 'img/ss_1.json'
 });
 
+Test.defineSounds({
+	a: 'sound/a.mp3'
+});
+
 const test = new Test();
 test.addImages({
 	image_2: 'img/image_2.png'
@@ -71,6 +80,10 @@ test.addImages({
 
 test.addSpritesheets({
 	ss_2: 'img/ss_2.json'
+});
+
+test.addSounds({
+	b: 'sound/b.mp3'
 });
 
 const test2 = new Test();

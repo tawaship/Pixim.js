@@ -53,7 +53,7 @@ export type TContentResources = { [name: string]: TResources };
  */
 const _cache: TResources = {};
 
-export class ContentManifestBase {
+export abstract class ContentManifestBase {
 	private _manifests: TPreManifests = {};
 	
 	/**
@@ -126,6 +126,7 @@ export class ContentManifestBase {
 	/**
 	 * Load resources.
 	 * 
+	 * @abstract
 	 * @async
 	 */
 	protected _loadAsync(manifests: TPostManifests): Promise<TLoadedResources> {

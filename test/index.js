@@ -1,8 +1,8 @@
 const assert = require('assert');
 const PIXI = require('pixi.js');
+const { Howl } = require('howler');
 const Pixim = require('../');
 const path = require('path');
-console.warn = () => {};
 
 describe('Pixim.js', () => {
 	const exec = (done, app) => {
@@ -163,6 +163,48 @@ describe('Pixim.js', () => {
 			});
 		});
 		
+		it('define and add sounds', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.sounds.a instanceof Howl)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.sounds.b instanceof Howl)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSounds({
+					a: path.resolve(__dirname, 'sound/a.mp3')
+				});
+				
+				const test = new Test();
+				
+				test.addSounds({
+					b: path.resolve(__dirname, 'sound/b.mp3')
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
 		it('unrequire define and add images', () => {
 			return new Promise((resolve, reject) => {
 				const app = new Pixim.Application();
@@ -255,7 +297,53 @@ describe('Pixim.js', () => {
 			});
 		});
 		
-		it('define vars', () => {
+		it('unrequire define and add sounds', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends PIXI.Container {
+						constructor($) {
+							super();
+							
+							if ((!$.resources.sounds.c instanceof Howl)) {
+								exec(reject, app);
+								return;
+							}
+							
+							if ((!$.resources.sounds.d instanceof Howl)) {
+								exec(reject, app);
+								return;
+							}
+							
+							exec(resolve, app);
+						}
+					}
+				});
+				
+				Test.defineSounds({
+					c: path.resolve(__dirname, 'sound/c.mp3')
+				}, {
+					unrequired: true
+				});
+				
+				const test = new Test();
+				
+				test.addSounds({
+					d: path.resolve(__dirname, 'sound/d.mp3')
+				}, {
+					unrequired: true
+				});
+				
+				app.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('add vars', () => {
 			return new Promise((resolve, reject) => {
 				const app = new Pixim.Application();
 				
@@ -277,7 +365,7 @@ describe('Pixim.js', () => {
 				
 				const test = new Test();
 				
-				test.defineVars({
+				test.addVars({
 					check: true
 				});
 				

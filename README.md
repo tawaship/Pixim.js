@@ -1,6 +1,6 @@
 # @tawaship/pixim.js
 
-**"pixim.js" is a little useful "[pixi.js](https://github.com/pixijs/pixi.js)" wrapper framework.**
+**"pixim.js" is a little useful "[pixi.js - v5.2.1](https://github.com/pixijs/pixi.js)" wrapper framework.**
 
 [![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
@@ -114,9 +114,11 @@ app.attachAsync(new Test())
 
 ![1](https://raw.github.com/tawaship/Pixim.js/screenshot/img/1.png)
 
-### Advanced content
+### Image assets to preload
 
-#### Class assets to preload
+Asset provided by this feature are instance of "PIXI.Texture", or dictionary of instance of "PIXI.Texture".
+
+#### for class
 
 1. Define assets
 
@@ -142,7 +144,7 @@ this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
 
 ![2](https://raw.github.com/tawaship/Pixim.js/screenshot/img/2.png)
 
-#### Instance assets to preload
+#### for instance
 
 1. Define assets
 
@@ -170,7 +172,55 @@ this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
 
 ![3](https://raw.github.com/tawaship/Pixim.js/screenshot/img/3.png)
 
-#### Task processing
+### Sound assets to preload
+
+Load "[howler.js - v2.1.3](https://github.com/goldfire/howler.js)".
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js"></script>
+```
+
+Asset provided by this feature are instance of "Howl".
+
+#### for class
+
+1. Define assets
+
+```javascript
+Test.defineSounds({
+	a: 'sound/a.mp3'
+});
+```
+
+2. Use assets
+
+```javascript
+// in content library
+
+$.resources.sounds.a.play();
+```
+
+#### for instance
+
+1. Define assets
+
+```javascript
+const test = new Test();
+
+test.addSounds({
+	b: 'sound/b.mp3'
+});
+```
+
+2. Use assets
+
+```javascript
+// in content library
+
+$.resources.sounds.b.play();
+```
+
+### Task processing
 
 If the library class inherits Pixim.Container, you can use tasks that are executed for each ticker process of the application.
 

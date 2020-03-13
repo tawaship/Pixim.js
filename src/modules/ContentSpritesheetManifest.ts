@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
-import { Content as _Content } from './Content';
 
 /**
  * @private
@@ -67,39 +66,5 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 				resolve(res);
 			});
 		});
-	}
-}
-
-/**
- * @ignore
- */
-declare module './Content' {
-	interface Content {
-		addSpritesheets(data: TManifests, options?: IContentManifestOption): this;
-	}
-	
-	namespace Content {
-		function defineSpritesheets(data: TManifests, options?: IContentManifestOption): typeof Content;
-	}
-}
-
-_Content.prototype.addSpritesheets = function(data: TManifests, options: IContentManifestOption = {}) {
-	return this.addManifests(manifestKey, data, options);
-}
-
-_Content.defineSpritesheets = function(data: TManifests, options: IContentManifestOption = {}) {
-	return this.defineManifests(manifestKey, data, options);
-}
-
-_Content.useManifestClass(manifestKey, ContentSpritesheetManifest);
-
-// for docs
-class Content {
-	static defineSpritesheets(data: TManifests, options: IContentManifestOption = {}) {
-		return _Content;
-	}
-	
-	addSpritesheets(data: TManifests, options: IContentManifestOption = {}) {
-		return this;
 	}
 }

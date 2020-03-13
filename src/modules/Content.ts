@@ -1,21 +1,27 @@
 import * as PIXI from 'pixi.js';
 import { ContentDeliver, TContentLibrary } from './ContentDeliver';
-import { ContentManifestBase, TResources, TContentResources, TManifests, IContentManifestOption } from './ContentManifestBase';
+import { TResources, TContentResources, TManifests, IContentManifestOption } from './ContentManifestBase';
+import { ContentImageManifest } from './ContentImageManifest';
+import { ContentSpritesheetManifest } from './ContentSpritesheetManifest';
+import { ContentSoundManifest } from './ContentSoundManifest';
+
+export type TContentManifestType = 'images' | 'spritesheets' | 'sounds';
 
 /**
  * @private
  */
-type TContentManifestClasses = { [name: string]: typeof ContentManifestBase };
-
-/**
- * @private
- */
-type TContentManifests = { [name: string]: ContentManifestBase };
+type TContentManifests = { 
+	images: ContentImageManifest,
+	spritesheets: ContentSpritesheetManifest,
+	sounds: ContentSoundManifest
+};
 
 export interface IContentConfigData {
 	width: number,
 	height: number
 }
+
+export type TContentVars = { [name: string]: any };
 
 /**
  * @private
@@ -64,24 +70,14 @@ interface IContentStaticData {
 /**
  * @ignore
  */
-const _registeredManifestClasses: TContentManifestClasses = {};
-
-/**
- * @ignore
- */
 function createManifests(): TContentManifests {
-	const res: TContentManifests = {};
-	
-	for (let i in _registeredManifestClasses) {
-		res[i] = new _registeredManifestClasses[i]();
-	}
-	
-	return res;
+	return {
+		images: new ContentImageManifest(),
+		spritesheets: new ContentSpritesheetManifest(),
+		sounds: new ContentSoundManifest()
+	};
 }
 
-/**
- * @ignore
- */
 function createContentStatic(): IContentStaticData {
 	return {
 		config: {
@@ -163,17 +159,12 @@ export class Content {
 	}
 	
 	/**
-	 * Register custom manifest class.
-	 */
-	static useManifestClass(key: string, cls: typeof ContentManifestBase) {
-		_registeredManifestClasses[key] = cls;
-	}
-	
-	/**
+	 * Define assets for class.
+	 * 
 	 * @since 1.2.0
 	 * @return Returns itself for the method chaining.
 	 */
-	static defineManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
+	static defineManifests(key: TContentManifestType, data: TManifests, options: IContentManifestOption = {}) {
 		if (!this._piximData.manifests[key]) {
 			return this;
 		}
@@ -181,6 +172,34 @@ export class Content {
 		this._piximData.manifests[key].add(data, options);
 		
 		return this;
+	}
+	
+	/**
+	 * Define image assets for class.
+	 * 
+	 * @return Returns itself for the method chaining.
+	 */
+	static defineImages(data: TManifests, options: IContentManifestOption = {}) {
+		return this.defineManifests('images', data, options);
+	}
+	
+	/**
+	 * Define spritesheet assets for class.
+	 * 
+	 * @return Returns itself for the method chaining.
+	 */
+	static defineSpritesheets(data: TManifests, options: IContentManifestOption = {}) {
+		return this.defineManifests('spritesheets', data, options);
+	}
+	
+	/**
+	 * Define sound assets for class.
+	 * 
+	 * @since 1.3.0
+	 * @return Returns itself for the method chaining.
+	 */
+	static defineSounds(data: TManifests, options: IContentManifestOption = {}) {
+		return this.defineManifests('sounds', data, options);
 	}
 	
 	/**
@@ -221,10 +240,12 @@ export class Content {
 	}
 	
 	/**
+	 * Define assets for instance.
+	 * 
 	 * @since 1.2.0
 	 * @return Returns itself for the method chaining.
 	 */
-	addManifests(key: string, data: TManifests, options: IContentManifestOption = {}) {
+	addManifests(key: TContentManifestType, data: TManifests, options: IContentManifestOption = {}): this {
 		if (!this._piximData.additionalManifests[key]) {
 			return this;
 		}
@@ -235,11 +256,40 @@ export class Content {
 	}
 	
 	/**
-	 * Define valriables.
+	 * Define image assets for instance.
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	defineVars(data: { [name: string]: any }) {
+	addImages(data: TManifests, options: IContentManifestOption = {}): this {
+		return this.addManifests('images', data, options);
+	}
+	
+	/**
+	 * Define spritesheet assets for instance.
+	 * 
+	 * @return Returns itself for the method chaining.
+	 */
+	addSpritesheets(data: TManifests, options: IContentManifestOption = {}): this {
+		return this.addManifests('spritesheets', data, options);
+	}
+	
+	/**
+	 * Define sound assets for instance.
+	 * 
+	 * @since 1.3.0
+	 * @return Returns itself for the method chaining.
+	 */
+	addSounds(data: TManifests, options: IContentManifestOption = {}): this {
+		return this.addManifests('sounds', data, options);
+	}
+	
+	/**
+	 * Define valriables for instance.
+	 * 
+	 * @since 1.3.0
+	 * @return Returns itself for the method chaining.
+	 */
+	addVars(data: TContentVars): this {
 		for (let i in data) {
 			 this._piximData.$.vars[i] = data[i];
 		}
@@ -248,14 +298,25 @@ export class Content {
 	}
 	
 	/**
+	 * Define valriables.
+	 * 
+	 * @deprecated since 1.3.0
+	 * @alias <a href="addvars">addVars</a>
+	 * @return Returns itself for the method chaining.
+	 */
+	defineVars(data: TContentVars): this {
+		return this.addVars(data);
+	}
+	
+	/**
 	 * Prepare content.
 	 * 
 	 * @async
 	 */
 	prepareAsync(): Promise<void> {
-		return this.preloadAsync()
+		return this.preloadClassAssetAsync()
 			.then(() => {
-				return this.postloadAsync();
+				return this.preloadInstanceAssetAsync();
 			});
 	}
 	
@@ -276,11 +337,11 @@ export class Content {
 	}
 	
 	/**
-	 * Preloads assets.
+	 * Preloads class assets.
 	 * 
 	 * @async
 	 */
-	preloadAsync(): Promise<void> {
+	preloadClassAssetAsync(): Promise<void> {
 		if (this._piximData.preloadPromise) {
 			return this._piximData.preloadPromise;
 		}
@@ -294,11 +355,11 @@ export class Content {
 	}
 	
 	/**
-	 * Postload srequired assets.
+	 * Preloads instance assets.
 	 * 
 	 * @async
 	 */
-	postloadAsync(): Promise<void> {
+	preloadInstanceAssetAsync(): Promise<void> {
 		if (this._piximData.postloadPromise) {
 			return this._piximData.postloadPromise;
 		}
@@ -325,10 +386,11 @@ export class Content {
 		}
 		
 		const promises: Promise<TResources>[] = [];
-		const keys: string[] = [];
+		const keys: TContentManifestType[] = [];
 		for (let i in manifests) {
-			keys.push(i);
-			promises.push(manifests[i].getAsync(basepath));
+			const type: TContentManifestType = <TContentManifestType>i;
+			keys.push(type);
+			promises.push(manifests[type].getAsync(basepath));
 		}
 		
 		return Promise.all(promises)
