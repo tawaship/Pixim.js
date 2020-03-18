@@ -78,6 +78,9 @@ function createManifests(): TContentManifests {
 	};
 }
 
+/**
+ * @ignore
+ */
 function createContentStatic(): IContentStaticData {
 	return {
 		config: {

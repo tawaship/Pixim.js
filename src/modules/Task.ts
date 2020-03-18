@@ -1,9 +1,10 @@
 import { Emitter } from './Emitter';
+import { Container }  from './Container';
 
 /**
  * @private
  */
-export interface ITickerData {
+export interface ITaskTickerData {
 	delta: number
 }
 
@@ -11,37 +12,38 @@ export interface ITickerData {
  * @private
  */
 interface ITaskData {
-	context: any,
-	tickEnabled: boolean
+	context: Container,
+	enabled: boolean
 }
 
 /**
- * @ignore
+ * @private
  */
-const _tasks: Task[] = [];
-
 export class Task extends Emitter {
 	private _piximData: ITaskData;
 	
-	constructor(context: any) {
+	constructor(context: Container) {
 		super();
 		
 		this._piximData = {
 			context,
-			tickEnabled: true
+			enabled: true
 		};
 	}
 	
-	/**
+	/*
 	 * Get registration index of task.
 	 */
+	/*
 	private static _getIndex(task: Task): number {
 		return _tasks.indexOf(task);
 	}
+	*/
 	
-	/**
+	/*
 	 * Register task.
 	 */
+	/*
 	static add(task: Task): void {
 		if (this._getIndex(task) > -1) {
 			return;
@@ -49,10 +51,12 @@ export class Task extends Emitter {
 		
 		_tasks.push(task);
 	}
+	*/
 	
-	/**
+	/*
 	 * Unregister task.
 	 */
+	/*
 	static remove(task: Task): void {
 		const index = this._getIndex(task);
 		
@@ -62,37 +66,40 @@ export class Task extends Emitter {
 		
 		_tasks.splice(index, 1);
 	}
+	*/
 	
-	/**
+	/*
 	 * Execute all task.
 	 */
+	/*
 	static done(e: ITickerData): void {
 		for (let i: number = 0; i < _tasks.length; i++) {
 			_tasks[i]._update(e);
 		}
 	}
+	*/
 	
 	/**
 	 * Whether the task works.
 	 */
-	get tickEnabled(): boolean {
-		return this._piximData.tickEnabled;
+	get enabled(): boolean {
+		return this._piximData.enabled;
 	}
 	
-	set tickEnabled(enabled) {
-		this._piximData.tickEnabled = enabled;
+	set enabled(enabled) {
+		this._piximData.enabled = enabled;
 	}
 	
 	/**
 	 * Execute task.
 	 */
-	private _update(e: ITickerData): void {
-		if (!this.tickEnabled) {
+	update(e: ITaskTickerData): void {
+		if (!this._piximData.enabled) {
 			return;
 		}
 		
 		const eventNames: string[] = this.eventNames;
-		const context: any = this._piximData.context;
+		const context: Container = this._piximData.context;
 		
 		for (let i: number = 0; i < eventNames.length; i++) {
 			this.cemit(eventNames[i], context, e);
@@ -103,7 +110,7 @@ export class Task extends Emitter {
 	 * Destroy instance.
 	 */
 	destroy(): void {
-		Task.remove(this);
+		//Task.remove(this);
 		this.clear();
 	}
 }

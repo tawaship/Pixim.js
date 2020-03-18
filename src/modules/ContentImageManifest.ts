@@ -18,6 +18,9 @@ type TLoadedImageResources = { [name: string]: ILoadedImageResource };
  */
 const manifestKey: string = 'images';
 
+/**
+ * @private
+ */
 export class ContentImageManifest extends ContentManifestBase {
 	/**
 	 * Load image resources.

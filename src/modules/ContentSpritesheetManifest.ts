@@ -14,10 +14,8 @@ interface ILoadedSpritesheetResource extends ILoadedResource {
 type TLoadedSpritesheetResources = { [name: string]: ILoadedSpritesheetResource };
 
 /**
- * @ignore
+ * @private
  */
-const manifestKey: string = 'spritesheets';
-
 export class ContentSpritesheetManifest extends ContentManifestBase {
 	/**
 	 * Load image resources.

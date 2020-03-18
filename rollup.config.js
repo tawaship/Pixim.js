@@ -11,6 +11,7 @@ const banner = [
 	` * @tawaship/pixim.js - v${version}`,
 	' * ',
 	' * @require pixi.js v5.2.1',
+	' * @require howler.js v2.1.3 (If use sound)',
 	' * @author tawaship (makazu.mori@gmail.com)',
 	' * @license MIT',
 	' */',

@@ -23,16 +23,19 @@ interface IPostManifest extends IPreManifest {
 }
 
 /**
- * @protected
+ * @private
  */
 export type TPostManifests = { [name: string]: IPostManifest };
 
+/**
+ * @private
+ */
 export interface IContentManifestOption {
 	unrequired?: boolean
 }
 
 /**
- * @protected
+ * @private
  */
 export interface ILoadedResource {
 	resource: any;
@@ -44,8 +47,14 @@ export interface ILoadedResource {
  */
 type TLoadedResources = { [name: string]: ILoadedResource };
 
+/**
+ * @private
+ */
 export type TResources = { [name: string]: any};
 
+/**
+ * @private
+ */
 export type TContentResources = { [name: string]: TResources };
 
 /**
@@ -53,6 +62,9 @@ export type TContentResources = { [name: string]: TResources };
  */
 const _cache: TResources = {};
 
+/**
+ * @private
+ */
 export abstract class ContentManifestBase {
 	private _manifests: TPreManifests = {};
 	

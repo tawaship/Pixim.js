@@ -13,6 +13,9 @@ interface ILoadedSoundResource extends ILoadedResource {
  */
 type TLoadedSoundResources = { [name: string]: ILoadedSoundResource };
 
+/**
+ * @private
+ */
 export class ContentSoundManifest extends ContentManifestBase {
 	/**
 	 * Load image resources.

@@ -17,6 +17,9 @@ interface IContentDeliverData {
 	vars: TVars
 }
 
+/**
+ * @private
+ */
 export class ContentDeliver {
 	private _piximData: IContentDeliverData;
 	

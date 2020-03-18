@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { Content } from './Content';
 import { Emitter } from './Emitter';
-import { Task } from './Task';
+import { Container } from './Container';
+import { Task, ITaskTickerData } from './Task';
 
 /**
  * @private
@@ -53,6 +54,27 @@ export interface IRect extends ISize, IPosition {
  */
 const _roots: TRoots = {};
 
+/**
+ * @ignore
+ */
+function taskHandler(obj: PIXI.Container, e: ITaskTickerData): void {
+	if (obj instanceof Container) {
+		obj.task.update(e);
+		
+		if (!obj.taskEnabledChildren) {
+			return;
+		}
+	}
+	
+	for (let i = 0; i < obj.children.length; i++) {
+		const child = obj.children[i];
+		
+		if (child instanceof PIXI.Container) {
+			taskHandler(child, e);
+		}
+	}
+}
+
 export class Application extends Emitter {
 	private _piximData: IApplicationData;
 	
@@ -94,7 +116,8 @@ export class Application extends Emitter {
 		const ticker: PIXI.Ticker = this._piximData.app.ticker;
 		
 		ticker.add((delta: number) => {
-			Task.done({ delta });
+			taskHandler(stage, { delta });
+			//Task.done({ delta });
 		});
 		
 		if (piximOptions.autoAdjust) {
