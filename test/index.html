@@ -15,22 +15,22 @@ Test.setConfig({
 });
 
 Test.defineLibraries({
-	root: class Root extends Pixim.Container {
+	root: class Root extends PIXI.Container {
 		constructor($) {
 			super();
 			
-			//this.taskEnabledChildren = false;
+			this.taskEnabledChildren = false;
 			
 			this.addChild(new PIXI.Graphics())
 				.beginFill(0xFFEEEE, 1)
 				.drawRect(0, 0, $.width, $.height);
 			
 			this.addChild(new $.lib.main($))
-			this.addChild(new $.lib.sub($))
+			
 		}
 	},
 	
-	main: class Main extends Pixim.Container {
+	main: class Main extends PIXI.Container {
 		constructor($) {
 			super();
 			
@@ -57,10 +57,10 @@ Test.defineLibraries({
 			//*/
 			
 			//*
-			this.task.on('anim', e => {
-				this.x += e.delta;
-			});
+			
 			//*/
+			
+			this.addChild(new $.lib.sub($)).taskEnabled = false
 		}
 	},
 	
