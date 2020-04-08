@@ -13,7 +13,7 @@ interface IContainerData {
 export class Container extends PIXI.Container {
 	private _piximData: IContainerData;
 	
-	constructor() {
+	constructor(...args: any[]) {
 		super();
 		
 		this._piximData = {
