@@ -13,7 +13,7 @@ interface IContainerData {
 export class Container extends PIXI.Container {
 	private _piximData: IContainerData;
 	
-	constructor(...args: any[]) {
+	constructor() {
 		super();
 		
 		this._piximData = {
@@ -70,8 +70,8 @@ export class Container extends PIXI.Container {
 	 * 
 	 * @override
 	 */
-	destroy(): void {
-		super.destroy();
+	destroy(...args: any[]): void {
+		super.destroy(...args);
 		this._piximData.task.destroy();
 	}
 }
