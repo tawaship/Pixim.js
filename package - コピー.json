@@ -1,6 +1,6 @@
 {
   "name": "@tawaship/pixim.js",
-  "version": "1.5.0",
+  "version": "1.4.1",
   "description": "Framework that wraps pixi.js.",
   "main": "dist/Pixim.cjs.js",
   "module": "dist/Pixim.esm.js",
@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@tawaship/emitter": "^2.1.1",
-    "@types/howler": "^2.2.1",
-    "howler": "^2.2.0",
+    "@types/howler": "^2.1.2",
+    "howler": "^2.1.3",
     "pixi.js": "^5.2.1"
   }
 }
