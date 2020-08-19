@@ -1,6 +1,6 @@
 # @tawaship/pixim.js
 
-**"pixim.js" is a little useful "[pixi.js - v5.2.1](https://github.com/pixijs/pixi.js)" wrapper framework.**
+**"pixim.js" is a little useful "[pixi.js](https://github.com/pixijs/pixi.js)" wrapper framework.**
 
 [![Build Status](https://travis-ci.org/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.org/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
@@ -174,10 +174,10 @@ this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
 
 ### Sound assets to preload
 
-Load "[howler.js - v2.1.3](https://github.com/goldfire/howler.js)".
+Load "[howler.js](https://github.com/goldfire/howler.js)".
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"></script>
 ```
 
 Asset provided by this feature are instance of "Howl".

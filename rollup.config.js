@@ -5,13 +5,17 @@ import buble from '@rollup/plugin-buble';
 import { terser } from 'rollup-plugin-terser';
 import del from 'del';
 
-const version = require('./package.json').version;
+const conf = require('./package.json');
+const version = conf.version;
+const pixi = conf.dependencies['pixi.js'].replace('^', '');
+const howler = conf.dependencies['howler'].replace('^', '');
+
 const banner = [
 	'/*!',
 	` * @tawaship/pixim.js - v${version}`,
 	' * ',
-	' * @require pixi.js v5.2.1',
-	' * @require howler.js v2.1.3 (If use sound)',
+	` * @require pixi.js v${pixi}`,
+	` * @require howler.js v${howler} (If use sound)`,
 	' * @author tawaship (makazu.mori@gmail.com)',
 	' * @license MIT',
 	' */',
@@ -62,9 +66,11 @@ export default (async () => {
 					format: 'iife',
 					name: 'Pixim',
 					sourcemap: true,
+					extend: true,
 					globals: {
 						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',
-						'pixi.js': 'PIXI'
+						'pixi.js': 'PIXI',
+						'exports': 'Pixim || {}'
 					}
 				}
 			],
@@ -77,7 +83,7 @@ export default (async () => {
 				terser({
 					compress: {
 						//drop_console: true
-						pure_funcs: ['console.log']
+						//pure_funcs: ['console.log']
 					},
 					mangle: false,
 					output: {
@@ -96,6 +102,7 @@ export default (async () => {
 					file: 'dist/Pixim.min.js',
 					format: 'iife',
 					name: 'Pixim',
+					extend: true,
 					globals: {
 						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',
 						'pixi.js': 'PIXI'

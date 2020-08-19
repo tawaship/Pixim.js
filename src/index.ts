@@ -1,7 +1,9 @@
 export * from './modules/Application';
 export * from './modules/Container';
 export * from './modules/Content';
+export * from './modules/ContentManifestBase';
+export * from './modules/ContentImageManifest';
+export * from './modules/ContentSpritesheetManifest';
+export * from './modules/ContentSoundManifest';
 export * from './modules/Emitter';
-
-export { IContentManifestOption } from './modules/ContentManifestBase';
-export { ITaskTickerData } from './modules/Task';
+export * from './modules/Task';
