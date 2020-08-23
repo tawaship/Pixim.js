@@ -83,7 +83,7 @@ export default (async () => {
 				terser({
 					compress: {
 						//drop_console: true
-						//pure_funcs: ['console.log']
+						pure_funcs: ['console.log']
 					},
 					mangle: false,
 					output: {

@@ -52,7 +52,7 @@ namespace Pixim {
 		private _manifests: TPreManifests = {};
 		
 		/**
-		 * Registered manifests.
+		 * Register manifests.
 		 * 
 		 * @param manifests Defined manifests.
 		 * @param option Manifest option data.
