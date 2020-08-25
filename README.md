@@ -90,7 +90,7 @@ Test.defineLibraries({
 			super();
 			
 			this.addChild(new PIXI.Graphics())
-				.beginFill(0, 1)
+				.beginFill(0xFFFFFF, 1)
 				.drawRect(0, 0, 100, 100);
 		}
 	}
