@@ -9,7 +9,7 @@
 
 ## How to install
 
-1. on you npm project
+1. on your npm project
 
 ```sh
 npm install --save @tawaship/pixim.js
