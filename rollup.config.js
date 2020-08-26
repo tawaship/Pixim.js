@@ -69,8 +69,7 @@ export default (async () => {
 					extend: true,
 					globals: {
 						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',
-						'pixi.js': 'PIXI',
-						'exports': 'Pixim || {}'
+						'pixi.js': 'PIXI'
 					}
 				}
 			],
