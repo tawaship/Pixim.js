@@ -25,9 +25,9 @@ namespace Pixim {
 	}
 	
 	/**
-	 * @private
+	 * @since 1.6.2
 	 */
-	interface IApplicationData {
+	export interface IApplicationData {
 		isRun: boolean,
 		app: PIXI.Application,
 		stage: PIXI.Container,
@@ -77,7 +77,10 @@ namespace Pixim {
 	}
 	
 	export class Application extends Emitter {
-		private _piximData: IApplicationData;
+		/**
+		 * @since 1.6.2
+		 */
+		protected _piximData: IApplicationData;
 		
 		/**
 		 * @param pixiOptions Optional data when call 'new PIXI.Application'.

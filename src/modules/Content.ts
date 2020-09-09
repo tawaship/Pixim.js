@@ -28,9 +28,9 @@ namespace Pixim {
 	export type TContentVars = { [name: string]: any };
 	
 	/**
-	 * @private
+	 * @since 1.6.2
 	 */
-	interface IContentData {
+	export interface IContentData {
 		contentID: string;
 		basepath: string;
 		$: ContentDeliver;
@@ -62,10 +62,7 @@ namespace Pixim {
 	 */
 	let _contentID: number = 0;
 	
-	/**
-	 * @private
-	 */
-	interface IContentStaticData {
+	export interface IContentStaticData {
 		config: IContentConfigData;
 		manifests: TContentManifests;
 		lib: TContentLibrary;
@@ -99,7 +96,10 @@ namespace Pixim {
 	export class Content {
 		protected static _piximData: IContentStaticData;
 		
-		private _piximData: IContentData;
+		/**
+		 * @since 1.6.2
+		 */
+		protected _piximData: IContentData;
 		
 		constructor(options: TContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 			const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');

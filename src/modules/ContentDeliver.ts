@@ -16,7 +16,10 @@ namespace Pixim {
 	}
 	
 	export class ContentDeliver {
-		private _piximData: IContentDeliverData;
+		/**
+		 * @since 1.6.2
+		 */
+		protected _piximData: IContentDeliverData;
 		
 		constructor(data: IContentDeliverData) {
 			this._piximData = {

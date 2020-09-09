@@ -3,9 +3,9 @@ import { Task } from './Task';
 
 namespace Pixim {
 	/**
-	 * @private
+	 * @since 1.6.2
 	 */
-	interface IContainerData {
+	export interface IContainerData {
 		task: Task,
 		taskEnabledChildren: boolean
 	}
@@ -14,7 +14,10 @@ namespace Pixim {
 	 * @see http://pixijs.download/release/docs/PIXI.Container.html
 	 */
 	export class Container extends PIXI.Container {
-		private _piximData: IContainerData;
+		/**
+		 * @since 1.6.2
+		 */
+		protected _piximData: IContainerData;
 		
 		constructor(...args: any[]) {
 			super();

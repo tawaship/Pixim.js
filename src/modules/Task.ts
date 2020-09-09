@@ -7,15 +7,18 @@ namespace Pixim {
 	}
 	
 	/**
-	 * @private
+	 * @since 1.6.2
 	 */
-	interface ITaskData {
+	export interface ITaskData {
 		context: Container,
 		enabled: boolean
 	}
 	
 	export class Task extends Emitter {
-		private _piximData: ITaskData;
+		/**
+		 * @since 1.6.2
+		 */
+		protected _piximData: ITaskData;
 		
 		constructor(context: Container) {
 			super();
