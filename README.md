@@ -227,7 +227,20 @@ If the library class inherits Pixim.Container, you can use tasks that are execut
 ```javascript
 // in content library
 
-this.task.register(e => {
-	this.x += e.delta;
-});
+this.task.add([
+	e => {
+		this.x += e.delta;
+		
+		if (this.x > 100) {
+			this.task.next();
+		}
+	},
+	e => {
+		this.y += e.delta;
+		
+		if (this.y > 100) {
+			this.task.reset();
+		}
+	}
+]);
 ```

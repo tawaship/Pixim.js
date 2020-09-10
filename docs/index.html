@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@tawaship/pixim.js - v1.7.0</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.7.0">
+	<title>@tawaship/pixim.js - v1.7.1</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.7.1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@tawaship/pixim.js - v1.7.0</a>
+					<a href="index.html" class="title">@tawaship/pixim.js - v1.7.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1>@tawaship/pixim.js - v1.7.0</h1>
+			<h1>@tawaship/pixim.js - v1.7.1</h1>
 		</div>
 	</div>
 </header>
@@ -253,9 +253,22 @@ $.resources.sounds.b.play();</code></pre>
 				<p>If the library class inherits Pixim.Container, you can use tasks that are executed for each ticker process of the application.</p>
 				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
 
-<span class="hljs-built_in">this</span>.task.register(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
-    <span class="hljs-built_in">this</span>.x += e.delta;
-});</code></pre>
+<span class="hljs-built_in">this</span>.task.add([
+    <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+        <span class="hljs-built_in">this</span>.x += e.delta;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.x &gt; <span class="hljs-number">100</span>) {
+            <span class="hljs-built_in">this</span>.task.next();
+        }
+    },
+    <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+        <span class="hljs-built_in">this</span>.y += e.delta;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.y &gt; <span class="hljs-number">100</span>) {
+            <span class="hljs-built_in">this</span>.task.reset();
+        }
+    }
+]);</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
