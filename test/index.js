@@ -423,24 +423,56 @@ describe('Pixim.js', () => {
 						constructor($) {
 							super();
 							
-							this.task.register([
+							this.task.add(e => {
+								this.task.reset();
+								exec(resolve, app);
+							});
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				app.play()
+					.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('(new)task chaining', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends Pixim.Container {
+						constructor($) {
+							super();
+							
+							this.task.add(e => {
+								this.task.next();
+							});
+							
+							this.task.add(e => {
+								this.task.add(taskB);
+								this.task.next();
+							});
+							
+							const taskB = [
 								e => {
 									this.task.next();
 								},
 								e => {
-									this.task.to(3);
-								},
-								e => {
-									this.task.destroy();
+									this.task.replace(taskC);
 								}
-							]);
+							];
 							
-							this.task.register(
-								e => {
-									this.task.destroy();
-									exec(resolve, app);
-								}
-							);
+							const taskC = e => {
+								this.task.reset();
+								exec(resolve, app);
+							};
 						}
 					}
 				});

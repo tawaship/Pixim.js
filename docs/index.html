@@ -253,7 +253,7 @@ $.resources.sounds.b.play();</code></pre>
 				<p>If the library class inherits Pixim.Container, you can use tasks that are executed for each ticker process of the application.</p>
 				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
 
-<span class="hljs-built_in">this</span>.task.on(<span class="hljs-string">&#x27;anim&#x27;</span>, <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+<span class="hljs-built_in">this</span>.task.register(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
     <span class="hljs-built_in">this</span>.x += e.delta;
 });</code></pre>
 			</div>

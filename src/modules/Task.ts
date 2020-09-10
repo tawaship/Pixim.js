@@ -146,8 +146,10 @@ namespace Pixim {
 		/**
 		 * @since 1.7.0
 		 */
-		init() {
+		reset() {
 			this._taskData.tasks = [];
+			this._taskData.current = null;
+			this._taskData.index = 0;
 			
 			return this;
 		}
@@ -155,16 +157,38 @@ namespace Pixim {
 		/**
 		 * @since 1.7.0
 		 */
-		register(funcs: TTaskDelegate | TTaskDelegate[]) {
+		add(funcs: TTaskDelegate | TTaskDelegate[]) {
 			if (funcs instanceof Function) {
 				funcs = [funcs];
 			}
 			
 			const tasks: TTaskDelegate[] = this._taskData.tasks;
+			const f = tasks.length === 0;
 			
 			for (let i = 0; i < funcs.length; i++) {
 				tasks.push(funcs[i]);
 			}
+ 			
+ 			if (f) {
+	 			this.first();
+ 			}
+ 			
+ 			return this;
+		}
+		
+		/**
+		 * @since 1.7.0
+		 */
+		replace(funcs: TTaskDelegate | TTaskDelegate[]) {
+			if (funcs instanceof Function) {
+				funcs = [funcs];
+			}
+			
+			this.reset();
+			
+			const tasks: TTaskDelegate[] = this._taskData.tasks;
+			
+			this._taskData.tasks = funcs;
  			
  			this.first();
  			

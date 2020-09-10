@@ -227,7 +227,7 @@ If the library class inherits Pixim.Container, you can use tasks that are execut
 ```javascript
 // in content library
 
-this.task.on('anim', e => {
+this.task.register(e => {
 	this.x += e.delta;
 });
 ```
