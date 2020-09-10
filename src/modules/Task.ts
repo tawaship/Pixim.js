@@ -30,6 +30,9 @@ namespace Pixim {
 		currentID: number
 	}
 	
+	/**
+	 * @see https://tawaship.github.io/Task/index.html
+	 */
 	export class Task extends _Task {
 		private _piximData: ITaskData;
 		private static _piximData: ITaskStaticData = {
