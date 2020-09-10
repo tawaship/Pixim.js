@@ -24,11 +24,10 @@ Test.defineLibraries({
 				.drawRect(0, 0, $.width, $.height);
 			
 			this.addChild(new $.lib.main($))
-			
 		}
 	},
 	
-	main: class Main extends PIXI.Container {
+	main: class Main extends Pixim.Container {
 		constructor($) {
 			super();
 			
@@ -57,8 +56,12 @@ Test.defineLibraries({
 			//*
 			
 			//*/
-			
-			this.addChild(new $.lib.sub($)).taskEnabled = false
+			this.task.on('anim', e => {
+				this.y += e.delta;
+			});
+			const a = this.addChild(new $.lib.sub($));
+			//a.taskEnabled = false
+			//this.taskEnabled = false;
 		}
 	},
 	
@@ -66,9 +69,35 @@ Test.defineLibraries({
 		constructor($) {
 			super();
 			
-			this.task.on('anim', e => {
-				this.parent.y += e.delta;
-			});
+			this.task.add([
+				e => {
+					this.parent.x += e.delta;
+					if (this.parent.x > 100) {
+						this.task.next();
+					}
+				},
+				e => {
+					this.parent.x -= e.delta;
+					if (this.parent.x < 0) {
+						this.task.replace(t);
+					}
+				}
+			]);
+			
+			const t = [
+				e => {
+					this.parent.x += e.delta * 5;
+					if (this.parent.x > 100) {
+						this.task.next();
+					}
+				},
+				e => {
+					this.parent.x -= e.delta * 5;
+					if (this.parent.x < 0) {
+						this.task.prev();
+					}
+				}
+			]
 		}
 	}
 });

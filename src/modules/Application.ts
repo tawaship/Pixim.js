@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Content } from './Content';
 import { Emitter } from './Emitter';
-import { Container } from './Container';
-import { Task, ITaskTickerData } from './Task';
+import { TaskManager } from './TaskManager';
 
 namespace Pixim {
 	/**
@@ -14,6 +13,13 @@ namespace Pixim {
 	 * @private
 	 */
 	type TLayers = { [name: string]: PIXI.Container };
+	
+	/**
+	 * @since 1.7.3
+	 */
+	export interface ITickerData {
+		delta: number
+	}
 	
 	/**
 	 * @property container Parent node of canvas element.
@@ -46,9 +52,7 @@ namespace Pixim {
 		y: number
 	}
 	
-	export interface IRect extends ISize, IPosition {
-	
-	}
+	export interface IRect extends ISize, IPosition {}
 	
 	/**
 	 * @ignore
@@ -58,6 +62,7 @@ namespace Pixim {
 	/**
 	 * @ignore
 	 */
+	/*
 	function taskHandler(obj: PIXI.Container, e: ITaskTickerData): void {
 		if (obj instanceof Container) {
 			obj.task.update(e);
@@ -75,6 +80,7 @@ namespace Pixim {
 			}
 		}
 	}
+	*/
 	
 	export class Application extends Emitter {
 		/**
@@ -120,8 +126,8 @@ namespace Pixim {
 			const ticker: PIXI.Ticker = this._piximData.app.ticker;
 			
 			ticker.add((delta: number) => {
-				taskHandler(stage, { delta });
-				//Task.done({ delta });
+				TaskManager.done({ delta });
+				//taskHandler(stage, { delta });
 			});
 			
 			if (piximOptions.autoAdjust) {
@@ -433,6 +439,11 @@ export import IApplicationData = Pixim.IApplicationData;
  * @ignore
  */
 export import TApplicationOption = Pixim.TApplicationOption;
+
+/**
+ * @ignore
+ */
+export import ITickerData = Pixim.ITickerData;
 
 /**
  * @ignore

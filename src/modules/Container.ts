@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Task } from './Task';
+import { TaskManager } from './TaskManager';
+import { ITickerData } from './Application';
 
 namespace Pixim {
 	/**
@@ -9,6 +11,11 @@ namespace Pixim {
 		task: Task,
 		taskEnabledChildren: boolean
 	}
+	
+	/**
+	 * @ignore
+	 */
+	let _lastObserverID = 0;
 	
 	/**
 	 * @see http://pixijs.download/release/docs/PIXI.Container.html
@@ -27,13 +34,51 @@ namespace Pixim {
 				taskEnabledChildren: true
 			};
 			
+			const _observerID = _lastObserverID++;
+			
 			this.on('added', () => {
-				Task.add(this._piximData.task);
+				TaskManager.addObserver(_observerID, this);
 			});
 			
 			this.on('removed', () => {
-				Task.remove(this._piximData.task);
+				TaskManager.removeObserver(_observerID);
 			});
+		}
+		
+		/**
+		 * @since 1.7.3
+		 */
+		updateTask(e: ITickerData) {
+			const task: Task = this._piximData.task;
+			
+			if (!this.taskEnabled) {
+				return;
+			}
+			
+			let p: PIXI.DisplayObject = this;
+			let f = true;
+			
+			while (p) {
+				if (p instanceof Container && !p.taskEnabledChildren) {
+					f = false;
+					break;
+				}
+				
+				p = p.parent;
+			}
+			
+			if (!f) {
+				return;
+			}
+			
+			task.done(e);
+			
+			const eventNames: string[] = task.eventNames;
+			const context: any = this;
+			
+			for (let i: number = 0; i < eventNames.length; i++) {
+				task.cemit(eventNames[i], this, e);
+			}
 		}
 		
 		/**
