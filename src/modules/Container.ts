@@ -3,7 +3,7 @@ import { Task } from './Task';
 
 namespace Pixim {
 	/**
-	 * @since 1.6.2
+	 * @since 1.7.0
 	 */
 	export interface IContainerData {
 		task: Task,
@@ -23,11 +23,10 @@ namespace Pixim {
 			super();
 			
 			this._piximData = {
-				task: new Task(this),
+				task: new Task([], this),
 				taskEnabledChildren: true
 			};
 			
-			/*
 			this.on('added', () => {
 				Task.add(this._piximData.task);
 			});
@@ -35,7 +34,6 @@ namespace Pixim {
 			this.on('removed', () => {
 				Task.remove(this._piximData.task);
 			});
-			*/
 		}
 		
 		/**
@@ -82,6 +80,11 @@ namespace Pixim {
 		}
 	}
 }
+
+/**
+ * @ignore
+ */
+export import IContainerData = Pixim.IContainerData;
 
 /**
  * @ignore

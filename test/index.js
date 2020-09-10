@@ -376,7 +376,7 @@ describe('Pixim.js', () => {
 			});
 		});
 		
-		it('activate and deactivate task', () => {
+		it('(deprecated) activate and deactivate task', () => {
 			return new Promise((resolve, reject) => {
 				const app = new Pixim.Application();
 				
@@ -399,6 +399,48 @@ describe('Pixim.js', () => {
 								}
 							})
 							.clear('dummy');
+						}
+					}
+				});
+				
+				const test = new Test();
+				
+				app.play()
+					.attachAsync(test)
+					.catch(e => {
+						exec(reject, app);
+					});
+			});
+		});
+		
+		it('(new)activate and deactivate task', () => {
+			return new Promise((resolve, reject) => {
+				const app = new Pixim.Application();
+				
+				const Test = Pixim.Content.create();
+				Test.defineLibraries({
+					root: class Root extends Pixim.Container {
+						constructor($) {
+							super();
+							
+							this.task.register([
+								e => {
+									this.task.next();
+								},
+								e => {
+									this.task.to(3);
+								},
+								e => {
+									this.task.destroy();
+								}
+							]);
+							
+							this.task.register(
+								e => {
+									this.task.destroy();
+									exec(resolve, app);
+								}
+							);
 						}
 					}
 				});

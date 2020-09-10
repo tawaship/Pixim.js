@@ -28,7 +28,7 @@ namespace Pixim {
 	export type TContentVars = { [name: string]: any };
 	
 	/**
-	 * @since 1.6.2
+	 * @since 1.7.0
 	 */
 	export interface IContentData {
 		contentID: string;
@@ -62,6 +62,9 @@ namespace Pixim {
 	 */
 	let _contentID: number = 0;
 	
+	/**
+	 * @since 1.7.0
+	 */
 	export interface IContentStaticData {
 		config: IContentConfigData;
 		manifests: TContentManifests;
@@ -420,6 +423,16 @@ namespace Pixim {
 		}
 	}
 }
+
+/**
+ * @ignore
+ */
+export import IContentData = Pixim.IContentData;
+
+/**
+ * @ignore
+ */
+export import IContentStaticData = Pixim.IContentStaticData;
 
 /**
  * @ignore

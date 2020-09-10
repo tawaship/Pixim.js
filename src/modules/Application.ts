@@ -25,7 +25,7 @@ namespace Pixim {
 	}
 	
 	/**
-	 * @since 1.6.2
+	 * @since 1.7.0
 	 */
 	export interface IApplicationData {
 		isRun: boolean,
@@ -423,6 +423,11 @@ namespace Pixim {
 		}
 	}
 }
+
+/**
+ * @ignore
+ */
+export import IApplicationData = Pixim.IApplicationData;
 
 /**
  * @ignore
