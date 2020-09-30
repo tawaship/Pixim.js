@@ -59,9 +59,6 @@ namespace Pixim {
 	 */
 	const _roots: TRoots = {};
 	
-	/**
-	 * @ignore
-	 */
 	/*
 	function taskHandler(obj: PIXI.Container, e: ITaskTickerData): void {
 		if (obj instanceof Container) {
