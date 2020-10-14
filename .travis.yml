@@ -14,3 +14,7 @@ before_script:
  
 script:
     - xvfb-maybe npm test
+
+branches:
+  only: 
+    - master
