@@ -6,7 +6,6 @@ const path = require('path');
 
 describe('Pixim.js', () => {
 	const exec = (done, app) => {
-		app.view.parentNode.removeChild(app.view);
 		done();
 	};
 	

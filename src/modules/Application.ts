@@ -21,12 +21,14 @@ namespace Pixim {
 		delta: number
 	}
 	
-	/**
-	 * @property container Parent node of canvas element.
-	 * @property autoAdjust Whether to adjust canvas size automatically.
-	 */
 	export type TApplicationOption = {
+		/**
+		 * Parent node of canvas element.
+		 */
 		container?: HTMLElement,
+		/**
+		 * Whether to automatically adjust the canvas size when resizing the window.
+		 */
 		autoAdjust?: boolean
 	}
 	
@@ -38,6 +40,7 @@ namespace Pixim {
 		app: PIXI.Application,
 		stage: PIXI.Container,
 		view: HTMLCanvasElement,
+		container: HTMLElement,
 		options: TApplicationOption,
 		layers: TLayers
 	}
@@ -101,6 +104,7 @@ namespace Pixim {
 			const view: HTMLCanvasElement = app.view;
 			view.style.position = 'absolute';
 			
+			/*
 			if (piximOptions.container) {
 				piximOptions.container.appendChild(view);
 			} else {
@@ -108,6 +112,7 @@ namespace Pixim {
 					document.body.appendChild(view);
 				}
 			}
+			*/
 			
 			const autoAdjust: boolean = piximOptions.autoAdjust || false;
 			
@@ -116,6 +121,7 @@ namespace Pixim {
 				app,
 				stage,
 				view,
+				container: piximOptions.container || document.body,
 				layers: {},
 				options: piximOptions
 			};
@@ -129,14 +135,12 @@ namespace Pixim {
 			
 			if (piximOptions.autoAdjust) {
 				const f = () => {
-					this.fullScreen({ x: 0, y: 0, width: window.innerWidth, height: window.innerHeight })
+					this.fullScreen()
 				};
 				
 				window.addEventListener('resize', f);
 				
 				f();
-			} else {
-				this.fullScreen({ x: 0, y: 0, width: view.width, height: view.height });
 			}
 		}
 		
@@ -150,6 +154,23 @@ namespace Pixim {
 		
 		get view(): HTMLCanvasElement {
 			return this._piximData.view;
+		}
+		
+		/**
+		 * @since 3.0.0
+		 */
+		get container(): HTMLElement {
+			return this._piximData.container;
+		}
+		
+		/**
+		 * @since 3.0.0
+		 */
+		set container(container: HTMLElement) {
+			this._piximData.container = container || document.body;
+			if (this._piximData.view.parentNode) {
+				this._piximData.container.appendChild(this._piximData.view);
+			}
 		}
 		
 		/**
@@ -233,6 +254,8 @@ namespace Pixim {
 				return this;
 			}
 			
+			this._piximData.container.appendChild(this._piximData.view);
+			
 			this._piximData.app.start();
 			this._piximData.isRun = true;
 			
@@ -247,6 +270,10 @@ namespace Pixim {
 		stop(): this {
 			if (!this._piximData.isRun) {
 				return this;
+			}
+			
+			if (this._piximData.view.parentNode) {
+				this._piximData.view.parentNode.removeChild(this._piximData.view);
 			}
 			
 			this._piximData.app.stop();
@@ -306,14 +333,21 @@ namespace Pixim {
 		 * 
 		 * @return Returns itself for the method chaining.
 		 */
-		fullScreen(rect: IRect = { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight}): this {
+		fullScreen(): this {
 			const view: HTMLCanvasElement = this._piximData.view;
+			const container: HTMLElement = this._piximData.container;
+			const rect: IRect = {
+				x: 0,
+				y: 0,
+				width: container.offsetWidth || window.innerWidth,
+				height: container.offsetHeight || window.innerHeight
+			};
 			
 			if (rect.width / rect.height > view.width / view.height) {
-				return this.adjustHeight(rect.height).toCenter(rect).toTop(rect);
+				return this.adjustHeight().toCenter().toTop();
 			}
 			
-			return this.adjustWidth(rect.width).toMiddle(rect).toLeft(rect);
+			return this.adjustWidth().toMiddle().toLeft();
 		}
 		
 		/**
@@ -321,8 +355,10 @@ namespace Pixim {
 		 * 
 		 * @return Returns itself for the method chaining.
 		 */
-		adjustWidth(width: number): this {
+		adjustWidth(): this {
 			const view: HTMLCanvasElement = this._piximData.view;
+			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
+			
 			const h: number = width / view.width * view.height;
 			
 			//const frame = this._piximData.frame;
@@ -337,8 +373,10 @@ namespace Pixim {
 		 * 
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		adjustHeight(height: number): this {
+		adjustHeight(): this {
 			const view = this._piximData.view;
+			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
+			
 			const w = height / view.height * view.width;
 			
 			//const frame = this._piximData.frame;
@@ -351,10 +389,10 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toLeft(rect: IRect): this {
+		toLeft(): this {
 			const view = this._piximData.view;
 			
-			view.style.left = `${rect.x}px`;
+			view.style.left = '0px';
 			
 			return this;
 		}
@@ -362,10 +400,11 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toCenter(rect: IRect): this {
+		toCenter(): this {
 			const view = this._piximData.view;
+			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
 			
-			view.style.left = `${(rect.width - this._getViewRect().width) / 2 + rect.x}px`;
+			view.style.left = `${(width - this._getViewRect().width) / 2}px`;
 			
 			return this;
 		}
@@ -373,10 +412,11 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toRight(rect: IRect): this {
+		toRight(): this {
 			const view = this._piximData.view;
+			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
 			
-			view.style.left = `${rect.width - this._getViewRect().width + rect.x}px`;
+			view.style.left = `${width - this._getViewRect().width}px`;
 			
 			return this;
 		}
@@ -384,10 +424,10 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toTop(rect: IRect): this {
+		toTop(): this {
 			const view = this._piximData.view;
 			
-			view.style.top = `${rect.y}px`;
+			view.style.top = '0px';
 			
 			return this;
 		}
@@ -395,10 +435,11 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toMiddle(rect: IRect): this {
+		toMiddle(): this {
 			const view = this._piximData.view;
+			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
 			
-			view.style.top = `${(rect.height - this._getViewRect().height) / 2 + rect.y}px`;
+			view.style.top = `${(height - this._getViewRect().height) / 2}px`;
 			
 			return this;
 		}
@@ -406,10 +447,11 @@ namespace Pixim {
 		/**
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toBottom(rect: IRect): this {
+		toBottom(): this {
 			const view = this._piximData.view;
+			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
 			
-			view.style.top = `${rect.height - this._getViewRect().height + rect.y}px`;
+			view.style.top = `${height - this._getViewRect().height}px`;
 			
 			return this;
 		}
