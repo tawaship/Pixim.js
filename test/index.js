@@ -11,12 +11,12 @@ describe('Pixim.js', () => {
 	
 	describe('Application', () => {
 		it('auto resize', () => {
-			const app = new Pixim.Application({}, {
+			const app = new Pixim.Application({width:100,height:100}, {
 				autoAdjust: true
 			});
 			
 			exec(() => {
-				assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+				assert.ok(app.view.style.width.replace('px', '') == (app.container.offsetWidth || window.innerWidth) || app.view.style.height.replace('px', '') == (app.container.offsetHeight || window.innerHeight));
 			}, app);
 		});
 		
@@ -25,7 +25,7 @@ describe('Pixim.js', () => {
 			app.fullScreen();
 			
 			exec(() => {
-				assert.ok(app.view.style.width.replace('px', '') == window.innerWidth || app.view.style.height.replace('px', '') == window.innerHeight);
+				assert.ok(app.view.style.width.replace('px', '') == (app.container.offsetWidth || window.innerWidth) || app.view.style.height.replace('px', '') == (app.container.offsetHeight || window.innerHeight));
 			}, app);
 		});
 		
@@ -404,8 +404,7 @@ describe('Pixim.js', () => {
 				
 				const test = new Test();
 				
-				app.play()
-					.attachAsync(test)
+				app.play().attachAsync(test)
 					.catch(e => {
 						exec(reject, app);
 					});
@@ -425,6 +424,7 @@ describe('Pixim.js', () => {
 							this.task.add(e => {
 								this.task.reset();
 								exec(resolve, app);
+								app.container.removeChild(app.view);
 							});
 						}
 					}
@@ -432,8 +432,7 @@ describe('Pixim.js', () => {
 				
 				const test = new Test();
 				
-				app.play()
-					.attachAsync(test)
+				app.play().attachAsync(test)
 					.catch(e => {
 						exec(reject, app);
 					});
@@ -471,6 +470,7 @@ describe('Pixim.js', () => {
 							const taskC = e => {
 								this.task.reset();
 								exec(resolve, app);
+								app.container.removeChild(app.view);
 							};
 						}
 					}
@@ -478,8 +478,7 @@ describe('Pixim.js', () => {
 				
 				const test = new Test();
 				
-				app.play()
-					.attachAsync(test)
+				app.play().attachAsync(test)
 					.catch(e => {
 						exec(reject, app);
 					});
