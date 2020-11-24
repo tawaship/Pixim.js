@@ -101,6 +101,7 @@ export default (async () => {
 					file: 'dist/Pixim.min.js',
 					format: 'iife',
 					name: 'Pixim',
+					sourcemap: true,
 					extend: true,
 					globals: {
 						howler: '{ Howl: typeof Howl === "undefined" ? null : Howl }',

@@ -26,6 +26,7 @@ namespace Pixim {
 		 * Parent node of canvas element.
 		 */
 		container?: HTMLElement,
+		
 		/**
 		 * Whether to automatically adjust the canvas size when resizing the window.
 		 */
@@ -36,23 +37,39 @@ namespace Pixim {
 	 * @since 1.7.0
 	 */
 	export interface IApplicationData {
-		isRun: boolean,
-		app: PIXI.Application,
-		stage: PIXI.Container,
-		view: HTMLCanvasElement,
-		container: HTMLElement,
-		options: TApplicationOption,
-		layers: TLayers
+		isRun: boolean;
+		app: PIXI.Application;
+		stage: PIXI.Container;
+		view: HTMLCanvasElement;
+		container: HTMLElement;
+		options: TApplicationOption;
+		layers: TLayers;
 	}
 	
 	export interface ISize {
-		width: number,
-		height: number
+		width: number;
+		height: number;
 	}
 	
 	export interface IPosition {
-		x: number,
-		y: number
+		x: number;
+		y: number;
+	}
+	
+	/**
+	 * @since 1.8.1
+	 */
+	export interface IHorizontal {
+		x: number;
+		width: number;
+	}
+	
+	/**
+	 * @since 1.8.1
+	 */
+	export interface IVertical {
+		y: number;
+		height: number;
 	}
 	
 	export interface IRect extends ISize, IPosition {}
@@ -157,14 +174,14 @@ namespace Pixim {
 		}
 		
 		/**
-		 * @since 3.0.0
+		 * @since 1.8.0
 		 */
 		get container(): HTMLElement {
 			return this._piximData.container;
 		}
 		
 		/**
-		 * @since 3.0.0
+		 * @since 1.8.0
 		 */
 		set container(container: HTMLElement) {
 			this._piximData.container = container || document.body;
@@ -331,19 +348,19 @@ namespace Pixim {
 		/**
 		 * Resize canvas to fit specified rectangle.
 		 * 
+		 * @param rect Rectangle to adjust.
 		 * @return Returns itself for the method chaining.
 		 */
-		fullScreen(): this {
+		fullScreen(rect?: IRect): this {
 			const view: HTMLCanvasElement = this._piximData.view;
-			const container: HTMLElement = this._piximData.container;
-			const rect: IRect = {
+			const r: IRect = rect || {
 				x: 0,
 				y: 0,
-				width: container.offsetWidth || window.innerWidth,
-				height: container.offsetHeight || window.innerHeight
+				width: this._piximData.container.offsetWidth || window.innerWidth,
+				height: this._piximData.container.offsetHeight || window.innerHeight
 			};
 			
-			if (rect.width / rect.height > view.width / view.height) {
+			if (r.width / r.height > view.width / view.height) {
 				return this.adjustHeight().toCenter().toTop();
 			}
 			
@@ -353,16 +370,17 @@ namespace Pixim {
 		/**
 		 * Resize canvas to fit specified width.
 		 * 
+		 * @param width Width to adjust.
 		 * @return Returns itself for the method chaining.
 		 */
-		adjustWidth(): this {
+		adjustWidth(width?: number): this {
 			const view: HTMLCanvasElement = this._piximData.view;
-			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
+			const w: number = width || this._piximData.container.offsetWidth || window.innerWidth;
 			
-			const h: number = width / view.width * view.height;
+			const h: number = w / view.width * view.height;
 			
 			//const frame = this._piximData.frame;
-			view.style.width = `${width}px`;
+			view.style.width = `${w}px`;
 			view.style.height = `${h}px`;
 			
 			return this;
@@ -371,87 +389,126 @@ namespace Pixim {
 		/**
 		 * Resize canvas to fit specified height.
 		 * 
+		 * @param height Height to adjust.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		adjustHeight(): this {
+		adjustHeight(height?: number): this {
 			const view = this._piximData.view;
-			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
+			const h: number = height || this._piximData.container.offsetHeight || window.innerHeight;
 			
-			const w = height / view.height * view.width;
+			const w = h / view.height * view.width;
 			
 			//const frame = this._piximData.frame;
-			view.style.height = `${height}px`;
+			view.style.height = `${h}px`;
 			view.style.width = `${w}px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Left justified with respect to the reference data.
+		 * 
+		 * @param horizontal Horizontal data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toLeft(): this {
+		toLeft(horizontal?: IHorizontal): this {
 			const view = this._piximData.view;
+			const hol: IHorizontal = horizontal || {
+				x: 0,
+				width: this._piximData.container.offsetWidth || window.innerWidth
+			};
 			
-			view.style.left = '0px';
+			view.style.left = `${hol.x}px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Center justified with respect to the reference data.
+		 * 
+		 * @param horizontal Horizontal data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toCenter(): this {
+		toCenter(horizontal?: IHorizontal): this {
 			const view = this._piximData.view;
-			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
+			const hol: IHorizontal = horizontal || {
+				x: 0,
+				width: this._piximData.container.offsetWidth || window.innerWidth
+			};
 			
-			view.style.left = `${(width - this._getViewRect().width) / 2}px`;
+			view.style.left = `${(hol.width - this._getViewRect().width) / 2 + hol.x}px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Right justified with respect to the reference data.
+		 * 
+		 * @param horizontal Horizontal data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toRight(): this {
+		toRight(horizontal?: IHorizontal): this {
 			const view = this._piximData.view;
-			const width: number = this._piximData.container.offsetWidth || window.innerWidth;
+			const hol: IHorizontal = horizontal || {
+				x: 0,
+				width: this._piximData.container.offsetWidth || window.innerWidth
+			};
 			
-			view.style.left = `${width - this._getViewRect().width}px`;
+			view.style.left = `${hol.width - this._getViewRect().width + hol.x}px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Top justified with respect to the reference data.
+		 * 
+		 * @param vertical Vertical data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toTop(): this {
+		toTop(vertical?: IVertical): this {
 			const view = this._piximData.view;
+			const ver: IVertical = vertical || {
+				y: 0,
+				height: this._piximData.container.offsetHeight || window.innerHeight
+			};
 			
-			view.style.top = '0px';
+			view.style.top = `${ver.y}0px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Middle justified with respect to the reference data.
+		 * 
+		 * @param vertical Vertical data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toMiddle(): this {
+		toMiddle(vertical?: IVertical): this {
 			const view = this._piximData.view;
-			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
+			const ver: IVertical = vertical || {
+				y: 0,
+				height: this._piximData.container.offsetHeight || window.innerHeight
+			};
 			
-			view.style.top = `${(height - this._getViewRect().height) / 2}px`;
+			view.style.top = `${(ver.height - this._getViewRect().height) / 2 + ver.y}px`;
 			
 			return this;
 		}
 		
 		/**
+		 * Bottom justified with respect to the reference data.
+		 * 
+		 * @param vertical Vertical data used to calculate the position.
 		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toBottom(): this {
+		toBottom(vertical?: IVertical): this {
 			const view = this._piximData.view;
-			const height: number = this._piximData.container.offsetHeight || window.innerHeight;
+			const ver: IVertical = vertical || {
+				y: 0,
+				height: this._piximData.container.offsetHeight || window.innerHeight
+			};
 			
-			view.style.top = `${height - this._getViewRect().height}px`;
+			view.style.top = `${ver.height - this._getViewRect().height + ver.y}px`;
 			
 			return this;
 		}
