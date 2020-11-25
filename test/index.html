@@ -130,9 +130,9 @@ test.addSounds({
 
 const test2 = new Test();
 
-const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: true, container: document.getElementById("a")});
+const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: (app)=>{console.log(1);const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};app.fullScreen(rect)}, container: document.getElementById("a")});
 
-const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};
+
 
 app.attachAsync(test)
 	.then(() => {

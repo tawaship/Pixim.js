@@ -21,6 +21,16 @@ namespace Pixim {
 		delta: number
 	}
 	
+	/**
+	 * @since 1.8.2
+	 */
+	export type TAdjustDelegate = (app: Application) => void;
+	
+	/**
+	 * @since 1.8.2
+	 */
+	export type TAutoAdjust = boolean | TAdjustDelegate;
+	
 	export type TApplicationOption = {
 		/**
 		 * Parent node of canvas element.
@@ -28,9 +38,10 @@ namespace Pixim {
 		container?: HTMLElement,
 		
 		/**
-		 * Whether to automatically adjust the canvas size when resizing the window.
+		 * Whether to automatically resize the canvas when resizing the window.<br />
+		 * Or the resizing process to be executed at that time.
 		 */
-		autoAdjust?: boolean
+		autoAdjust?: TAutoAdjust
 	}
 	
 	/**
@@ -131,7 +142,7 @@ namespace Pixim {
 			}
 			*/
 			
-			const autoAdjust: boolean = piximOptions.autoAdjust || false;
+			const autoAdjust: TAutoAdjust = piximOptions.autoAdjust || false;
 			
 			this._piximData = {
 				isRun: false,
@@ -150,14 +161,24 @@ namespace Pixim {
 				//taskHandler(stage, { delta });
 			});
 			
-			if (piximOptions.autoAdjust) {
-				const f = () => {
-					this.fullScreen()
-				};
-				
-				window.addEventListener('resize', f);
-				
-				f();
+			if (autoAdjust) {
+				if (autoAdjust === true) {
+					const f = () => {
+						this.fullScreen()
+					};
+					
+					window.addEventListener('resize', f);
+					
+					f();
+				} else {
+					const f = () => {
+						autoAdjust(this);
+					};
+					
+					window.addEventListener('resize', f);
+					
+					f();
+				}
 			}
 		}
 		
@@ -361,10 +382,10 @@ namespace Pixim {
 			};
 			
 			if (r.width / r.height > view.width / view.height) {
-				return this.adjustHeight().toCenter().toTop();
+				return this.adjustHeight(r.height).toCenter(r).toTop(r);
 			}
 			
-			return this.adjustWidth().toMiddle().toLeft();
+			return this.adjustWidth(r.width).toMiddle(r).toLeft(r);
 		}
 		
 		/**
