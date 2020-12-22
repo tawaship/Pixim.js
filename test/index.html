@@ -14,23 +14,32 @@ Test.setConfig({
 });
 
 Test.defineLibraries({
-	root: class Root extends PIXI.Container {
+	root: class Root extends Pixim.Container {
 		constructor($) {
 			super();
 			
-			this.taskEnabledChildren = false;
+			//this.taskEnabledChildren = false;
 			
 			this.addChild(new PIXI.Graphics())
 				.beginFill(0xFFEEEE, 1)
 				.drawRect(0, 0, $.width, $.height);
 			
+			this.task.add(e => {
 			this.addChild(new $.lib.main($))
+			this.task.reset();
+			})
 		}
 	},
 	
 	main: class Main extends Pixim.Container {
 		constructor($) {
 			super();
+			
+			const uy = this.addChild(new PIXI.Sprite($.resources.images.image_2));
+			this.task.add(e => {
+				uy.scale.set(0.5)
+			})
+			return
 			
 			$.resources.sounds.a.play();
 			$.resources.sounds.a.loop(true);

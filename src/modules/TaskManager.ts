@@ -16,6 +16,11 @@ namespace Pixim {
 	const _observers: TObservers = {};
 	
 	/**
+	 * @ignore
+	 */
+	let _lastTickerData: ITickerData = { delta: 1 };
+	
+	/**
 	 * @private
 	 * @since 1.7.3
 	 */
@@ -26,6 +31,7 @@ namespace Pixim {
 		
 		static addObserver(id: number, observer: Container) {
 			_observers[id] = observer;
+			observer.updateTask(_lastTickerData);
 		}
 		
 		static removeObserver(id: number) {
@@ -33,6 +39,8 @@ namespace Pixim {
 		}
 		
 		static done(e: ITickerData) {
+			_lastTickerData = e;
+			
 			for (let i in _observers) {
 				_observers[i].updateTask(e);
 			}
