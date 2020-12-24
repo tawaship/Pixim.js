@@ -1,21 +1,18 @@
 import { Emitter } from './Emitter';
-import { Task as _Task, TTaskDelegate } from '@tawaship/task';
+import { Task as _Task, ITaskDelegate } from '@tawaship/task';
 
 namespace Pixim {
-	/**
-	 * @since 1.7.0
-	 */
 	export interface ITaskData {
 		emitter: Emitter
 	}
 	
 	/**
-	 * @see https://tawaship.github.io/Task/index.html
+	 * [[https://tawaship.github.io/Task/index.html | @tawaship/task]]
 	 */
 	export class Task extends _Task {
 		private _piximData: ITaskData;
 		
-		constructor(tasks: TTaskDelegate | TTaskDelegate[], context: any ) {
+		constructor(tasks: ITaskDelegate | ITaskDelegate[], context: any) {
 			super(tasks, context);
 			
 			this.enabled = true;
@@ -27,8 +24,8 @@ namespace Pixim {
 		/**
 		 * @deprecated 1.7.0
 		 */
-		on(type: string, func: TTaskDelegate) {
-			this._piximData.emitter.on(type, func);
+		on(type: string, callback: ITaskDelegate) {
+			this._piximData.emitter.on(type, callback);
 			
 			return this;
 		}
@@ -36,8 +33,8 @@ namespace Pixim {
 		/**
 		 * @deprecated 1.7.0
 		 */
-		once(type: string, func: TTaskDelegate) {
-			this._piximData.emitter.once(type, func);
+		once(type: string, callback: ITaskDelegate) {
+			this._piximData.emitter.once(type, callback);
 			
 			return this;
 		}
@@ -45,8 +42,8 @@ namespace Pixim {
 		/**
 		 * @deprecated 1.7.0
 		 */
-		off(type: string, func: TTaskDelegate) {
-			this._piximData.emitter.off(type, func);
+		off(type: string, callback: ITaskDelegate) {
+			this._piximData.emitter.off(type, callback);
 			
 			return this;
 		}
@@ -78,22 +75,41 @@ namespace Pixim {
 		}
 		
 		/**
-		 * @deprecated 1.7.0
+		 * @deprecated 1.9.0
 		 */
-		clear(type: string=''): this {
-			this._piximData.emitter.clear(type);
+		emitAll(...args: any[]) {
+			if (!this._taskData.enabled) {
+				return this;
+			}
+			
+			this._piximData.emitter.emitAll(...args);
 			
 			return this;
 		}
 		
 		/**
-		 * @deprecated 1.7.3
+		 * @deprecated 1.9.0
 		 */
-		get eventNames() {
-			return this._piximData.emitter.eventNames;
+		cemitAll(context: any, ...args: any[]) {
+			if (!this._taskData.enabled) {
+				return this;
+			}
+			
+			this._piximData.emitter.cemitAll(context, ...args);
+			
+			return this;
 		}
 		
-		destroy(): void {
+		/**
+		 * @deprecated 1.7.0
+		 */
+		clear(type: string = '') {
+			this._piximData.emitter.clear(type);
+			
+			return this;
+		}
+		
+		destroy() {
 			super.destroy();
 			this.clear();
 		}

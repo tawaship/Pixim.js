@@ -4,9 +4,6 @@ import { TaskManager } from './TaskManager';
 import { ITickerData } from './Application';
 
 namespace Pixim {
-	/**
-	 * @since 1.7.0
-	 */
 	export interface IContainerData {
 		task: Task,
 		taskEnabledChildren: boolean
@@ -18,12 +15,9 @@ namespace Pixim {
 	let _lastObserverID = 0;
 	
 	/**
-	 * @see http://pixijs.download/release/docs/PIXI.Container.html
+	 * [[http://pixijs.download/release/docs/PIXI.Container.html]]
 	 */
 	export class Container extends PIXI.Container {
-		/**
-		 * @since 1.6.2
-		 */
 		protected _piximData: IContainerData;
 		
 		constructor(...args: any[]) {
@@ -33,6 +27,8 @@ namespace Pixim {
 				task: new Task([], this),
 				taskEnabledChildren: true
 			};
+			
+			this._piximData.task.first();
 			
 			const _observerID = _lastObserverID++;
 			
@@ -45,9 +41,6 @@ namespace Pixim {
 			});
 		}
 		
-		/**
-		 * @since 1.7.3
-		 */
 		updateTask(e: ITickerData) {
 			const task: Task = this._piximData.task;
 			
@@ -73,18 +66,12 @@ namespace Pixim {
 			
 			task.done(e);
 			
-			const eventNames: string[] = task.eventNames;
-			const context: any = this;
-			
-			for (let i: number = 0; i < eventNames.length; i++) {
-				task.cemit(eventNames[i], this, e);
-			}
+			// will be deprecated
+			task.cemitAll(this, e);
 		}
 		
 		/**
 		 * Whether the task works.
-		 * 
-		 * @since 1.4.0
 		 */
 		get taskEnabled(): boolean {
 			return this._piximData.task.enabled;
@@ -96,8 +83,6 @@ namespace Pixim {
 		
 		/**
 		 * Whether the children and subsequent tasks work.
-		 * 
-		 * @since 1.4.0
 		 */
 		get taskEnabledChildren(): boolean {
 			return this._piximData.taskEnabledChildren;

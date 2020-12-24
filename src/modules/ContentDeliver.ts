@@ -1,24 +1,25 @@
 import * as PIXI from 'pixi.js';
 import { Container } from './Container';
-import { TContentResources } from './ContentManifestBase';
+import { IContentResourceDictionary } from './ContentManifestBase';
 
 namespace Pixim {
-	export type TContentLibrary = { [name: string]: typeof PIXI.Container | typeof Container };
+	export interface IContentLibrary {
+		[name: string]: typeof PIXI.Container | typeof Container
+	}
 	
-	export type TVars = { [name: string]: any };
+	export interface IVariableDictionary {
+		[name: string]: any;
+	}
 	
 	export interface IContentDeliverData {
 		width: number,
 		height: number,
-		lib: TContentLibrary,
-		resources: TContentResources,
-		vars: TVars
+		lib: IContentLibrary,
+		resources: IContentResourceDictionary,
+		vars: IVariableDictionary
 	}
 	
 	export class ContentDeliver {
-		/**
-		 * @since 1.6.2
-		 */
 		protected _piximData: IContentDeliverData;
 		
 		constructor(data: IContentDeliverData) {
@@ -48,21 +49,21 @@ namespace Pixim {
 		/**
 		 * Defined classes in content.
 		 */
-		get lib(): TContentLibrary {
+		get lib(): IContentLibrary {
 			return this._piximData.lib;
 		}
 		
 		/**
 		 * Loaded resources.
 		 */
-		get resources(): TContentResources {
+		get resources(): IContentResourceDictionary {
 			return this._piximData.resources;
 		}
 		
 		/**
 		 * Defined variables by framework.
 		 */
-		get vars(): TVars {
+		get vars() {
 			return this._piximData.vars;
 		}
 	}
@@ -71,12 +72,12 @@ namespace Pixim {
 /**
  * @ignore
  */
-export import TContentLibrary = Pixim.TContentLibrary;
+export import IContentLibrary = Pixim.IContentLibrary;
 
 /**
  * @ignore
  */
-export import TVars = Pixim.TVars;
+export import IVariableDictionary = Pixim.IVariableDictionary;
 
 /**
  * @ignore

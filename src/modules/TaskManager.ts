@@ -5,15 +5,16 @@ import { Container } from './Container';
 
 namespace Pixim {
 	/**
-	 * @private
-	 * @since 1.7.3
+	 * @ignore
 	 */
-	type TObservers = { [name: number]: Container };
+	interface IObserverDictionary {
+		[name: number]: Container;
+	}
 	
 	/**
 	 * @ignore
 	 */
-	const _observers: TObservers = {};
+	const _observers: IObserverDictionary = {};
 	
 	/**
 	 * @ignore
@@ -22,7 +23,6 @@ namespace Pixim {
 	
 	/**
 	 * @private
-	 * @since 1.7.3
 	 */
 	export class TaskManager {
 		constructor() {

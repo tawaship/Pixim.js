@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
+import { ContentManifestBase, IManifestDictionary, IContentManifestOption, IPostManifestDictionary, ILoadedResource } from './ContentManifestBase';
 
 namespace Pixim {
 	/**
@@ -9,17 +9,18 @@ namespace Pixim {
 		resource: PIXI.ITextureDictionary
 	}
 	
-	export type TLoadedSpritesheetResources = { [name: string]: ILoadedSpritesheetResource };
+	export interface ILoadedSpritesheetResourceDictionary {
+		[name: string]: ILoadedSpritesheetResource;
+	}
 	
 	export class ContentSpritesheetManifest extends ContentManifestBase {
 		/**
 		 * Load image resources.
 		 * 
 		 * @override
-		 * @async
 		 */
-		protected _loadAsync(manifests: TPostManifests): Promise<TLoadedSpritesheetResources> {
-			return new Promise((resolve: (resource: TLoadedSpritesheetResources) => void, reject: (manifest: TManifests) => void): void => {
+		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedSpritesheetResourceDictionary> {
+			return new Promise((resolve: (resource: ILoadedSpritesheetResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
 				const loader: PIXI.Loader = new PIXI.Loader();
 				
 				for (let i in manifests) {
@@ -28,7 +29,7 @@ namespace Pixim {
 					});
 				}
 				
-				const res: TLoadedSpritesheetResources = {};
+				const res: ILoadedSpritesheetResourceDictionary = {};
 				loader.load((loader, resources): void => {
 					for (let i in resources) {
 						if (!manifests[i]) {
@@ -66,7 +67,7 @@ namespace Pixim {
 /**
  * @ignore
  */
-export import TLoadedSpritesheetResources = Pixim.TLoadedSpritesheetResources;
+export import ILoadedSpritesheetResourceDictionary = Pixim.ILoadedSpritesheetResourceDictionary;
 
 /**
  * @ignore

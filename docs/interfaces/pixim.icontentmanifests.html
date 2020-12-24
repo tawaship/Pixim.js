@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ILoadedSoundResource | @tawaship/pixim.js - v1.9.0</title>
+	<title>IContentManifests | @tawaship/pixim.js - v1.9.0</title>
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.9.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/pixim.html">Pixim</a>
 				</li>
 				<li>
-					<a href="pixim.iloadedsoundresource.html">ILoadedSoundResource</a>
+					<a href="pixim.icontentmanifests.html">IContentManifests</a>
 				</li>
 			</ul>
-			<h1>Interface ILoadedSoundResource</h1>
+			<h1>Interface IContentManifests</h1>
 		</div>
 	</div>
 </header>
@@ -77,12 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="pixim.iloadedresource.html" class="tsd-signature-type">ILoadedResource</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">ILoadedSoundResource</span>
-							</li>
-						</ul>
+						<span class="target">IContentManifests</span>
 					</li>
 				</ul>
 			</section>
@@ -93,8 +88,9 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="pixim.iloadedsoundresource.html#error" class="tsd-kind-icon">error</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported"><a href="pixim.iloadedsoundresource.html#resource" class="tsd-kind-icon">resource</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.icontentmanifests.html#images" class="tsd-kind-icon">images</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.icontentmanifests.html#sounds" class="tsd-kind-icon">sounds</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.icontentmanifests.html#spritesheets" class="tsd-kind-icon">spritesheets</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,25 +98,33 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>error</h3>
-					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="images" class="tsd-anchor"></a>
+					<h3>images</h3>
+					<div class="tsd-signature tsd-kind-icon">images<span class="tsd-signature-symbol">:</span> <a href="../classes/pixim.contentimagemanifest.html" class="tsd-signature-type">ContentImageManifest</a></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="pixim.iloadedresource.html">ILoadedResource</a>.<a href="pixim.iloadedresource.html#error">error</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L40">src/modules/ContentManifestBase.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L18">src/modules/Content.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported">
-					<a name="resource" class="tsd-anchor"></a>
-					<h3>resource</h3>
-					<div class="tsd-signature tsd-kind-icon">resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Howl</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="sounds" class="tsd-anchor"></a>
+					<h3>sounds</h3>
+					<div class="tsd-signature tsd-kind-icon">sounds<span class="tsd-signature-symbol">:</span> <a href="../classes/pixim.contentsoundmanifest.html" class="tsd-signature-type">ContentSoundManifest</a></div>
 					<aside class="tsd-sources">
-						<p>Overrides <a href="pixim.iloadedresource.html">ILoadedResource</a>.<a href="pixim.iloadedresource.html#resource">resource</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentSoundManifest.ts#L9">src/modules/ContentSoundManifest.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L20">src/modules/Content.ts:20</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="spritesheets" class="tsd-anchor"></a>
+					<h3>spritesheets</h3>
+					<div class="tsd-signature tsd-kind-icon">spritesheets<span class="tsd-signature-symbol">:</span> <a href="../classes/pixim.contentspritesheetmanifest.html" class="tsd-signature-type">ContentSpritesheetManifest</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L19">src/modules/Content.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -142,13 +146,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-is-private tsd-is-not-exported">
-						<a href="pixim.iloadedsoundresource.html" class="tsd-kind-icon">ILoaded<wbr>Sound<wbr>Resource</a>
+						<a href="pixim.icontentmanifests.html" class="tsd-kind-icon">IContent<wbr>Manifests</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-								<a href="pixim.iloadedsoundresource.html#error" class="tsd-kind-icon">error</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.icontentmanifests.html#images" class="tsd-kind-icon">images</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported">
-								<a href="pixim.iloadedsoundresource.html#resource" class="tsd-kind-icon">resource</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.icontentmanifests.html#sounds" class="tsd-kind-icon">sounds</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.icontentmanifests.html#spritesheets" class="tsd-kind-icon">spritesheets</a>
 							</li>
 						</ul>
 					</li>

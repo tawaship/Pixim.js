@@ -463,15 +463,11 @@ describe('Pixim.js', () => {
 									this.task.next();
 								},
 								e => {
-									this.task.replace(taskC);
+									this.task.reset();
+									exec(resolve, app);
+									app.container.removeChild(app.view);
 								}
 							];
-							
-							const taskC = e => {
-								this.task.reset();
-								exec(resolve, app);
-								app.container.removeChild(app.view);
-							};
 						}
 					}
 				});

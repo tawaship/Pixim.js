@@ -35,12 +35,6 @@ Test.defineLibraries({
 		constructor($) {
 			super();
 			
-			const uy = this.addChild(new PIXI.Sprite($.resources.images.image_2));
-			this.task.add(e => {
-				uy.scale.set(0.5)
-			})
-			return
-			
 			$.resources.sounds.a.play();
 			$.resources.sounds.a.loop(true);
 			$.resources.sounds.b.play();
@@ -66,8 +60,8 @@ Test.defineLibraries({
 			//*
 			
 			//*/
-			this.task.on('anim', e => {
-				this.y += e.delta;
+			this.task.add(e => {
+				this.y += e.delta / 2;
 			});
 			const a = this.addChild(new $.lib.sub($));
 			//a.taskEnabled = false
@@ -89,7 +83,7 @@ Test.defineLibraries({
 				e => {
 					this.parent.x -= e.delta;
 					if (this.parent.x < 0) {
-						this.task.replace(t);
+						this.task.next();
 					}
 				}
 			]);
@@ -104,10 +98,12 @@ Test.defineLibraries({
 				e => {
 					this.parent.x -= e.delta * 5;
 					if (this.parent.x < 0) {
-						this.task.prev();
+						this.task.first();
 					}
 				}
 			]
+			
+			this.task.add(t);
 		}
 	}
 });
@@ -146,18 +142,6 @@ const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: (app)=
 app.attachAsync(test)
 	.then(() => {
 		app.play();
-		//app.adjustHeight().toMiddle().toTop().toBottom().toRight().toLeft().toCenter()
-		
-		
-		setTimeout(()=>{
-		app.stop()
-			app.pause(true)
-			console.log(document.getElementById("a").offsetWidth)
-		},1000)
-		
-		setTimeout(()=>{
-			app.play(false)
-		},2000)
 	});
 </script>
 </body>

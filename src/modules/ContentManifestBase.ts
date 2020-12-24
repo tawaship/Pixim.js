@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
 
 namespace Pixim {
-	export type TManifests = { [name: string]: string};
+	export interface IManifestDictionary {
+		[name: string]: string;
+	}
 	
 	/**
 	 * @private
@@ -14,7 +16,9 @@ namespace Pixim {
 	/**
 	 * @private
 	 */
-	type TPreManifests = { [name: string]: IPreManifest };
+	interface IPreManifestDictionary {
+		[name: string]: IPreManifest;
+	}
 	
 	/**
 	 * @private
@@ -23,7 +27,9 @@ namespace Pixim {
 		name: string;
 	}
 	
-	export type TPostManifests = { [name: string]: IPostManifest };
+	export interface IPostManifestDictionary {
+		[name: string]: IPostManifest;
+	}
 	
 	export interface IContentManifestOption {
 		unrequired?: boolean
@@ -37,19 +43,25 @@ namespace Pixim {
 	/**
 	 * @private
 	 */
-	type TLoadedResources = { [name: string]: ILoadedResource };
+	interface ILoadedResourceDictionary {
+		[name: string]: ILoadedResource;
+	}
 	
-	export type TResources = { [name: string]: any};
+	export interface IResourceDictionary {
+		[name: string]: any;
+	}
 	
-	export type TContentResources = { [name: string]: TResources };
+	export interface IContentResourceDictionary {
+		[name: string]: IResourceDictionary;
+	}
 	
 	/**
 	 * @ignore
 	 */
-	const _cache: TResources = {};
+	const _cache: IResourceDictionary = {};
 	
 	export abstract class ContentManifestBase {
-		private _manifests: TPreManifests = {};
+		private _manifests: IPreManifestDictionary = {};
 		
 		/**
 		 * Register manifests.
@@ -57,7 +69,7 @@ namespace Pixim {
 		 * @param manifests Defined manifests.
 		 * @param option Manifest option data.
 		 */
-		add(manifests: TManifests, options: IContentManifestOption = {}): void {
+		add(manifests: IManifestDictionary, options: IContentManifestOption = {}): void {
 			const unrequired: boolean = options.unrequired || false;
 			
 			for (let i in manifests) {
@@ -71,14 +83,13 @@ namespace Pixim {
 		/**
 		 * Get resources.
 		 * 
-		 * @async
 		 * @param basepath Basement directory path of assets.
 		 */
-		getAsync(basepath: string): Promise<TResources> {
-			const manifests: TPreManifests = this._manifests;
+		getAsync(basepath: string): Promise<IResourceDictionary> {
+			const manifests: IPreManifestDictionary = this._manifests;
 			
-			const resources: TResources = {};
-			const loadable: TPostManifests = {};
+			const resources: IResourceDictionary = {};
+			const loadable: IPostManifestDictionary = {};
 			const cache = _cache;
 			
 			for (let i in manifests) {
@@ -105,7 +116,7 @@ namespace Pixim {
 			}
 			
 			return this._loadAsync(loadable)
-				.then((res: TLoadedResources) => {
+				.then((res: ILoadedResourceDictionary) => {
 					for (let i in res) {
 						resources[i] = res[i].resource;
 						
@@ -120,11 +131,8 @@ namespace Pixim {
 		
 		/**
 		 * Load resources.
-		 * 
-		 * @abstract
-		 * @async
 		 */
-		protected _loadAsync(manifests: TPostManifests): Promise<TLoadedResources> {
+		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedResourceDictionary> {
 			return Promise.resolve({});
 		}
 		
@@ -144,12 +152,12 @@ namespace Pixim {
 /**
  * @ignore
  */
-export import TManifests = Pixim.TManifests;
+export import IManifestDictionary = Pixim.IManifestDictionary;
 
 /**
  * @ignore
  */
-export import TPostManifests = Pixim.TPostManifests;
+export import IPostManifestDictionary = Pixim.IPostManifestDictionary;
 
 /**
  * @ignore
@@ -164,12 +172,12 @@ export import ILoadedResource = Pixim.ILoadedResource;
 /**
  * @ignore
  */
-export import TResources = Pixim.TResources;
+export import IResourceDictionary = Pixim.IResourceDictionary;
 
 /**
  * @ignore
  */
-export import TContentResources = Pixim.TContentResources;
+export import IContentResourceDictionary = Pixim.IContentResourceDictionary;
 
 /**
  * @ignore

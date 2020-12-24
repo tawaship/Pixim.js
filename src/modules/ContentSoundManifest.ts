@@ -1,5 +1,5 @@
 import { Howl } from 'howler';
-import { ContentManifestBase, TManifests, IContentManifestOption, TPostManifests, ILoadedResource } from './ContentManifestBase';
+import { ContentManifestBase, IManifestDictionary, IContentManifestOption, IPostManifestDictionary, ILoadedResource } from './ContentManifestBase';
 
 namespace Pixim {
 	/**
@@ -9,18 +9,19 @@ namespace Pixim {
 		resource: Howl
 	}
 	
-	export type TLoadedSoundResources = { [name: string]: ILoadedSoundResource };
+	export interface ILoadedSoundResourceDictionary{
+		[name: string]: ILoadedSoundResource;
+	}
 	
 	export class ContentSoundManifest extends ContentManifestBase {
 		/**
 		 * Load image resources.
 		 * 
 		 * @override
-		 * @async
 		 */
-		protected _loadAsync(manifests: TPostManifests): Promise<TLoadedSoundResources> {
-			return new Promise((resolve: (resource: TLoadedSoundResources) => void, reject: (manifest: TManifests) => void): void => {
-				const res: TLoadedSoundResources = {};
+		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedSoundResourceDictionary> {
+			return new Promise((resolve: (resource: ILoadedSoundResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
+				const res: ILoadedSoundResourceDictionary = {};
 				
 				function loadedHandler(key: string, howl: Howl, error: boolean): void {
 					res[key] = {
@@ -74,7 +75,7 @@ namespace Pixim {
 /**
  * @ignore
  */
-export import TLoadedSoundResources = Pixim.TLoadedSoundResources;
+export import ILoadedSoundResourceDictionary = Pixim.ILoadedSoundResourceDictionary;
 
 /**
  * @ignore

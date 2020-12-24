@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentManifestBase | @tawaship/pixim.js - v1.8.3</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.8.3">
+	<title>ContentManifestBase | @tawaship/pixim.js - v1.9.0</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.9.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@tawaship/pixim.js - v1.8.3</a>
+					<a href="../index.html" class="title">@tawaship/pixim.js - v1.9.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -115,10 +115,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_manifests" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _manifests</h3>
-					<div class="tsd-signature tsd-kind-icon">_manifests<span class="tsd-signature-symbol">:</span> <a href="../modules/pixim.html#tpremanifests" class="tsd-signature-type">TPreManifests</a></div>
+					<div class="tsd-signature tsd-kind-icon">_manifests<span class="tsd-signature-symbol">:</span> <a href="../interfaces/pixim.ipremanifestdictionary.html" class="tsd-signature-type">IPreManifestDictionary</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L52">src/modules/ContentManifestBase.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L64">src/modules/ContentManifestBase.ts:64</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -129,33 +129,27 @@
 					<a name="_loadasync" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _load<wbr>Async</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">_load<wbr>Async<span class="tsd-signature-symbol">(</span>manifests<span class="tsd-signature-symbol">: </span><a href="../modules/pixim.html#tpostmanifests" class="tsd-signature-type">TPostManifests</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/pixim.html#tloadedresources" class="tsd-signature-type">TLoadedResources</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">_load<wbr>Async<span class="tsd-signature-symbol">(</span>manifests<span class="tsd-signature-symbol">: </span><a href="../interfaces/pixim.ipostmanifestdictionary.html" class="tsd-signature-type">IPostManifestDictionary</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pixim.iloadedresourcedictionary.html" class="tsd-signature-type">ILoadedResourceDictionary</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L127">src/modules/ContentManifestBase.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L135">src/modules/ContentManifestBase.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Load resources.</p>
 								</div>
-								<dl class="tsd-comment-tags">
-									<dt>abstract</dt>
-									<dd></dd>
-									<dt>async</dt>
-									<dd></dd>
-								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>manifests: <a href="../modules/pixim.html#tpostmanifests" class="tsd-signature-type">TPostManifests</a></h5>
+									<h5>manifests: <a href="../interfaces/pixim.ipostmanifestdictionary.html" class="tsd-signature-type">IPostManifestDictionary</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/pixim.html#tloadedresources" class="tsd-signature-type">TLoadedResources</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pixim.iloadedresourcedictionary.html" class="tsd-signature-type">ILoadedResourceDictionary</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -169,7 +163,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L134">src/modules/ContentManifestBase.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L142">src/modules/ContentManifestBase.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -194,13 +188,13 @@
 					<a name="add" class="tsd-anchor"></a>
 					<h3>add</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>manifests<span class="tsd-signature-symbol">: </span><a href="../modules/pixim.html#tmanifests" class="tsd-signature-type">TManifests</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/pixim.icontentmanifestoption.html" class="tsd-signature-type">IContentManifestOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>manifests<span class="tsd-signature-symbol">: </span><a href="../interfaces/pixim.imanifestdictionary.html" class="tsd-signature-type">IManifestDictionary</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/pixim.icontentmanifestoption.html" class="tsd-signature-type">IContentManifestOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L60">src/modules/ContentManifestBase.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L72">src/modules/ContentManifestBase.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -211,7 +205,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>manifests: <a href="../modules/pixim.html#tmanifests" class="tsd-signature-type">TManifests</a></h5>
+									<h5>manifests: <a href="../interfaces/pixim.imanifestdictionary.html" class="tsd-signature-type">IManifestDictionary</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Defined manifests.</p>
 									</div>
@@ -228,23 +222,19 @@
 					<a name="getasync" class="tsd-anchor"></a>
 					<h3>get<wbr>Async</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Async<span class="tsd-signature-symbol">(</span>basepath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/pixim.html#tresources" class="tsd-signature-type">TResources</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Async<span class="tsd-signature-symbol">(</span>basepath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pixim.iresourcedictionary.html" class="tsd-signature-type">IResourceDictionary</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L77">src/modules/ContentManifestBase.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L88">src/modules/ContentManifestBase.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Get resources.</p>
 								</div>
-								<dl class="tsd-comment-tags">
-									<dt>async</dt>
-									<dd></dd>
-								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -255,7 +245,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/pixim.html#tresources" class="tsd-signature-type">TResources</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/pixim.iresourcedictionary.html" class="tsd-signature-type">IResourceDictionary</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>

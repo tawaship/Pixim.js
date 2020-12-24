@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Application | @tawaship/pixim.js - v1.8.3</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.8.3">
+	<title>Application | @tawaship/pixim.js - v1.9.0</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.9.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@tawaship/pixim.js - v1.8.3</a>
+					<a href="../index.html" class="title">@tawaship/pixim.js - v1.9.0</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -103,7 +103,6 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="pixim.application.html#app" class="tsd-kind-icon">app</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="pixim.application.html#container" class="tsd-kind-icon">container</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="pixim.application.html#stage" class="tsd-kind-icon">stage</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="pixim.application.html#view" class="tsd-kind-icon">view</a></li>
 							</ul>
@@ -111,7 +110,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#_destroyroot" class="tsd-kind-icon">_destroy<wbr>Root</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="pixim.application.html#_destroyroot" class="tsd-kind-icon">_destroy<wbr>Root</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="pixim.application.html#_getviewrect" class="tsd-kind-icon">_get<wbr>View<wbr>Rect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="pixim.application.html#_haslayer" class="tsd-kind-icon">_has<wbr>Layer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#addlayer" class="tsd-kind-icon">add<wbr>Layer</a></li>
@@ -119,9 +118,11 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#adjustwidth" class="tsd-kind-icon">adjust<wbr>Width</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#attachasync" class="tsd-kind-icon">attach<wbr>Async</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#cemit" class="tsd-kind-icon">cemit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#cemitall" class="tsd-kind-icon">cemit<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#clear" class="tsd-kind-icon">clear</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#detach" class="tsd-kind-icon">detach</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#emit" class="tsd-kind-icon">emit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#emitall" class="tsd-kind-icon">emit<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="pixim.application.html#fullscreen" class="tsd-kind-icon">full<wbr>Screen</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="pixim.application.html#on" class="tsd-kind-icon">on</a></li>
@@ -147,21 +148,16 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Application<span class="tsd-signature-symbol">(</span>pixiOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Object</span>, piximOptions<span class="tsd-signature-symbol">?: </span><a href="../modules/pixim.html#tapplicationoption" class="tsd-signature-type">TApplicationOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixim.application.html" class="tsd-signature-type">Application</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Application<span class="tsd-signature-symbol">(</span>pixiOptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Object</span>, piximOptions<span class="tsd-signature-symbol">?: </span><a href="../interfaces/pixim.iapplicationoption.html" class="tsd-signature-type">IApplicationOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="pixim.application.html" class="tsd-signature-type">Application</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L117">src/modules/Application.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L105">src/modules/Application.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>see</dt>
-									<dd><p><a href="http://pixijs.download/v5.2.1/docs/PIXI.Application.html">http://pixijs.download/v5.2.1/docs/PIXI.Application.html</a></p>
-									</dd>
-								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -169,12 +165,12 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> pixiOptions: <span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> = {}</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Optional data when call &#39;new PIXI.Application&#39;.</p>
+											<p>Optional data when call &#39;new [[[[<a href="http://pixijs.download/v5.2.1/docs/PIXI.Application.html">http://pixijs.download/v5.2.1/docs/PIXI.Application.html</a> | PIXI.Application]]]]&#39;.</p>
 										</div>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> piximOptions: <a href="../modules/pixim.html#tapplicationoption" class="tsd-signature-type">TApplicationOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> piximOptions: <a href="../interfaces/pixim.iapplicationoption.html" class="tsd-signature-type">IApplicationOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Optional data for Pixim.</p>
@@ -195,16 +191,9 @@
 					<div class="tsd-signature tsd-kind-icon">_pixim<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/pixim.iapplicationdata.html" class="tsd-signature-type">IApplicationData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L117">src/modules/Application.ts:117</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L105">src/modules/Application.ts:105</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>since</dt>
-							<dd><p>1.6.2</p>
-							</dd>
-						</dl>
-					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -219,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L185">src/modules/Application.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L172">src/modules/Application.ts:172</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Application</span></h4>
@@ -237,31 +226,17 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L200">src/modules/Application.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L184">src/modules/Application.ts:184</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>since</dt>
-									<dd><p>1.8.0</p>
-									</dd>
-								</dl>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLElement</span></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L207">src/modules/Application.ts:207</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L188">src/modules/Application.ts:188</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>since</dt>
-									<dd><p>1.8.0</p>
-									</dd>
-								</dl>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -269,34 +244,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-					<a name="eventnames" class="tsd-anchor"></a>
-					<h3>event<wbr>Names</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> eventNames<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#eventnames">eventNames</a></p>
-								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:12</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Registered event names.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>since</dt>
-									<dd><p>1.1.1</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -310,7 +257,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L189">src/modules/Application.ts:189</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L176">src/modules/Application.ts:176</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Container</span></h4>
@@ -327,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L193">src/modules/Application.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L180">src/modules/Application.ts:180</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLCanvasElement</span></h4>
@@ -337,17 +284,17 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="_destroyroot" class="tsd-anchor"></a>
-					<h3>_destroy<wbr>Root</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _destroy<wbr>Root</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
 						<li class="tsd-signature tsd-kind-icon">_destroy<wbr>Root<span class="tsd-signature-symbol">(</span>root<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Container</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L343">src/modules/Application.ts:343</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L314">src/modules/Application.ts:314</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -370,7 +317,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L537">src/modules/Application.ts:537</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L497">src/modules/Application.ts:497</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/pixim.irect.html" class="tsd-signature-type">IRect</a></h4>
@@ -387,7 +334,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L217">src/modules/Application.ts:217</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L198">src/modules/Application.ts:198</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -415,7 +362,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L226">src/modules/Application.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L205">src/modules/Application.ts:205</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -430,7 +377,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -444,7 +390,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L416">src/modules/Application.ts:416</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L382">src/modules/Application.ts:382</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -462,7 +408,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -476,7 +421,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L397">src/modules/Application.ts:397</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L364">src/modules/Application.ts:364</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -494,7 +439,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -508,7 +452,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L255">src/modules/Application.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L232">src/modules/Application.ts:232</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -540,7 +484,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#cemit">cemit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:62</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:43</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -559,7 +503,7 @@
 								<li>
 									<h5>context: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>&#39;this&#39; context in callback.</p>
+										<p>Context to execute the callback.</p>
 									</div>
 								</li>
 								<li>
@@ -570,7 +514,44 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="cemitall" class="tsd-anchor"></a>
+					<h3>cemit<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">cemit<wbr>All<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#cemitall">cemitAll</a></p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:57</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit all events with specifying a context.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>context: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Context to execute the callback.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -585,7 +566,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:69</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:63</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -598,12 +579,11 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Event type to remove.<br>If it is empty, removes all events.</p>
+										<p>Event type to remove. If it is empty, removes all events.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -617,7 +597,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L272">src/modules/Application.ts:272</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L247">src/modules/Application.ts:247</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -632,7 +612,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -647,7 +626,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#emit">emit</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:53</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:35</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -671,7 +650,38 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="emitall" class="tsd-anchor"></a>
+					<h3>emit<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">emit<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#emitall">emitAll</a></p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:50</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit all events.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -685,7 +695,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L375">src/modules/Application.ts:375</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L343">src/modules/Application.ts:343</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -703,7 +713,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -711,14 +720,14 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TEmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#off">off</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:45</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:27</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -735,14 +744,13 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">TEmitterCallback</span></h5>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Registered callback.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -750,14 +758,14 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TEmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#on">on</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:29</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:13</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -774,14 +782,13 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">TEmitterCallback</span></h5>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -789,14 +796,14 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TEmitterCallback</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="pixim.emitter.html">Emitter</a>.<a href="pixim.emitter.html#once">once</a></p>
 								<ul>
-									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:37</li>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:20</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -813,14 +820,13 @@
 									</div>
 								</li>
 								<li>
-									<h5>func: <span class="tsd-signature-type">TEmitterCallback</span></h5>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Callback when the event fires.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -834,7 +840,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L355">src/modules/Application.ts:355</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L324">src/modules/Application.ts:324</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -849,7 +855,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -863,7 +868,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L290">src/modules/Application.ts:290</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L263">src/modules/Application.ts:263</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -872,7 +877,6 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -886,7 +890,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L241">src/modules/Application.ts:241</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L218">src/modules/Application.ts:218</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -901,7 +905,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -915,7 +918,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L308">src/modules/Application.ts:308</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L279">src/modules/Application.ts:279</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -924,7 +927,6 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -938,7 +940,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L525">src/modules/Application.ts:525</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L485">src/modules/Application.ts:485</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -956,7 +958,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -970,7 +971,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L453">src/modules/Application.ts:453</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L417">src/modules/Application.ts:417</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -988,7 +989,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -1002,7 +1002,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L435">src/modules/Application.ts:435</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L400">src/modules/Application.ts:400</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1020,7 +1020,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -1034,7 +1033,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L507">src/modules/Application.ts:507</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L468">src/modules/Application.ts:468</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1052,7 +1051,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -1066,7 +1064,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L471">src/modules/Application.ts:471</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L434">src/modules/Application.ts:434</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1084,7 +1082,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -1098,7 +1095,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L489">src/modules/Application.ts:489</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L451">src/modules/Application.ts:451</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1116,7 +1113,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-							<p>Returns itself for the method chaining.</p>
 						</li>
 					</ul>
 				</section>
@@ -1152,16 +1148,13 @@
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="pixim.application.html#container" class="tsd-kind-icon">container</a>
 							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="pixim.application.html#eventnames" class="tsd-kind-icon">event<wbr>Names</a>
-							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="pixim.application.html#stage" class="tsd-kind-icon">stage</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="pixim.application.html#view" class="tsd-kind-icon">view</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="pixim.application.html#_destroyroot" class="tsd-kind-icon">_destroy<wbr>Root</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -1186,6 +1179,9 @@
 								<a href="pixim.application.html#cemit" class="tsd-kind-icon">cemit</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="pixim.application.html#cemitall" class="tsd-kind-icon">cemit<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="pixim.application.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -1193,6 +1189,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="pixim.application.html#emit" class="tsd-kind-icon">emit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="pixim.application.html#emitall" class="tsd-kind-icon">emit<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="pixim.application.html#fullscreen" class="tsd-kind-icon">full<wbr>Screen</a>

@@ -2,7 +2,7 @@ import { Emitter as _Emitter } from '@tawaship/emitter';
 
 namespace Pixim {
 	/**
-	 * @see https://tawaship.github.io/Emitter/index.html
+	 * [[https://tawaship.github.io/Emitter/index.html | @tawaship/emitter]]
 	 */
 	export class Emitter extends _Emitter {}
 }

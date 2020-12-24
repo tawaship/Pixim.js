@@ -5,56 +5,53 @@ import { TaskManager } from './TaskManager';
 
 namespace Pixim {
 	/**
-	 * @private
+	 * @ignore
 	 */
-	type TRoots = { [id: string]: PIXI.Container };
+	interface IRootDictionary {
+		[id: string]: PIXI.Container;
+	}
 	
 	/**
 	 * @private
 	 */
-	type TLayers = { [name: string]: PIXI.Container };
+	interface ILayerDictionary{
+		[name: string]: PIXI.Container;
+	}
 	
-	/**
-	 * @since 1.7.3
-	 */
 	export interface ITickerData {
 		delta: number
 	}
 	
-	/**
-	 * @since 1.8.2
-	 */
-	export type TAdjustDelegate = (app: Application) => void;
+	export interface IAdjustDelegate {
+		(app: Application): void;
+	}
 	
-	/**
-	 * @since 1.8.2
-	 */
-	export type TAutoAdjust = boolean | TAdjustDelegate;
+	export type TAutoAdjust = boolean | IAdjustDelegate;
 	
-	export type TApplicationOption = {
+	export interface IApplicationOption {
 		/**
 		 * Parent node of canvas element.
 		 */
-		container?: HTMLElement,
+		container?: HTMLElement;
 		
 		/**
 		 * Whether to automatically resize the canvas when resizing the window.<br />
 		 * Or the resizing process to be executed at that time.
 		 */
-		autoAdjust?: TAutoAdjust
+		autoAdjust?: TAutoAdjust;
 	}
 	
-	/**
-	 * @since 1.7.0
-	 */
 	export interface IApplicationData {
 		isRun: boolean;
+		/**
+		 * [[[[http://pixijs.download/v5.2.1/docs/PIXI.Application.html | PIXI.Application]]]]
+		 */
 		app: PIXI.Application;
 		stage: PIXI.Container;
 		view: HTMLCanvasElement;
 		container: HTMLElement;
-		options: TApplicationOption;
-		layers: TLayers;
+		options: IApplicationOption;
+		layers: ILayerDictionary;
 	}
 	
 	export interface ISize {
@@ -67,17 +64,11 @@ namespace Pixim {
 		y: number;
 	}
 	
-	/**
-	 * @since 1.8.1
-	 */
 	export interface IHorizontal {
 		x: number;
 		width: number;
 	}
 	
-	/**
-	 * @since 1.8.1
-	 */
 	export interface IVertical {
 		y: number;
 		height: number;
@@ -88,7 +79,7 @@ namespace Pixim {
 	/**
 	 * @ignore
 	 */
-	const _roots: TRoots = {};
+	const _roots: IRootDictionary = {};
 	
 	/*
 	function taskHandler(obj: PIXI.Container, e: ITaskTickerData): void {
@@ -111,17 +102,13 @@ namespace Pixim {
 	*/
 	
 	export class Application extends Emitter {
-		/**
-		 * @since 1.6.2
-		 */
 		protected _piximData: IApplicationData;
 		
 		/**
-		 * @param pixiOptions Optional data when call 'new PIXI.Application'.
+		 * @param pixiOptions Optional data when call 'new [[[[http://pixijs.download/v5.2.1/docs/PIXI.Application.html | PIXI.Application]]]]'.
 		 * @param piximOptions Optional data for Pixim.
-		 * @see http://pixijs.download/v5.2.1/docs/PIXI.Application.html
 		 */
-		constructor(pixiOptions: Object = {}, piximOptions: TApplicationOption = {}) {
+		constructor(pixiOptions: Object = {}, piximOptions: IApplicationOption = {}) {
 			super();
 			
 			const app: PIXI.Application = new PIXI.Application(pixiOptions);
@@ -194,16 +181,10 @@ namespace Pixim {
 			return this._piximData.view;
 		}
 		
-		/**
-		 * @since 1.8.0
-		 */
 		get container(): HTMLElement {
 			return this._piximData.container;
 		}
 		
-		/**
-		 * @since 1.8.0
-		 */
 		set container(container: HTMLElement) {
 			this._piximData.container = container || document.body;
 			if (this._piximData.view.parentNode) {
@@ -220,10 +201,8 @@ namespace Pixim {
 		
 		/**
 		 * Add layer to application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		addLayer(name: string): this {
+		addLayer(name: string) {
 			if (this._hasLayer(name)) {
 				return this;
 			}
@@ -235,10 +214,8 @@ namespace Pixim {
 		
 		/**
 		 * Remove layer form application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		removeLayer(name: string): this {
+		removeLayer(name: string) {
 			if (!this._hasLayer(name)) {
 				return this;
 			}
@@ -266,10 +243,8 @@ namespace Pixim {
 		
 		/**
 		 * Detach content from application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		detach(content: Content): this {
+		detach(content: Content) {
 			const root: PIXI.Container = _roots[content.contentID];
 			
 			if (!root) {
@@ -284,10 +259,8 @@ namespace Pixim {
 		
 		/**
 		 * Play application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		play(): this {
+		play() {
 			if (this._piximData.isRun) {
 				return this;
 			}
@@ -302,10 +275,8 @@ namespace Pixim {
 		
 		/**
 		 * Stop application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		stop(): this {
+		stop() {
 			if (!this._piximData.isRun) {
 				return this;
 			}
@@ -319,7 +290,7 @@ namespace Pixim {
 			
 			const stage: PIXI.Container = this._piximData.app.stage;
 			
-			const layers: TLayers = this._piximData.layers;
+			const layers: ILayerDictionary = this._piximData.layers;
 			
 			for (let i in layers) {
 				layers[i].removeChildren();
@@ -340,7 +311,7 @@ namespace Pixim {
 			return this;
 		}
 		
-		_destroyRoot(root: PIXI.Container): void {
+		private _destroyRoot(root: PIXI.Container): void {
 			if (root.parent) {
 				root.parent.removeChild(root);
 			}
@@ -349,10 +320,8 @@ namespace Pixim {
 		
 		/**
 		 * Pause (or restart) application.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		pause(paused: boolean): this {
+		pause(paused: boolean) {
 			if (!this._piximData.isRun) {
 				return this;
 			}
@@ -370,9 +339,8 @@ namespace Pixim {
 		 * Resize canvas to fit specified rectangle.
 		 * 
 		 * @param rect Rectangle to adjust.
-		 * @return Returns itself for the method chaining.
 		 */
-		fullScreen(rect?: IRect): this {
+		fullScreen(rect?: IRect) {
 			const view: HTMLCanvasElement = this._piximData.view;
 			const r: IRect = rect || {
 				x: 0,
@@ -392,9 +360,8 @@ namespace Pixim {
 		 * Resize canvas to fit specified width.
 		 * 
 		 * @param width Width to adjust.
-		 * @return Returns itself for the method chaining.
 		 */
-		adjustWidth(width?: number): this {
+		adjustWidth(width?: number) {
 			const view: HTMLCanvasElement = this._piximData.view;
 			const w: number = width || this._piximData.container.offsetWidth || window.innerWidth;
 			
@@ -411,9 +378,8 @@ namespace Pixim {
 		 * Resize canvas to fit specified height.
 		 * 
 		 * @param height Height to adjust.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		adjustHeight(height?: number): this {
+		adjustHeight(height?: number) {
 			const view = this._piximData.view;
 			const h: number = height || this._piximData.container.offsetHeight || window.innerHeight;
 			
@@ -430,9 +396,8 @@ namespace Pixim {
 		 * Left justified with respect to the reference data.
 		 * 
 		 * @param horizontal Horizontal data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toLeft(horizontal?: IHorizontal): this {
+		toLeft(horizontal?: IHorizontal) {
 			const view = this._piximData.view;
 			const hol: IHorizontal = horizontal || {
 				x: 0,
@@ -448,9 +413,8 @@ namespace Pixim {
 		 * Center justified with respect to the reference data.
 		 * 
 		 * @param horizontal Horizontal data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toCenter(horizontal?: IHorizontal): this {
+		toCenter(horizontal?: IHorizontal) {
 			const view = this._piximData.view;
 			const hol: IHorizontal = horizontal || {
 				x: 0,
@@ -466,9 +430,8 @@ namespace Pixim {
 		 * Right justified with respect to the reference data.
 		 * 
 		 * @param horizontal Horizontal data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toRight(horizontal?: IHorizontal): this {
+		toRight(horizontal?: IHorizontal) {
 			const view = this._piximData.view;
 			const hol: IHorizontal = horizontal || {
 				x: 0,
@@ -484,9 +447,8 @@ namespace Pixim {
 		 * Top justified with respect to the reference data.
 		 * 
 		 * @param vertical Vertical data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toTop(vertical?: IVertical): this {
+		toTop(vertical?: IVertical) {
 			const view = this._piximData.view;
 			const ver: IVertical = vertical || {
 				y: 0,
@@ -502,9 +464,8 @@ namespace Pixim {
 		 * Middle justified with respect to the reference data.
 		 * 
 		 * @param vertical Vertical data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toMiddle(vertical?: IVertical): this {
+		toMiddle(vertical?: IVertical) {
 			const view = this._piximData.view;
 			const ver: IVertical = vertical || {
 				y: 0,
@@ -520,9 +481,8 @@ namespace Pixim {
 		 * Bottom justified with respect to the reference data.
 		 * 
 		 * @param vertical Vertical data used to calculate the position.
-		 * @return {Pixim.Application} Returns itself for the method chaining.
 		 */
-		toBottom(vertical?: IVertical): this {
+		toBottom(vertical?: IVertical) {
 			const view = this._piximData.view;
 			const ver: IVertical = vertical || {
 				y: 0,
@@ -555,7 +515,7 @@ export import IApplicationData = Pixim.IApplicationData;
 /**
  * @ignore
  */
-export import TApplicationOption = Pixim.TApplicationOption;
+export import IApplicationOption = Pixim.IApplicationOption;
 
 /**
  * @ignore

@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { TResources, TContentResources, TManifests, IContentManifestOption } from './ContentManifestBase';
+import { IResourceDictionary, IContentResourceDictionary, IManifestDictionary, IContentManifestOption } from './ContentManifestBase';
 import { ContentImageManifest } from './ContentImageManifest';
 import { ContentSpritesheetManifest } from './ContentSpritesheetManifest';
 import { ContentSoundManifest } from './ContentSoundManifest';
-import { ContentDeliver, TContentLibrary } from './ContentDeliver';
+import { ContentDeliver, IVariableDictionary, IContentLibrary } from './ContentDeliver';
 
 namespace Pixim {
 	/**
@@ -14,42 +14,39 @@ namespace Pixim {
 	/**
 	 * @private
 	 */
-	type TContentManifests = { 
-		images: ContentImageManifest,
-		spritesheets: ContentSpritesheetManifest,
-		sounds: ContentSoundManifest
-	};
-	
-	export interface IContentConfigData {
-		width: number,
-		height: number
+	interface IContentManifests { 
+		images: ContentImageManifest;
+		spritesheets: ContentSpritesheetManifest;
+		sounds: ContentSoundManifest;
 	}
 	
-	export type TContentVars = { [name: string]: any };
+	export interface IContentConfigData {
+		width: number;
+		height: number;
+	}
 	
-	/**
-	 * @since 1.7.0
-	 */
 	export interface IContentData {
 		contentID: string;
 		basepath: string;
 		$: ContentDeliver;
-		manifests: TContentManifests;
-		additionalManifests: TContentManifests;
+		manifests: IContentManifests;
+		additionalManifests: IContentManifests;
 		preloadPromise: Promise<void> | null;
 		postloadPromise: Promise<void> | null;
 	}
 	
 	/**
-	 * @private
+	 * @ignore
 	 */
-	type TContents = { [name: string]: typeof Content };
+	interface TContents {
+		[name: string]: typeof Content;
+	};
 	
-	/**
-	 * @property basepath Asset root path.
-	 */
-	export type TContentOption = {
-		basepath?: string
+	export interface IContentOption {
+		/**
+		 * Asset root path.
+		 */
+		basepath?: string;
 	}
 	
 	/**
@@ -62,19 +59,16 @@ namespace Pixim {
 	 */
 	let _contentID: number = 0;
 	
-	/**
-	 * @since 1.7.0
-	 */
 	export interface IContentStaticData {
 		config: IContentConfigData;
-		manifests: TContentManifests;
-		lib: TContentLibrary;
+		manifests: IContentManifests;
+		lib: IContentLibrary;
 	}
 	
 	/**
 	 * @ignore
 	 */
-	function createManifests(): TContentManifests {
+	function createManifests(): IContentManifests {
 		return {
 			images: new ContentImageManifest(),
 			spritesheets: new ContentSpritesheetManifest(),
@@ -99,12 +93,9 @@ namespace Pixim {
 	export class Content {
 		protected static _piximData: IContentStaticData;
 		
-		/**
-		 * @since 1.6.2
-		 */
 		protected _piximData: IContentData;
 		
-		constructor(options: TContentOption = {}, piximData: IContentStaticData = Content._piximData) {
+		constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 			const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 			
 			this._piximData = {
@@ -138,7 +129,7 @@ namespace Pixim {
 			class ContentClone extends Content {
 				protected static _piximData: IContentStaticData = createContentStatic();
 				
-				constructor(options: TContentOption = {}) {
+				constructor(options: IContentOption = {}) {
 					super(options, ContentClone._piximData);
 				}
 			}
@@ -170,11 +161,8 @@ namespace Pixim {
 		
 		/**
 		 * Define assets for class.
-		 * 
-		 * @since 1.2.0
-		 * @return Returns itself for the method chaining.
 		 */
-		static defineManifests(key: TContentManifestType, data: TManifests, options: IContentManifestOption = {}) {
+		static defineManifests(key: TContentManifestType, data: IManifestDictionary, options: IContentManifestOption = {}) {
 			if (!this._piximData.manifests[key]) {
 				return this;
 			}
@@ -186,29 +174,22 @@ namespace Pixim {
 		
 		/**
 		 * Define image assets for class.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		static defineImages(data: TManifests, options: IContentManifestOption = {}) {
+		static defineImages(data: IManifestDictionary, options: IContentManifestOption = {}) {
 			return this.defineManifests('images', data, options);
 		}
 		
 		/**
 		 * Define spritesheet assets for class.
-		 * 
-		 * @return Returns itself for the method chaining.
 		 */
-		static defineSpritesheets(data: TManifests, options: IContentManifestOption = {}) {
+		static defineSpritesheets(data: IManifestDictionary, options: IContentManifestOption = {}) {
 			return this.defineManifests('spritesheets', data, options);
 		}
 		
 		/**
 		 * Define sound assets for class.
-		 * 
-		 * @since 1.3.0
-		 * @return Returns itself for the method chaining.
 		 */
-		static defineSounds(data: TManifests, options: IContentManifestOption = {}) {
+		static defineSounds(data: IManifestDictionary, options: IContentManifestOption = {}) {
 			return this.defineManifests('sounds', data, options);
 		}
 		
@@ -216,7 +197,6 @@ namespace Pixim {
 		 * Set the content settings.
 		 * 
 		 * @param data Config data.
-		 * @return Returns itself for the method chaining.
 		 */
 		static setConfig(data: IContentConfigData) {
 			//this._piximData.config.fps = data.fps;
@@ -232,9 +212,8 @@ namespace Pixim {
 		 * By giving this argument to the child further, you will be able to access the data freely from anywhere.
 		 * 
 		 * @param data Library data.
-		 * @return Returns itself for the method chaining.
 		 */
-		static defineLibraries(data: TContentLibrary) {
+		static defineLibraries(data: IContentLibrary) {
 			for (let i in data) {
 				this._piximData.lib[i] = data[i];
 			}
@@ -252,10 +231,9 @@ namespace Pixim {
 		/**
 		 * Define assets for instance.
 		 * 
-		 * @since 1.2.0
 		 * @return Returns itself for the method chaining.
 		 */
-		addManifests(key: TContentManifestType, data: TManifests, options: IContentManifestOption = {}): this {
+		addManifests(key: TContentManifestType, data: IManifestDictionary, options: IContentManifestOption = {}): this {
 			if (!this._piximData.additionalManifests[key]) {
 				return this;
 			}
@@ -270,7 +248,7 @@ namespace Pixim {
 		 * 
 		 * @return Returns itself for the method chaining.
 		 */
-		addImages(data: TManifests, options: IContentManifestOption = {}): this {
+		addImages(data: IManifestDictionary, options: IContentManifestOption = {}): this {
 			return this.addManifests('images', data, options);
 		}
 		
@@ -279,27 +257,25 @@ namespace Pixim {
 		 * 
 		 * @return Returns itself for the method chaining.
 		 */
-		addSpritesheets(data: TManifests, options: IContentManifestOption = {}): this {
+		addSpritesheets(data: IManifestDictionary, options: IContentManifestOption = {}): this {
 			return this.addManifests('spritesheets', data, options);
 		}
 		
 		/**
 		 * Define sound assets for instance.
 		 * 
-		 * @since 1.3.0
 		 * @return Returns itself for the method chaining.
 		 */
-		addSounds(data: TManifests, options: IContentManifestOption = {}): this {
+		addSounds(data: IManifestDictionary, options: IContentManifestOption = {}): this {
 			return this.addManifests('sounds', data, options);
 		}
 		
 		/**
 		 * Define valriables for instance.
 		 * 
-		 * @since 1.3.0
 		 * @return Returns itself for the method chaining.
 		 */
-		addVars(data: TContentVars): this {
+		addVars(data: IVariableDictionary): this {
 			for (let i in data) {
 				 this._piximData.$.vars[i] = data[i];
 			}
@@ -308,20 +284,7 @@ namespace Pixim {
 		}
 		
 		/**
-		 * Define valriables.
-		 * 
-		 * @deprecated since 1.3.0
-		 * @alias <a href="addvars">addVars</a>
-		 * @return Returns itself for the method chaining.
-		 */
-		defineVars(data: TContentVars): this {
-			return this.addVars(data);
-		}
-		
-		/**
 		 * Prepare content.
-		 * 
-		 * @async
 		 */
 		prepareAsync(): Promise<void> {
 			return this.preloadClassAssetAsync()
@@ -332,8 +295,6 @@ namespace Pixim {
 		
 		/**
 		 * Build content.
-		 * 
-		 * @async
 		 */
 		buildAsync(): Promise<PIXI.Container> {
 			if (!this._piximData.$.lib.root) {
@@ -348,8 +309,6 @@ namespace Pixim {
 		
 		/**
 		 * Preloads class assets.
-		 * 
-		 * @async
 		 */
 		preloadClassAssetAsync(): Promise<void> {
 			if (this._piximData.preloadPromise) {
@@ -357,7 +316,7 @@ namespace Pixim {
 			}
 			
 			return this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests)
-				.catch((e: TManifests) => {
+				.catch((e: IManifestDictionary) => {
 					this._piximData.preloadPromise = null;
 					
 					throw e;
@@ -366,8 +325,6 @@ namespace Pixim {
 		
 		/**
 		 * Preloads instance assets.
-		 * 
-		 * @async
 		 */
 		preloadInstanceAssetAsync(): Promise<void> {
 			if (this._piximData.postloadPromise) {
@@ -378,16 +335,16 @@ namespace Pixim {
 				.then(() => {
 					this._piximData.postloadPromise = null;
 				})
-				.catch((e: TManifests) => {
+				.catch((e: IManifestDictionary) => {
 					this._piximData.postloadPromise = null;
 					
 					throw e;
 				});
 		}
 		
-		private _loadAssetAsync(manifests: TContentManifests): Promise<void> {
+		private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 			const basepath: string = this._piximData.basepath;
-			const resources: TContentResources = this._piximData.$.resources;
+			const resources: IContentResourceDictionary = this._piximData.$.resources;
 			
 			const loaderCount = Object.keys(manifests).length;
 			
@@ -395,7 +352,7 @@ namespace Pixim {
 				return Promise.resolve();
 			}
 			
-			const promises: Promise<TResources>[] = [];
+			const promises: Promise<IResourceDictionary>[] = [];
 			const keys: TContentManifestType[] = [];
 			for (let i in manifests) {
 				const type: TContentManifestType = <TContentManifestType>i;
@@ -404,7 +361,7 @@ namespace Pixim {
 			}
 			
 			return Promise.all(promises)
-				.then((resolver: TResources) => {
+				.then((resolver: IResourceDictionary) => {
 					for (let i: number = 0; i < resolver.length;i++) {
 						resources[keys[i]] = resources[keys[i]] || {};
 						
@@ -413,7 +370,7 @@ namespace Pixim {
 						}
 					}
 				})
-				.catch((e: TManifests) => {
+				.catch((e: IManifestDictionary) => {
 					for (let i in e) {
 						console.error(`Asset '${i}: ${e[i]}' cannot load.`);
 					}
@@ -442,14 +399,11 @@ export import IContentConfigData = Pixim.IContentConfigData;
 /**
  * @ignore
  */
-export import TContentVars = Pixim.TContentVars;
-
-/**
- * @ignore
- */
-export import TContentOption = Pixim.TContentOption;
+export import IContentOption = Pixim.IContentOption;
 
 /**
  * @ignore
  */
 export import Content = Pixim.Content;
+
+export { IVariableDictionary , IContentLibrary };
