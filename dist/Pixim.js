@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.9.1
+ * @tawaship/pixim.js - v1.9.2
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.9.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.9.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -274,7 +274,7 @@
                     y: 0,
                     height: this._piximData.container.offsetHeight || window.innerHeight
                 };
-                return view.style.top = ver.y + "0px", this;
+                return view.style.top = ver.y + "px", this;
             }, Application.prototype.toMiddle = function(vertical) {
                 var view = this._piximData.view, ver = vertical || {
                     y: 0,

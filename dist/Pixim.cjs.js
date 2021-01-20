@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.9.1
+ * @tawaship/pixim.js - v1.9.2
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -374,7 +374,7 @@ var Pixim$2;
                 y: 0,
                 height: this._piximData.container.offsetHeight || window.innerHeight
             };
-            view.style.top = `${ver.y}0px`;
+            view.style.top = `${ver.y}px`;
             return this;
         }
         /**

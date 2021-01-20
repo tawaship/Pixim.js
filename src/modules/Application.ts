@@ -455,7 +455,7 @@ namespace Pixim {
 				height: this._piximData.container.offsetHeight || window.innerHeight
 			};
 			
-			view.style.top = `${ver.y}0px`;
+			view.style.top = `${ver.y}px`;
 			
 			return this;
 		}
