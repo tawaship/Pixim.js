@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IContentConfigData | @tawaship/pixim.js - v1.9.3</title>
+	<title>IContentAssetVersion | @tawaship/pixim.js - v1.9.3</title>
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.9.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/pixim.html">Pixim</a>
 				</li>
 				<li>
-					<a href="pixim.icontentconfigdata.html">IContentConfigData</a>
+					<a href="pixim.icontentassetversion.html">IContentAssetVersion</a>
 				</li>
 			</ul>
-			<h1>Interface IContentConfigData</h1>
+			<h1>Interface IContentAssetVersion</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IContentConfigData</span>
+						<span class="target">IContentAssetVersion</span>
 					</li>
 				</ul>
 			</section>
@@ -84,8 +84,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pixim.icontentconfigdata.html#height" class="tsd-kind-icon">height</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pixim.icontentconfigdata.html#width" class="tsd-kind-icon">width</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pixim.icontentassetversion.html#images" class="tsd-kind-icon">images</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pixim.icontentassetversion.html#sounds" class="tsd-kind-icon">sounds</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="pixim.icontentassetversion.html#spritesheets" class="tsd-kind-icon">spritesheets</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,22 +95,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="height" class="tsd-anchor"></a>
-					<h3>height</h3>
-					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="images" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> images</h3>
+					<div class="tsd-signature tsd-kind-icon">images<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L31">src/modules/Content.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L15">src/modules/Content.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="width" class="tsd-anchor"></a>
-					<h3>width</h3>
-					<div class="tsd-signature tsd-kind-icon">width<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="sounds" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sounds</h3>
+					<div class="tsd-signature tsd-kind-icon">sounds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L30">src/modules/Content.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L17">src/modules/Content.ts:17</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="spritesheets" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> spritesheets</h3>
+					<div class="tsd-signature tsd-kind-icon">spritesheets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L16">src/modules/Content.ts:16</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -131,13 +142,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-namespace">
-						<a href="pixim.icontentconfigdata.html" class="tsd-kind-icon">IContent<wbr>Config<wbr>Data</a>
+						<a href="pixim.icontentassetversion.html" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Version</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pixim.icontentconfigdata.html#height" class="tsd-kind-icon">height</a>
+								<a href="pixim.icontentassetversion.html#images" class="tsd-kind-icon">images</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="pixim.icontentconfigdata.html#width" class="tsd-kind-icon">width</a>
+								<a href="pixim.icontentassetversion.html#sounds" class="tsd-kind-icon">sounds</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="pixim.icontentassetversion.html#spritesheets" class="tsd-kind-icon">spritesheets</a>
 							</li>
 						</ul>
 					</li>

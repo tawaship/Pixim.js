@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.9.2
+ * @tawaship/pixim.js - v1.9.3
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -747,7 +747,7 @@ var Pixim$5;
          *
          * @param basepath Basement directory path of assets.
          */
-        getAsync(basepath) {
+        getAsync(basepath, version) {
             const manifests = this._manifests;
             const resources = {};
             const loadable = {};
@@ -770,7 +770,7 @@ var Pixim$5;
             if (Object.keys(loadable).length === 0) {
                 return Promise.resolve(resources);
             }
-            return this._loadAsync(loadable)
+            return this._loadAsync(loadable, version)
                 .then((res) => {
                 for (let i in res) {
                     resources[i] = res[i].resource;
@@ -784,7 +784,7 @@ var Pixim$5;
         /**
          * Load resources.
          */
-        _loadAsync(manifests) {
+        _loadAsync(manifests, version) {
             return Promise.resolve({});
         }
         /**
@@ -814,9 +814,12 @@ var Pixim$6;
          *
          * @override
          */
-        _loadAsync(manifests) {
+        _loadAsync(manifests, version) {
             return new Promise((resolve, reject) => {
                 const loader = new PIXI.Loader();
+                if (version) {
+                    loader.defaultQueryString = `_fv=${version}`;
+                }
                 for (let i in manifests) {
                     loader.add(i, manifests[i].url, {
                         crossOrigin: true
@@ -859,9 +862,12 @@ var Pixim$7;
          *
          * @override
          */
-        _loadAsync(manifests) {
+        _loadAsync(manifests, version) {
             return new Promise((resolve, reject) => {
                 const loader = new PIXI.Loader();
+                if (version) {
+                    loader.defaultQueryString = `_fv=${version}`;
+                }
                 for (let i in manifests) {
                     loader.add(i, manifests[i].url, {
                         crossOrigin: true
@@ -909,7 +915,7 @@ var Pixim$8;
          *
          * @override
          */
-        _loadAsync(manifests) {
+        _loadAsync(manifests, version) {
             return new Promise((resolve, reject) => {
                 const res = {};
                 function loadedHandler(key, howl, error) {
@@ -934,8 +940,11 @@ var Pixim$8;
                 }
                 for (let i in manifests) {
                     const _i = i;
+                    const url = version
+                        ? `${manifests[_i].url}${manifests[_i].url.match(/\?/) ? '&' : '?'}_fv=${version}`
+                        : manifests[_i].url;
                     const howl = new howler.Howl({
-                        src: manifests[_i].url,
+                        src: url,
                         onload: () => {
                             loadedHandler(_i, howl, false);
                         },
@@ -1044,9 +1053,17 @@ var Pixim$a;
     class Content {
         constructor(options = {}, piximData = Content._piximData) {
             const basepath = (options.basepath || '').replace(/([^/])$/, '$1/');
+            if (typeof (options.version) !== 'object') {
+                options.version = {
+                    images: options.version || '',
+                    spritesheets: options.version || '',
+                    sounds: options.version || ''
+                };
+            }
             this._piximData = {
                 contentID: (++_contentID).toString(),
                 basepath,
+                version: options.version,
                 $: new ContentDeliver({
                     width: piximData.config.width,
                     height: piximData.config.height,
@@ -1253,6 +1270,7 @@ var Pixim$a;
         }
         _loadAssetAsync(manifests) {
             const basepath = this._piximData.basepath;
+            const version = this._piximData.version;
             const resources = this._piximData.$.resources;
             const loaderCount = Object.keys(manifests).length;
             if (loaderCount === 0) {
@@ -1263,7 +1281,7 @@ var Pixim$a;
             for (let i in manifests) {
                 const type = i;
                 keys.push(type);
-                promises.push(manifests[type].getAsync(basepath));
+                promises.push(manifests[type].getAsync(basepath, version[type] || ''));
             }
             return Promise.all(promises)
                 .then((resolver) => {

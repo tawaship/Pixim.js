@@ -19,9 +19,13 @@ namespace Pixim {
 		 * 
 		 * @override
 		 */
-		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedImageResourceDictionary> {
+		protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedImageResourceDictionary> {
 			return new Promise((resolve: (resource: ILoadedImageResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
 				const loader: PIXI.Loader = new PIXI.Loader();
+				
+				if (version) {
+					loader.defaultQueryString = `_fv=${version}`;
+				}
 				
 				for (let i in manifests) {
 					loader.add(i, manifests[i].url, {

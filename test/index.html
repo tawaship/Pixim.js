@@ -120,7 +120,13 @@ Test.defineSounds({
 	a: 'sound/a.mp3'
 });
 
-const test = new Test();
+const test = new Test({
+	version: {
+		images: 2,
+		spritesheets: 3,
+		sounds: 54
+	}
+});
 test.addImages({
 	image_2: 'img/image_2.png'
 });
@@ -130,12 +136,11 @@ test.addSpritesheets({
 });
 
 test.addSounds({
-	b: 'sound/b.mp3'
+	b: 'sound/b.mp3?a=1'
 });
 
-const test2 = new Test();
-
-const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: (app)=>{console.log(1);const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};app.fullScreen(rect)}, container: document.getElementById("a")});
+const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust: (app)=>{console.log(1);
+const rect = {x: 0, y: 0, width: window.innerWidth, height: window.innerHeight};app.fullScreen(rect)}, container: document.getElementById("a")});
 
 
 

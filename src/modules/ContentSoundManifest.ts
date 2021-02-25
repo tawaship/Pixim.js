@@ -19,7 +19,7 @@ namespace Pixim {
 		 * 
 		 * @override
 		 */
-		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedSoundResourceDictionary> {
+		protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedSoundResourceDictionary> {
 			return new Promise((resolve: (resource: ILoadedSoundResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
 				const res: ILoadedSoundResourceDictionary = {};
 				
@@ -51,9 +51,13 @@ namespace Pixim {
 				
 				for (let i in manifests) {
 					const _i = i;
+					const url =
+						version
+						?`${manifests[_i].url}${manifests[_i].url.match(/\?/) ? '&' : '?'}_fv=${version}`
+						: manifests[_i].url;
 					
 					const howl = new Howl({
-						src: manifests[_i].url,
+						src: url,
 						onload: () => {
 							loadedHandler(_i, howl, false);
 						},

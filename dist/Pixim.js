@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.9.2
+ * @tawaship/pixim.js - v1.9.3
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.9.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.9.3 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -483,7 +483,7 @@
                     unrequired: unrequired
                 };
             }
-        }, ContentManifestBase.prototype.getAsync = function(basepath) {
+        }, ContentManifestBase.prototype.getAsync = function(basepath, version) {
             var manifests = this._manifests, resources = {}, loadable = {}, cache = _cache;
             for (var i in manifests) {
                 var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath), name = url.replace(/\?.*/, "");
@@ -493,13 +493,13 @@
                     unrequired: manifest.unrequired
                 };
             }
-            return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable).then((function(res) {
+            return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable, version).then((function(res) {
                 for (var i in res) {
                     resources[i] = res[i].resource, res[i].error || (cache[loadable[i].name] = res[i].resource);
                 }
                 return resources;
             }));
-        }, ContentManifestBase.prototype._loadAsync = function(manifests) {
+        }, ContentManifestBase.prototype._loadAsync = function(manifests, version) {
             return Promise.resolve({});
         }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
             return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
@@ -513,10 +513,10 @@
             }
             return ContentManifestBase && (ContentImageManifest.__proto__ = ContentManifestBase), 
             ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(manifests) {
+            ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(manifests, version) {
                 return new Promise((function(resolve, reject) {
                     var loader = new PIXI.Loader;
-                    for (var i in manifests) {
+                    for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
                         loader.add(i, manifests[i].url, {
                             crossOrigin: !0
                         });
@@ -552,10 +552,10 @@
             }
             return ContentManifestBase && (ContentSpritesheetManifest.__proto__ = ContentManifestBase), 
             ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(manifests) {
+            ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(manifests, version) {
                 return new Promise((function(resolve, reject) {
                     var loader = new PIXI.Loader;
-                    for (var i in manifests) {
+                    for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
                         loader.add(i, manifests[i].url, {
                             crossOrigin: !0
                         });
@@ -595,7 +595,7 @@
             }
             return ContentManifestBase && (ContentSoundManifest.__proto__ = ContentManifestBase), 
             ContentSoundManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(manifests) {
+            ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(manifests, version) {
                 return new Promise((function(resolve, reject) {
                     var obj, res = {};
                     function loadedHandler(key, howl, error) {
@@ -613,8 +613,8 @@
                         ++loadCount;
                     }
                     var loop = function(i) {
-                        var _i = i$1, howl = new howler.Howl({
-                            src: manifests[_i].url,
+                        var _i = i$1, url = version ? manifests[_i].url + (manifests[_i].url.match(/\?/) ? "&" : "?") + "_fv=" + version : manifests[_i].url, howl = new howler.Howl({
+                            src: url,
                             onload: function() {
                                 loadedHandler(_i, howl, !1);
                             },
@@ -685,9 +685,14 @@
         var Content = function Content(options, piximData) {
             void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
             var basepath = (options.basepath || "").replace(/([^/])$/, "$1/");
-            this._piximData = {
+            "object" != typeof options.version && (options.version = {
+                images: options.version || "",
+                spritesheets: options.version || "",
+                sounds: options.version || ""
+            }), this._piximData = {
                 contentID: (++_contentID).toString(),
                 basepath: basepath,
+                version: options.version,
                 $: new ContentDeliver({
                     width: piximData.config.width,
                     height: piximData.config.height,
@@ -787,14 +792,14 @@
                 throw this$1._piximData.postloadPromise = null, e;
             }));
         }, Content.prototype._loadAssetAsync = function(manifests) {
-            var basepath = this._piximData.basepath, resources = this._piximData.$.resources;
+            var basepath = this._piximData.basepath, version = this._piximData.version, resources = this._piximData.$.resources;
             if (0 === Object.keys(manifests).length) {
                 return Promise.resolve();
             }
             var promises = [], keys = [];
             for (var i in manifests) {
                 var type = i;
-                keys.push(type), promises.push(manifests[type].getAsync(basepath));
+                keys.push(type), promises.push(manifests[type].getAsync(basepath, version[type] || ""));
             }
             return Promise.all(promises).then((function(resolver) {
                 for (var i = 0; i < resolver.length; i++) {

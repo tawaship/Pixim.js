@@ -85,7 +85,7 @@ namespace Pixim {
 		 * 
 		 * @param basepath Basement directory path of assets.
 		 */
-		getAsync(basepath: string): Promise<IResourceDictionary> {
+		getAsync(basepath: string, version: string): Promise<IResourceDictionary> {
 			const manifests: IPreManifestDictionary = this._manifests;
 			
 			const resources: IResourceDictionary = {};
@@ -115,7 +115,7 @@ namespace Pixim {
 				return Promise.resolve(resources);
 			}
 			
-			return this._loadAsync(loadable)
+			return this._loadAsync(loadable, version)
 				.then((res: ILoadedResourceDictionary) => {
 					for (let i in res) {
 						resources[i] = res[i].resource;
@@ -132,7 +132,7 @@ namespace Pixim {
 		/**
 		 * Load resources.
 		 */
-		protected _loadAsync(manifests: IPostManifestDictionary): Promise<ILoadedResourceDictionary> {
+		protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedResourceDictionary> {
 			return Promise.resolve({});
 		}
 		

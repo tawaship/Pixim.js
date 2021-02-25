@@ -11,6 +11,12 @@ namespace Pixim {
 	 */
 	type TContentManifestType = 'images' | 'spritesheets' | 'sounds';
 	
+	export interface IContentAssetVersion {
+		images?: string;
+		spritesheets?: string;
+		sounds?: string;
+	}
+	
 	/**
 	 * @private
 	 */
@@ -28,6 +34,7 @@ namespace Pixim {
 	export interface IContentData {
 		contentID: string;
 		basepath: string;
+		version: IContentAssetVersion;
 		$: ContentDeliver;
 		manifests: IContentManifests;
 		additionalManifests: IContentManifests;
@@ -47,6 +54,11 @@ namespace Pixim {
 		 * Asset root path.
 		 */
 		basepath?: string;
+		
+		/**
+		 * Asset version.
+		 */
+		version?: string | IContentAssetVersion;
 	}
 	
 	/**
@@ -92,15 +104,23 @@ namespace Pixim {
 	
 	export class Content {
 		protected static _piximData: IContentStaticData;
-		
 		protected _piximData: IContentData;
 		
 		constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 			const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 			
+			if (typeof(options.version) !== 'object') {
+				options.version = {
+					images: options.version || '',
+					spritesheets: options.version || '',
+					sounds: options.version || ''
+				};
+			}
+			
 			this._piximData = {
 				contentID: (++_contentID).toString(),
 				basepath,
+				version: options.version,
 				$: new ContentDeliver({
 					width: piximData.config.width,
 					height: piximData.config.height,
@@ -133,7 +153,6 @@ namespace Pixim {
 					super(options, ContentClone._piximData);
 				}
 			}
-			
 			
 			if (!key) {
 				return ContentClone;
@@ -344,6 +363,7 @@ namespace Pixim {
 		
 		private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 			const basepath: string = this._piximData.basepath;
+			const version: IContentAssetVersion = this._piximData.version;
 			const resources: IContentResourceDictionary = this._piximData.$.resources;
 			
 			const loaderCount = Object.keys(manifests).length;
@@ -357,7 +377,8 @@ namespace Pixim {
 			for (let i in manifests) {
 				const type: TContentManifestType = <TContentManifestType>i;
 				keys.push(type);
-				promises.push(manifests[type].getAsync(basepath));
+				
+				promises.push(manifests[type].getAsync(basepath, version[type] || ''));
 			}
 			
 			return Promise.all(promises)
