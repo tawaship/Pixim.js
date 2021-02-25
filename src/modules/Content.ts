@@ -425,6 +425,11 @@ export import IContentOption = Pixim.IContentOption;
 /**
  * @ignore
  */
+export import IContentAssetVersion = Pixim.IContentAssetVersion;
+
+/**
+ * @ignore
+ */
 export import Content = Pixim.Content;
 
 export { IVariableDictionary , IContentLibrary };
