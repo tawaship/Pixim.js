@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.10.0
+ * @tawaship/pixim.js - v1.10.1
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.10.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.10.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -817,9 +817,10 @@
     }(Pixim$a || (Pixim$a = {}));
     var Content = Pixim$a.Content;
     exports.Application = Application, exports.Container = Container, exports.Content = Content, 
-    exports.ContentImageManifest = ContentImageManifest, exports.ContentManifestBase = ContentManifestBase, 
-    exports.ContentSoundManifest = ContentSoundManifest, exports.ContentSpritesheetManifest = ContentSpritesheetManifest, 
-    exports.Emitter = Emitter$1, exports.Task = Task$1;
+    exports.ContentDeliver = ContentDeliver, exports.ContentImageManifest = ContentImageManifest, 
+    exports.ContentManifestBase = ContentManifestBase, exports.ContentSoundManifest = ContentSoundManifest, 
+    exports.ContentSpritesheetManifest = ContentSpritesheetManifest, exports.Emitter = Emitter$1, 
+    exports.Task = Task$1;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

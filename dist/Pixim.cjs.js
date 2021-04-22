@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.10.0
+ * @tawaship/pixim.js - v1.10.1
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -1310,6 +1310,7 @@ var Content = Pixim$a.Content;
 exports.Application = Application;
 exports.Container = Container;
 exports.Content = Content;
+exports.ContentDeliver = ContentDeliver;
 exports.ContentImageManifest = ContentImageManifest;
 exports.ContentManifestBase = ContentManifestBase;
 exports.ContentSoundManifest = ContentSoundManifest;

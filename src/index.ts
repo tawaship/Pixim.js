@@ -1,6 +1,7 @@
 export * from './modules/Application';
 export * from './modules/Container';
 export * from './modules/Content';
+export * from './modules/ContentDeliver';
 export * from './modules/ContentManifestBase';
 export * from './modules/ContentImageManifest';
 export * from './modules/ContentSpritesheetManifest';

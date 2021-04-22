@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.10.0
+ * @tawaship/pixim.js - v1.10.1
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -1303,5 +1303,5 @@ var Pixim$a;
  */
 var Content = Pixim$a.Content;
 
-export { Application, Container, Content, ContentImageManifest, ContentManifestBase, ContentSoundManifest, ContentSpritesheetManifest, Emitter, Task$1 as Task };
+export { Application, Container, Content, ContentDeliver, ContentImageManifest, ContentManifestBase, ContentSoundManifest, ContentSpritesheetManifest, Emitter, Task$1 as Task };
 //# sourceMappingURL=Pixim.esm.js.map
