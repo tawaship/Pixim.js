@@ -77,6 +77,15 @@ namespace Pixim {
 	export interface IRect extends ISize, IPosition {}
 	
 	/**
+	 * @private
+	 */
+	interface IDestroyOptions {
+		children?: boolean;
+		texture?: boolean;
+		baseTexture?: boolean;
+	}
+	
+	/**
 	 * @ignore
 	 */
 	const _roots: IRootDictionary = {};
@@ -244,31 +253,33 @@ namespace Pixim {
 		/**
 		 * Detach content from application.
 		 */
-		detach(content: Content) {
+		detach(content: Content, stageOptions?: IDestroyOptions) {
 			const root: PIXI.Container = _roots[content.contentID];
 			
 			if (!root) {
 				return this;
 			}
 			
-			this._destroyRoot(root);
+			this._destroyRoot(root, stageOptions);
 			delete(_roots[content.contentID]);
 			
 			return this;
 		}
 		
 		/**
-		 * Play application.
+		 * Start application and displa viewy.
 		 */
 		play() {
-			if (this._piximData.isRun) {
-				return this;
-			}
-			
 			this._piximData.container.appendChild(this._piximData.view);
 			
+			return this.start();
+		}
+		
+		/**
+		 * Start application.
+		 */
+		start() {
 			this._piximData.app.start();
-			this._piximData.isRun = true;
 			
 			return this;
 		}
@@ -276,6 +287,13 @@ namespace Pixim {
 		/**
 		 * Stop application.
 		 */
+		stop() {
+			this._piximData.app.stop();
+			
+			return this;
+		}
+		
+		/*
 		stop() {
 			if (!this._piximData.isRun) {
 				return this;
@@ -289,7 +307,6 @@ namespace Pixim {
 			this._piximData.isRun = false;
 			
 			const stage: PIXI.Container = this._piximData.app.stage;
-			
 			const layers: ILayerDictionary = this._piximData.layers;
 			
 			for (let i in layers) {
@@ -310,21 +327,64 @@ namespace Pixim {
 			
 			return this;
 		}
+		*/
 		
-		private _destroyRoot(root: PIXI.Container): void {
+		/**
+		 * Destroy application.
+		 */
+		destroy(removeView?: boolean, stageOptions?: IDestroyOptions) {
+			/*
+			if (this._piximData.view.parentNode) {
+				this._piximData.view.parentNode.removeChild(this._piximData.view);
+			}
+			
+			this._piximData.app.stop();
+			this._piximData.isRun = false;
+			*/
+			
+			//const stage: PIXI.Container = this._piximData.app.stage;
+			/*
+			const layers: ILayerDictionary = this._piximData.layers;
+			
+			for (let i in layers) {
+				layers[i].removeChildren();
+			}
+			*/
+			
+			const keys: string[] = [];
+			for (let i in _roots) {
+			//	this._destroyRoot(_roots[i], stageOptions);
+				keys.push(i);
+			}
+			
+			for (let i = 0; i < keys.length; i++) {
+				delete(_roots[keys[i]]);
+			}
+			
+			this._piximData.app.destroy(removeView, stageOptions);
+			
+			return this;
+		}
+		
+		private _destroyRoot(root: PIXI.Container, stageOptions?: IDestroyOptions): void {
+			/*
 			if (root.parent) {
 				root.parent.removeChild(root);
 			}
-			root.destroy();
+			*/
+			
+			root.destroy(stageOptions);
 		}
 		
 		/**
 		 * Pause (or restart) application.
 		 */
 		pause(paused: boolean) {
+			/*
 			if (!this._piximData.isRun) {
 				return this;
 			}
+			*/
 			
 			if (paused) {
 				this._piximData.app.stop();

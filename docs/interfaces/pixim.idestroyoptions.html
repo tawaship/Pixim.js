@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ILoadedImageResource | @tawaship/pixim.js - v1.10.2</title>
+	<title>IDestroyOptions | @tawaship/pixim.js - v1.10.2</title>
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.10.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -59,10 +59,10 @@
 					<a href="../modules/pixim.html">Pixim</a>
 				</li>
 				<li>
-					<a href="pixim.iloadedimageresource.html">ILoadedImageResource</a>
+					<a href="pixim.idestroyoptions.html">IDestroyOptions</a>
 				</li>
 			</ul>
-			<h1>Interface ILoadedImageResource</h1>
+			<h1>Interface IDestroyOptions</h1>
 		</div>
 	</div>
 </header>
@@ -77,12 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="pixim.iloadedresource.html" class="tsd-signature-type">ILoadedResource</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">ILoadedImageResource</span>
-							</li>
-						</ul>
+						<span class="target">IDestroyOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -93,8 +88,9 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported"><a href="pixim.iloadedimageresource.html#error" class="tsd-kind-icon">error</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported"><a href="pixim.iloadedimageresource.html#resource" class="tsd-kind-icon">resource</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.idestroyoptions.html#basetexture" class="tsd-kind-icon">base<wbr>Texture</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.idestroyoptions.html#children" class="tsd-kind-icon">children</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="pixim.idestroyoptions.html#texture" class="tsd-kind-icon">texture</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,25 +98,33 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>error</h3>
-					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="basetexture" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> base<wbr>Texture</h3>
+					<div class="tsd-signature tsd-kind-icon">base<wbr>Texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="pixim.iloadedresource.html">ILoadedResource</a>.<a href="pixim.iloadedresource.html#error">error</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L40">src/modules/ContentManifestBase.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L85">src/modules/Application.ts:85</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported">
-					<a name="resource" class="tsd-anchor"></a>
-					<h3>resource</h3>
-					<div class="tsd-signature tsd-kind-icon">resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Texture</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="children" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> children</h3>
+					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
-						<p>Overrides <a href="pixim.iloadedresource.html">ILoadedResource</a>.<a href="pixim.iloadedresource.html#resource">resource</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentImageManifest.ts#L9">src/modules/ContentImageManifest.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L83">src/modules/Application.ts:83</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+					<a name="texture" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> texture</h3>
+					<div class="tsd-signature tsd-kind-icon">texture<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L84">src/modules/Application.ts:84</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -142,13 +146,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-is-private tsd-is-not-exported">
-						<a href="pixim.iloadedimageresource.html" class="tsd-kind-icon">ILoaded<wbr>Image<wbr>Resource</a>
+						<a href="pixim.idestroyoptions.html" class="tsd-kind-icon">IDestroy<wbr>Options</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-not-exported">
-								<a href="pixim.iloadedimageresource.html#error" class="tsd-kind-icon">error</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.idestroyoptions.html#basetexture" class="tsd-kind-icon">base<wbr>Texture</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-not-exported">
-								<a href="pixim.iloadedimageresource.html#resource" class="tsd-kind-icon">resource</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.idestroyoptions.html#children" class="tsd-kind-icon">children</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
+								<a href="pixim.idestroyoptions.html#texture" class="tsd-kind-icon">texture</a>
 							</li>
 						</ul>
 					</li>

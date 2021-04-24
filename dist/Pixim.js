@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.10.1
+ * @tawaship/pixim.js - v1.10.2
  * 
  * @require pixi.js v5.2.1
  * @require howler.js v2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.10.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.10.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -206,36 +206,29 @@
                     return this$1.addLayer(layerName), _roots[content.contentID] = root, this$1._piximData.layers[layerName].addChild(root), 
                     root;
                 }));
-            }, Application.prototype.detach = function(content) {
+            }, Application.prototype.detach = function(content, stageOptions) {
                 var root = _roots[content.contentID];
-                return root ? (this._destroyRoot(root), delete _roots[content.contentID], this) : this;
-            }, Application.prototype.play = function() {
-                return this._piximData.isRun || (this._piximData.container.appendChild(this._piximData.view), 
-                this._piximData.app.start(), this._piximData.isRun = !0), this;
-            }, Application.prototype.stop = function() {
-                if (!this._piximData.isRun) {
-                    return this;
-                }
-                this._piximData.view.parentNode && this._piximData.view.parentNode.removeChild(this._piximData.view), 
-                this._piximData.app.stop(), this._piximData.isRun = !1;
-                this._piximData.app.stage;
-                var layers = this._piximData.layers;
-                for (var i in layers) {
-                    layers[i].removeChildren();
-                }
-                var keys = [];
-                for (var i$1 in _roots) {
-                    this._destroyRoot(_roots[i$1]), keys.push(i$1);
-                }
-                for (var i$2 = 0; i$2 < keys.length; i$2++) {
-                    delete _roots[keys[i$2]];
-                }
-                return this._piximData.app.ticker.update(), this;
-            }, Application.prototype._destroyRoot = function(root) {
-                root.parent && root.parent.removeChild(root), root.destroy();
-            }, Application.prototype.pause = function(paused) {
-                return this._piximData.isRun ? (paused ? this._piximData.app.stop() : this._piximData.app.start(), 
+                return root ? (this._destroyRoot(root, stageOptions), delete _roots[content.contentID], 
                 this) : this;
+            }, Application.prototype.play = function() {
+                return this._piximData.container.appendChild(this._piximData.view), this.start();
+            }, Application.prototype.start = function() {
+                return this._piximData.app.start(), this;
+            }, Application.prototype.stop = function() {
+                return this._piximData.app.stop(), this;
+            }, Application.prototype.destroy = function(removeView, stageOptions) {
+                var keys = [];
+                for (var i in _roots) {
+                    keys.push(i);
+                }
+                for (var i$1 = 0; i$1 < keys.length; i$1++) {
+                    delete _roots[keys[i$1]];
+                }
+                return this._piximData.app.destroy(removeView, stageOptions), this;
+            }, Application.prototype._destroyRoot = function(root, stageOptions) {
+                root.destroy(stageOptions);
+            }, Application.prototype.pause = function(paused) {
+                return paused ? this._piximData.app.stop() : this._piximData.app.start(), this;
             }, Application.prototype.fullScreen = function(rect) {
                 var view = this._piximData.view, r = rect || {
                     x: 0,
