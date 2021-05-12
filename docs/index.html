@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.10.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -40,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -51,11 +50,6 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
 			<h1>@tawaship/pixim.js - v1.10.2</h1>
 		</div>
 	</div>
@@ -77,34 +71,34 @@
 				<ol>
 					<li>on your npm project</li>
 				</ol>
-				<pre><code class="language-sh">npm install --save @tawaship/pixim.js
+				<pre><code class="language-sh"><span style="color: #000000">npm install --save @tawaship/pixim.js</span>
 </code></pre>
 				<ol start="2">
 					<li>on your code</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Pixim <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@tawaship/pixim.js&#x27;</span>;
+				<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">Pixim</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@tawaship/pixim.js&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-comment">// or</span>
+<span style="color: #008000">// or</span>
 
-<span class="hljs-keyword">const</span> Pixim = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@tawaship/pixim.js&#x27;</span>);
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">Pixim</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;@tawaship/pixim.js&#039;</span><span style="color: #000000">);</span>
 </code></pre>
 				<a href="#how-to-build" id="how-to-build" style="color: inherit; text-decoration: none;">
 					<h2>How to build</h2>
 				</a>
-				<pre><code class="language-sh">git <span class="hljs-built_in">clone</span> https://github.com/tawaship/Pixim.js
+				<pre><code class="language-sh"><span style="color: #000000">git clone https://github.com/tawaship/Pixim.js</span>
 
-<span class="hljs-built_in">cd</span> Pixim.js
+<span style="color: #795E26">cd</span><span style="color: #000000"> Pixim.js</span>
 
-npm install
+<span style="color: #000000">npm install</span>
 
-npm run build
+<span style="color: #000000">npm run build</span>
 </code></pre>
 				<a href="#how-to-load-on-browser" id="how-to-load-on-browser" style="color: inherit; text-decoration: none;">
 					<h2>How to load on browser</h2>
 				</a>
 				<p>After <a href="#how-to-install">install</a> or <a href="#how-to-build">build</a></p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/path/to/dist/Pixim.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+				<pre><code class="language-html"><span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;/path/to/dist/Pixim.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
 </code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
@@ -115,57 +109,57 @@ npm run build
 				<ol>
 					<li> Create content </li>
 				</ol>
-				<pre><code class="language-javascript">Pixim.Content.create(<span class="hljs-string">&#x27;test&#x27;</span>);
-<span class="hljs-keyword">const</span> Test = Pixim.Content.get(<span class="hljs-string">&#x27;test&#x27;</span>);
+				<pre><code class="language-javascript"><span style="color: #001080">Pixim</span><span style="color: #000000">.</span><span style="color: #001080">Content</span><span style="color: #000000">.</span><span style="color: #795E26">create</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;test&#039;</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">Test</span><span style="color: #000000"> = </span><span style="color: #001080">Pixim</span><span style="color: #000000">.</span><span style="color: #001080">Content</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;test&#039;</span><span style="color: #000000">);</span>
 </code></pre>
 				<p>or </p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> Test = Pixim.Content.create();
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">Test</span><span style="color: #000000"> = </span><span style="color: #001080">Pixim</span><span style="color: #000000">.</span><span style="color: #001080">Content</span><span style="color: #000000">.</span><span style="color: #795E26">create</span><span style="color: #000000">();</span>
 </code></pre>
 				<ol start="2">
 					<li>Define content settings and libraries</li>
 				</ol>
 				<pre><code class="language-javascript">
-Test.setConfig({
-    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>
-});
+<span style="color: #001080">Test</span><span style="color: #000000">.</span><span style="color: #795E26">setConfig</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">width:</span><span style="color: #000000"> </span><span style="color: #098658">300</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">height:</span><span style="color: #000000"> </span><span style="color: #098658">300</span>
+<span style="color: #000000">});</span>
 
-Test.defineLibraries({
-    <span class="hljs-attr">root</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Pixim</span>.<span class="hljs-title">Container</span> </span>{
-        <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">$</span>)</span> {
-            <span class="hljs-built_in">super</span>();
-            
-            <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
-                .beginFill(<span class="hljs-number">0xFFEEEE</span>, <span class="hljs-number">1</span>)
-                .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, $.width, $.height);
-            
-            <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> $.lib.main($))
-        }
-    },
-    
-    <span class="hljs-attr">main</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Pixim</span>.<span class="hljs-title">Container</span> </span>{
-        <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">$</span>)</span> {
-            <span class="hljs-built_in">super</span>();
-            
-            <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
-                .beginFill(<span class="hljs-number">0xFFFFFF</span>, <span class="hljs-number">1</span>)
-                .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>);
-        }
-    }
-});
+<span style="color: #001080">Test</span><span style="color: #000000">.</span><span style="color: #795E26">defineLibraries</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">root:</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Root</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">Pixim</span><span style="color: #000000">.</span><span style="color: #267F99">Container</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">super</span><span style="color: #000000">();</span>
+<span style="color: #000000">            </span>
+<span style="color: #000000">            </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Graphics</span><span style="color: #000000">())</span>
+<span style="color: #000000">                .</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0xFFEEEE</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">)</span>
+<span style="color: #000000">                .</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">width</span><span style="color: #000000">, </span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">height</span><span style="color: #000000">);</span>
+<span style="color: #000000">            </span>
+<span style="color: #000000">            </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">lib</span><span style="color: #000000">.</span><span style="color: #795E26">main</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">))</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span>
+<span style="color: #000000">    </span><span style="color: #001080">main:</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Root</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">Pixim</span><span style="color: #000000">.</span><span style="color: #267F99">Container</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">super</span><span style="color: #000000">();</span>
+<span style="color: #000000">            </span>
+<span style="color: #000000">            </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Graphics</span><span style="color: #000000">())</span>
+<span style="color: #000000">                .</span><span style="color: #795E26">beginFill</span><span style="color: #000000">(</span><span style="color: #098658">0xFFFFFF</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">)</span>
+<span style="color: #000000">                .</span><span style="color: #795E26">drawRect</span><span style="color: #000000">(</span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #098658">100</span><span style="color: #000000">, </span><span style="color: #098658">100</span><span style="color: #000000">);</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">});</span>
 </code></pre>
 				<ol start="3">
 					<li>Create application</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Pixim.Application({<span class="hljs-attr">width</span>: <span class="hljs-number">300</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>});
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">app</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #001080">Pixim</span><span style="color: #000000">.</span><span style="color: #795E26">Application</span><span style="color: #000000">({</span><span style="color: #001080">width:</span><span style="color: #000000"> </span><span style="color: #098658">300</span><span style="color: #000000">, </span><span style="color: #001080">height:</span><span style="color: #000000"> </span><span style="color: #098658">300</span><span style="color: #000000">});</span>
 </code></pre>
 				<ol start="4">
 					<li>Attach content to application and run application</li>
 				</ol>
-				<pre><code class="language-javascript">app.attachAsync(<span class="hljs-keyword">new</span> Test())
-    .then(<span class="hljs-function">() =&gt;</span> {
-        app.play();
-    });
+				<pre><code class="language-javascript"><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #795E26">attachAsync</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Test</span><span style="color: #000000">())</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">then</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #795E26">play</span><span style="color: #000000">();</span>
+<span style="color: #000000">    });</span>
 </code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/1.png" alt="1"></p>
 				<a href="#image-assets-to-preload" id="image-assets-to-preload" style="color: inherit; text-decoration: none;">
@@ -178,22 +172,22 @@ Test.defineLibraries({
 				<ol>
 					<li>Define assets</li>
 				</ol>
-				<pre><code class="language-javascript">Test.defineImages({
-    <span class="hljs-attr">image_1</span>: <span class="hljs-string">&#x27;img/image_1.png&#x27;</span>
-});
+				<pre><code class="language-javascript"><span style="color: #001080">Test</span><span style="color: #000000">.</span><span style="color: #795E26">defineImages</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">image_1:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;img/image_1.png&#039;</span>
+<span style="color: #000000">});</span>
 
-Test.defineSpritesheets({
-    <span class="hljs-attr">ss_1</span>: <span class="hljs-string">&#x27;img/ss_1.json&#x27;</span>
-});
+<span style="color: #001080">Test</span><span style="color: #000000">.</span><span style="color: #795E26">defineSpritesheets</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">ss_1:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;img/ss_1.json&#039;</span>
+<span style="color: #000000">});</span>
 </code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// in content library</span>
 
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_1));
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = <span class="hljs-number">105</span>;
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = <span class="hljs-number">105</span>;
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">images</span><span style="color: #000000">.</span><span style="color: #001080">image_1</span><span style="color: #000000">));</span>
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">spritesheets</span><span style="color: #000000">.</span><span style="color: #001080">ss_1</span><span style="color: #000000">.</span><span style="color: #001080">ss_1_1</span><span style="color: #000000">)).</span><span style="color: #001080">y</span><span style="color: #000000"> = </span><span style="color: #098658">105</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">spritesheets</span><span style="color: #000000">.</span><span style="color: #001080">ss_1</span><span style="color: #000000">.</span><span style="color: #001080">ss_1_2</span><span style="color: #000000">)).</span><span style="color: #001080">x</span><span style="color: #000000"> = </span><span style="color: #098658">105</span><span style="color: #000000">;</span>
 </code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/2.png" alt="2"></p>
 				<a href="#for-instance" id="for-instance" style="color: inherit; text-decoration: none;">
@@ -202,31 +196,31 @@ Test.defineSpritesheets({
 				<ol>
 					<li>Define assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> test = <span class="hljs-keyword">new</span> Test();
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">test</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Test</span><span style="color: #000000">();</span>
 
-test.addImages({
-    <span class="hljs-attr">image_2</span>: <span class="hljs-string">&#x27;img/image_2.png&#x27;</span>
-});
+<span style="color: #001080">test</span><span style="color: #000000">.</span><span style="color: #795E26">addImages</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">image_2:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;img/image_2.png&#039;</span>
+<span style="color: #000000">});</span>
 
-test.addSpritesheets({
-    <span class="hljs-attr">ss_2</span>: <span class="hljs-string">&#x27;img/ss_2.json&#x27;</span>
-});
+<span style="color: #001080">test</span><span style="color: #000000">.</span><span style="color: #795E26">addSpritesheets</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">ss_2:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;img/ss_2.json&#039;</span>
+<span style="color: #000000">});</span>
 </code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// in content library</span>
 
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_2));
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = <span class="hljs-number">105</span>;
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = <span class="hljs-number">105</span>;
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">images</span><span style="color: #000000">.</span><span style="color: #001080">image_2</span><span style="color: #000000">));</span>
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">spritesheets</span><span style="color: #000000">.</span><span style="color: #001080">ss_2</span><span style="color: #000000">.</span><span style="color: #001080">ss_2_1</span><span style="color: #000000">)).</span><span style="color: #001080">y</span><span style="color: #000000"> = </span><span style="color: #098658">105</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #795E26">addChild</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #0070C1">PIXI</span><span style="color: #000000">.</span><span style="color: #795E26">Sprite</span><span style="color: #000000">(</span><span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">spritesheets</span><span style="color: #000000">.</span><span style="color: #001080">ss_2</span><span style="color: #000000">.</span><span style="color: #001080">ss_2_2</span><span style="color: #000000">)).</span><span style="color: #001080">x</span><span style="color: #000000"> = </span><span style="color: #098658">105</span><span style="color: #000000">;</span>
 </code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/3.png" alt="3"></p>
 				<a href="#sound-assets-to-preload" id="sound-assets-to-preload" style="color: inherit; text-decoration: none;">
 					<h3>Sound assets to preload</h3>
 				</a>
 				<p>Load &quot;<a href="https://github.com/goldfire/howler.js">howler.js</a>&quot;.</p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+				<pre><code class="language-html"><span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
 </code></pre>
 				<p>Asset provided by this feature are instance of &quot;Howl&quot;.</p>
 				<a href="#for-class-1" id="for-class-1" style="color: inherit; text-decoration: none;">
@@ -235,16 +229,16 @@ test.addSpritesheets({
 				<ol>
 					<li>Define assets</li>
 				</ol>
-				<pre><code class="language-javascript">Test.defineSounds({
-    <span class="hljs-attr">a</span>: <span class="hljs-string">&#x27;sound/a.mp3&#x27;</span>
-});
+				<pre><code class="language-javascript"><span style="color: #001080">Test</span><span style="color: #000000">.</span><span style="color: #795E26">defineSounds</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;sound/a.mp3&#039;</span>
+<span style="color: #000000">});</span>
 </code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// in content library</span>
 
-$.resources.sounds.a.play();
+<span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">sounds</span><span style="color: #000000">.</span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #795E26">play</span><span style="color: #000000">();</span>
 </code></pre>
 				<a href="#for-instance-1" id="for-instance-1" style="color: inherit; text-decoration: none;">
 					<h4>for instance</h4>
@@ -252,52 +246,85 @@ $.resources.sounds.a.play();
 				<ol>
 					<li>Define assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> test = <span class="hljs-keyword">new</span> Test();
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">test</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Test</span><span style="color: #000000">();</span>
 
-test.addSounds({
-    <span class="hljs-attr">b</span>: <span class="hljs-string">&#x27;sound/b.mp3&#x27;</span>
-});
+<span style="color: #001080">test</span><span style="color: #000000">.</span><span style="color: #795E26">addSounds</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">b:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;sound/b.mp3&#039;</span>
+<span style="color: #000000">});</span>
 </code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// in content library</span>
 
-$.resources.sounds.b.play();
+<span style="color: #001080">$</span><span style="color: #000000">.</span><span style="color: #001080">resources</span><span style="color: #000000">.</span><span style="color: #001080">sounds</span><span style="color: #000000">.</span><span style="color: #001080">b</span><span style="color: #000000">.</span><span style="color: #795E26">play</span><span style="color: #000000">();</span>
 </code></pre>
 				<a href="#task-processing" id="task-processing" style="color: inherit; text-decoration: none;">
 					<h3>Task processing</h3>
 				</a>
 				<p>If the library class inherits Pixim.Container, you can use tasks that are executed for each ticker process of the application.</p>
-				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// in content library</span>
 
-<span class="hljs-built_in">this</span>.task.add([
-    <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
-        <span class="hljs-built_in">this</span>.x += e.delta;
-        
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.x &gt; <span class="hljs-number">100</span>) {
-            <span class="hljs-built_in">this</span>.task.next();
-        }
-    },
-    <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
-        <span class="hljs-built_in">this</span>.y += e.delta;
-        
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.y &gt; <span class="hljs-number">100</span>) {
-            <span class="hljs-built_in">this</span>.task.reset();
-        }
-    }
-]);
+<span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">task</span><span style="color: #000000">.</span><span style="color: #795E26">add</span><span style="color: #000000">([</span>
+<span style="color: #000000">    </span><span style="color: #001080">e</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">x</span><span style="color: #000000"> += </span><span style="color: #001080">e</span><span style="color: #000000">.</span><span style="color: #001080">delta</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">x</span><span style="color: #000000"> &gt; </span><span style="color: #098658">100</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">task</span><span style="color: #000000">.</span><span style="color: #795E26">next</span><span style="color: #000000">();</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #001080">e</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">y</span><span style="color: #000000"> += </span><span style="color: #001080">e</span><span style="color: #000000">.</span><span style="color: #001080">delta</span><span style="color: #000000">;</span>
+<span style="color: #000000">        </span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">y</span><span style="color: #000000"> &gt; </span><span style="color: #098658">100</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">task</span><span style="color: #000000">.</span><span style="color: #795E26">reset</span><span style="color: #000000">();</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">]);</span>
 </code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
 					</li>
-					<li class=" tsd-kind-namespace">
+					<li class=" tsd-kind-module">
 						<a href="modules/pixim.html">Pixim</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_application.html">modules/<wbr>Application</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_container.html">modules/<wbr>Container</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_content.html">modules/<wbr>Content</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_contentdeliver.html">modules/<wbr>Content<wbr>Deliver</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_contentimagemanifest.html">modules/<wbr>Content<wbr>Image<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_contentmanifestbase.html">modules/<wbr>Content<wbr>Manifest<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_contentsoundmanifest.html">modules/<wbr>Content<wbr>Sound<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_contentspritesheetmanifest.html">modules/<wbr>Content<wbr>Spritesheet<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_emitter.html">modules/<wbr>Emitter</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_task.html">modules/<wbr>Task</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/modules_taskmanager.html">modules/<wbr>Task<wbr>Manager</a>
 					</li>
 				</ul>
 			</nav>
@@ -312,6 +339,15 @@ $.resources.sounds.b.play();
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
 		</div>
 	</div>
 </footer>
