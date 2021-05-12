@@ -77,7 +77,8 @@
 				<ol>
 					<li>on your npm project</li>
 				</ol>
-				<pre><code class="language-sh">npm install --save @tawaship/pixim.js</code></pre>
+				<pre><code class="language-sh">npm install --save @tawaship/pixim.js
+</code></pre>
 				<ol start="2">
 					<li>on your code</li>
 				</ol>
@@ -85,7 +86,8 @@
 
 <span class="hljs-comment">// or</span>
 
-<span class="hljs-keyword">const</span> Pixim = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@tawaship/pixim.js&#x27;</span>);</code></pre>
+<span class="hljs-keyword">const</span> Pixim = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@tawaship/pixim.js&#x27;</span>);
+</code></pre>
 				<a href="#how-to-build" id="how-to-build" style="color: inherit; text-decoration: none;">
 					<h2>How to build</h2>
 				</a>
@@ -95,13 +97,15 @@
 
 npm install
 
-npm run build</code></pre>
+npm run build
+</code></pre>
 				<a href="#how-to-load-on-browser" id="how-to-load-on-browser" style="color: inherit; text-decoration: none;">
 					<h2>How to load on browser</h2>
 				</a>
 				<p>After <a href="#how-to-install">install</a> or <a href="#how-to-build">build</a></p>
 				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/path/to/dist/Pixim.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/path/to/dist/Pixim.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
@@ -112,9 +116,11 @@ npm run build</code></pre>
 					<li> Create content </li>
 				</ol>
 				<pre><code class="language-javascript">Pixim.Content.create(<span class="hljs-string">&#x27;test&#x27;</span>);
-<span class="hljs-keyword">const</span> Test = Pixim.Content.get(<span class="hljs-string">&#x27;test&#x27;</span>);</code></pre>
+<span class="hljs-keyword">const</span> Test = Pixim.Content.get(<span class="hljs-string">&#x27;test&#x27;</span>);
+</code></pre>
 				<p>or </p>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> Test = Pixim.Content.create();</code></pre>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> Test = Pixim.Content.create();
+</code></pre>
 				<ol start="2">
 					<li>Define content settings and libraries</li>
 				</ol>
@@ -128,36 +134,39 @@ Test.defineLibraries({
     <span class="hljs-attr">root</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Pixim</span>.<span class="hljs-title">Container</span> </span>{
         <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">$</span>)</span> {
             <span class="hljs-built_in">super</span>();
-
+            
             <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
                 .beginFill(<span class="hljs-number">0xFFEEEE</span>, <span class="hljs-number">1</span>)
                 .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, $.width, $.height);
-
+            
             <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> $.lib.main($))
         }
     },
-
+    
     <span class="hljs-attr">main</span>: <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Root</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Pixim</span>.<span class="hljs-title">Container</span> </span>{
         <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">$</span>)</span> {
             <span class="hljs-built_in">super</span>();
-
+            
             <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Graphics())
                 .beginFill(<span class="hljs-number">0xFFFFFF</span>, <span class="hljs-number">1</span>)
                 .drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>);
         }
     }
-});</code></pre>
+});
+</code></pre>
 				<ol start="3">
 					<li>Create application</li>
 				</ol>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Pixim.Application({<span class="hljs-attr">width</span>: <span class="hljs-number">300</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>});</code></pre>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Pixim.Application({<span class="hljs-attr">width</span>: <span class="hljs-number">300</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">300</span>});
+</code></pre>
 				<ol start="4">
 					<li>Attach content to application and run application</li>
 				</ol>
 				<pre><code class="language-javascript">app.attachAsync(<span class="hljs-keyword">new</span> Test())
     .then(<span class="hljs-function">() =&gt;</span> {
         app.play();
-    });</code></pre>
+    });
+</code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/1.png" alt="1"></p>
 				<a href="#image-assets-to-preload" id="image-assets-to-preload" style="color: inherit; text-decoration: none;">
 					<h3>Image assets to preload</h3>
@@ -175,7 +184,8 @@ Test.defineLibraries({
 
 Test.defineSpritesheets({
     <span class="hljs-attr">ss_1</span>: <span class="hljs-string">&#x27;img/ss_1.json&#x27;</span>
-});</code></pre>
+});
+</code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
@@ -183,7 +193,8 @@ Test.defineSpritesheets({
 
 <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_1));
 <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = <span class="hljs-number">105</span>;
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = <span class="hljs-number">105</span>;</code></pre>
+<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = <span class="hljs-number">105</span>;
+</code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/2.png" alt="2"></p>
 				<a href="#for-instance" id="for-instance" style="color: inherit; text-decoration: none;">
 					<h4>for instance</h4>
@@ -199,7 +210,8 @@ test.addImages({
 
 test.addSpritesheets({
     <span class="hljs-attr">ss_2</span>: <span class="hljs-string">&#x27;img/ss_2.json&#x27;</span>
-});</code></pre>
+});
+</code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
@@ -207,13 +219,15 @@ test.addSpritesheets({
 
 <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.images.image_2));
 <span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = <span class="hljs-number">105</span>;
-<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = <span class="hljs-number">105</span>;</code></pre>
+<span class="hljs-built_in">this</span>.addChild(<span class="hljs-keyword">new</span> PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = <span class="hljs-number">105</span>;
+</code></pre>
 				<p><img src="https://raw.github.com/tawaship/Pixim.js/screenshot/img/3.png" alt="3"></p>
 				<a href="#sound-assets-to-preload" id="sound-assets-to-preload" style="color: inherit; text-decoration: none;">
 					<h3>Sound assets to preload</h3>
 				</a>
 				<p>Load &quot;<a href="https://github.com/goldfire/howler.js">howler.js</a>&quot;.</p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
 				<p>Asset provided by this feature are instance of &quot;Howl&quot;.</p>
 				<a href="#for-class-1" id="for-class-1" style="color: inherit; text-decoration: none;">
 					<h4>for class</h4>
@@ -223,13 +237,15 @@ test.addSpritesheets({
 				</ol>
 				<pre><code class="language-javascript">Test.defineSounds({
     <span class="hljs-attr">a</span>: <span class="hljs-string">&#x27;sound/a.mp3&#x27;</span>
-});</code></pre>
+});
+</code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
 				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
 
-$.resources.sounds.a.play();</code></pre>
+$.resources.sounds.a.play();
+</code></pre>
 				<a href="#for-instance-1" id="for-instance-1" style="color: inherit; text-decoration: none;">
 					<h4>for instance</h4>
 				</a>
@@ -240,13 +256,15 @@ $.resources.sounds.a.play();</code></pre>
 
 test.addSounds({
     <span class="hljs-attr">b</span>: <span class="hljs-string">&#x27;sound/b.mp3&#x27;</span>
-});</code></pre>
+});
+</code></pre>
 				<ol start="2">
 					<li>Use assets</li>
 				</ol>
 				<pre><code class="language-javascript"><span class="hljs-comment">// in content library</span>
 
-$.resources.sounds.b.play();</code></pre>
+$.resources.sounds.b.play();
+</code></pre>
 				<a href="#task-processing" id="task-processing" style="color: inherit; text-decoration: none;">
 					<h3>Task processing</h3>
 				</a>
@@ -256,19 +274,20 @@ $.resources.sounds.b.play();</code></pre>
 <span class="hljs-built_in">this</span>.task.add([
     <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
         <span class="hljs-built_in">this</span>.x += e.delta;
-
+        
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.x &gt; <span class="hljs-number">100</span>) {
             <span class="hljs-built_in">this</span>.task.next();
         }
     },
     <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
         <span class="hljs-built_in">this</span>.y += e.delta;
-
+        
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.y &gt; <span class="hljs-number">100</span>) {
             <span class="hljs-built_in">this</span>.task.reset();
         }
     }
-]);</code></pre>
+]);
+</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

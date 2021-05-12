@@ -1,7 +1,7 @@
 /*!
  * @tawaship/pixim.js - v1.10.2
  * 
- * @require pixi.js v5.2.1
+ * @require pixi.js v5.3.9
  * @require howler.js v2.2.0 (If use sound)
  * @author tawaship (makazu.mori@gmail.com)
  * @license MIT
