@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Task } from './Task';
-import { TaskManager } from './TaskManager';
+//import { TaskManager } from './TaskManager';
 import { ITickerData } from './Application';
 
 export interface IContainerData {
@@ -30,7 +30,7 @@ export class Container extends PIXI.Container {
 		this._piximData.task.first();
 		
 		const _observerID = _lastObserverID++;
-		
+		/*
 		this.on('added', () => {
 			TaskManager.addObserver(_observerID, this);
 		});
@@ -38,15 +38,17 @@ export class Container extends PIXI.Container {
 		this.on('removed', () => {
 			TaskManager.removeObserver(_observerID);
 		});
+		*/
 	}
 	
 	updateTask(e: ITickerData) {
 		const task: Task = this._piximData.task;
 		
-		if (!this.taskEnabled) {
+		if (!this._piximData.task.enabled) {
 			return;
 		}
 		
+		/*
 		let p: PIXI.DisplayObject = this;
 		let f = true;
 		
@@ -62,6 +64,7 @@ export class Container extends PIXI.Container {
 		if (!f) {
 			return;
 		}
+		*/
 		
 		task.done(e);
 		

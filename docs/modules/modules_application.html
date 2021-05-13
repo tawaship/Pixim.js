@@ -73,6 +73,7 @@
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/modules_application.application.html" class="tsd-kind-icon">Application</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/modules_application.layer.html" class="tsd-kind-icon">Layer</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -81,6 +82,7 @@
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.iadjustdelegate.html" class="tsd-kind-icon">IAdjust<wbr>Delegate</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.iapplicationdata.html" class="tsd-kind-icon">IApplication<wbr>Data</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.iapplicationoption.html" class="tsd-kind-icon">IApplication<wbr>Option</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.iautoadjustdelegate.html" class="tsd-kind-icon">IAuto<wbr>Adjust<wbr>Delegate</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.idestroyoptions.html" class="tsd-kind-icon">IDestroy<wbr>Options</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.ihorizontal.html" class="tsd-kind-icon">IHorizontal</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/modules_application.ilayerdictionary.html" class="tsd-kind-icon">ILayer<wbr>Dictionary</a></li>
@@ -96,6 +98,7 @@
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="modules_application.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="modules_application.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,7 +112,17 @@
 					<div class="tsd-signature tsd-kind-icon">TAuto<wbr>Adjust<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/modules_application.iadjustdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">IAdjustDelegate</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L22">src/modules/Application.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L23">src/modules/Application.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="tautoadjuster" class="tsd-anchor"></a>
+					<h3>TAuto<wbr>Adjuster</h3>
+					<div class="tsd-signature tsd-kind-icon">TAuto<wbr>Adjuster<span class="tsd-signature-symbol">:</span> <a href="../interfaces/modules_application.iautoadjustdelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">IAutoAdjustDelegate</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Application.ts#L29">src/modules/Application.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -154,15 +167,15 @@
 					<li class=" tsd-kind-module">
 						<a href="modules_task.html">modules/<wbr>Task</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules_taskmanager.html">modules/<wbr>Task<wbr>Manager</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/modules_application.application.html" class="tsd-kind-icon">Application</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/modules_application.layer.html" class="tsd-kind-icon">Layer</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/modules_application.iadjustdelegate.html" class="tsd-kind-icon">IAdjust<wbr>Delegate</a>
@@ -172,6 +185,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/modules_application.iapplicationoption.html" class="tsd-kind-icon">IApplication<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/modules_application.iautoadjustdelegate.html" class="tsd-kind-icon">IAuto<wbr>Adjust<wbr>Delegate</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/modules_application.idestroyoptions.html" class="tsd-kind-icon">IDestroy<wbr>Options</a>
@@ -202,6 +218,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="modules_application.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="modules_application.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a>
 					</li>
 				</ul>
 			</nav>
