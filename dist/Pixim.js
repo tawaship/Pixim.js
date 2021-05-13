@@ -108,182 +108,7 @@
         }
         return _Emitter && (Emitter.__proto__ = _Emitter), Emitter.prototype = Object.create(_Emitter && _Emitter.prototype), 
         Emitter.prototype.constructor = Emitter, Emitter;
-    }(Emitter), _observers = {}, _lastTickerData = {
-        delta: 1
-    }, TaskManager = function() {
-        throw new Error("This class can not instantiate.");
-    };
-    TaskManager.addObserver = function(id, observer) {
-        _observers[id] = observer, observer.updateTask(_lastTickerData);
-    }, TaskManager.removeObserver = function(id) {
-        delete _observers[id];
-    }, TaskManager.done = function(e) {
-        for (var i in _lastTickerData = e, _observers) {
-            _observers[i].updateTask(e);
-        }
-    };
-    var _roots = {}, Application = function(Emitter) {
-        function Application(pixiOptions, piximOptions) {
-            var this$1 = this;
-            void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
-            Emitter.call(this);
-            var app = new PIXI.Application(pixiOptions);
-            app.stop();
-            var stage = app.stage, view = app.view;
-            view.style.position = "absolute";
-            var autoAdjust = piximOptions.autoAdjust || !1;
-            if (this._piximData = {
-                isRun: !1,
-                app: app,
-                stage: stage,
-                view: view,
-                container: piximOptions.container || document.body,
-                layers: {},
-                options: piximOptions
-            }, this._piximData.app.ticker.add((function(delta) {
-                TaskManager.done({
-                    delta: delta
-                });
-            })), autoAdjust) {
-                if (!0 === autoAdjust) {
-                    var f = function() {
-                        this$1.fullScreen();
-                    };
-                    window.addEventListener("resize", f), f();
-                } else {
-                    var f$1 = function() {
-                        autoAdjust(this$1);
-                    };
-                    window.addEventListener("resize", f$1), f$1();
-                }
-            }
-        }
-        Emitter && (Application.__proto__ = Emitter), Application.prototype = Object.create(Emitter && Emitter.prototype), 
-        Application.prototype.constructor = Application;
-        var prototypeAccessors = {
-            app: {
-                configurable: !0
-            },
-            stage: {
-                configurable: !0
-            },
-            view: {
-                configurable: !0
-            },
-            container: {
-                configurable: !0
-            }
-        };
-        return prototypeAccessors.app.get = function() {
-            return this._piximData.app;
-        }, prototypeAccessors.stage.get = function() {
-            return this._piximData.stage;
-        }, prototypeAccessors.view.get = function() {
-            return this._piximData.view;
-        }, prototypeAccessors.container.get = function() {
-            return this._piximData.container;
-        }, prototypeAccessors.container.set = function(container) {
-            this._piximData.container = container || document.body, this._piximData.view.parentNode && this._piximData.container.appendChild(this._piximData.view);
-        }, Application.prototype._hasLayer = function(name) {
-            return !!this._piximData.layers[name];
-        }, Application.prototype.addLayer = function(name) {
-            return this._hasLayer(name) || (this._piximData.layers[name] = this._piximData.stage.addChild(new PIXI.Container)), 
-            this;
-        }, Application.prototype.removeLayer = function(name) {
-            return this._hasLayer(name) ? (this._piximData.stage.removeChild(this._piximData.layers[name]), 
-            delete this._piximData.layers[name], this) : this;
-        }, Application.prototype.attachAsync = function(content, layerName) {
-            var this$1 = this;
-            return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
-                return this$1.addLayer(layerName), _roots[content.contentID] = root, this$1._piximData.layers[layerName].addChild(root), 
-                root;
-            }));
-        }, Application.prototype.detach = function(content, stageOptions) {
-            var root = _roots[content.contentID];
-            return root ? (this._destroyRoot(root, stageOptions), delete _roots[content.contentID], 
-            this) : this;
-        }, Application.prototype.play = function() {
-            return this._piximData.container.appendChild(this._piximData.view), this.start();
-        }, Application.prototype.start = function() {
-            return this._piximData.app.start(), this;
-        }, Application.prototype.stop = function() {
-            return this._piximData.app.stop(), this;
-        }, Application.prototype.destroy = function(removeView, stageOptions) {
-            var keys = [];
-            for (var i in _roots) {
-                keys.push(i);
-            }
-            for (var i$1 = 0; i$1 < keys.length; i$1++) {
-                delete _roots[keys[i$1]];
-            }
-            return this._piximData.app.destroy(removeView, stageOptions), this;
-        }, Application.prototype._destroyRoot = function(root, stageOptions) {
-            root.destroy(stageOptions);
-        }, Application.prototype.pause = function(paused) {
-            return paused ? this._piximData.app.stop() : this._piximData.app.start(), this;
-        }, Application.prototype.fullScreen = function(rect) {
-            var view = this._piximData.view, r = rect || {
-                x: 0,
-                y: 0,
-                width: this._piximData.container.offsetWidth || window.innerWidth,
-                height: this._piximData.container.offsetHeight || window.innerHeight
-            };
-            return r.width / r.height > view.width / view.height ? this.adjustHeight(r.height).toCenter(r).toTop(r) : this.adjustWidth(r.width).toMiddle(r).toLeft(r);
-        }, Application.prototype.adjustWidth = function(width) {
-            var view = this._piximData.view, w = width || this._piximData.container.offsetWidth || window.innerWidth, h = w / view.width * view.height;
-            return view.style.width = w + "px", view.style.height = h + "px", this;
-        }, Application.prototype.adjustHeight = function(height) {
-            var view = this._piximData.view, h = height || this._piximData.container.offsetHeight || window.innerHeight, w = h / view.height * view.width;
-            return view.style.height = h + "px", view.style.width = w + "px", this;
-        }, Application.prototype.toLeft = function(horizontal) {
-            var view = this._piximData.view, hol = horizontal || {
-                x: 0,
-                width: this._piximData.container.offsetWidth || window.innerWidth
-            };
-            return view.style.left = hol.x + "px", this;
-        }, Application.prototype.toCenter = function(horizontal) {
-            var view = this._piximData.view, hol = horizontal || {
-                x: 0,
-                width: this._piximData.container.offsetWidth || window.innerWidth
-            };
-            return view.style.left = (hol.width - this._getViewRect().width) / 2 + hol.x + "px", 
-            this;
-        }, Application.prototype.toRight = function(horizontal) {
-            var view = this._piximData.view, hol = horizontal || {
-                x: 0,
-                width: this._piximData.container.offsetWidth || window.innerWidth
-            };
-            return view.style.left = hol.width - this._getViewRect().width + hol.x + "px", this;
-        }, Application.prototype.toTop = function(vertical) {
-            var view = this._piximData.view, ver = vertical || {
-                y: 0,
-                height: this._piximData.container.offsetHeight || window.innerHeight
-            };
-            return view.style.top = ver.y + "px", this;
-        }, Application.prototype.toMiddle = function(vertical) {
-            var view = this._piximData.view, ver = vertical || {
-                y: 0,
-                height: this._piximData.container.offsetHeight || window.innerHeight
-            };
-            return view.style.top = (ver.height - this._getViewRect().height) / 2 + ver.y + "px", 
-            this;
-        }, Application.prototype.toBottom = function(vertical) {
-            var view = this._piximData.view, ver = vertical || {
-                y: 0,
-                height: this._piximData.container.offsetHeight || window.innerHeight
-            };
-            return view.style.top = ver.height - this._getViewRect().height + ver.y + "px", 
-            this;
-        }, Application.prototype._getViewRect = function() {
-            var view = this._piximData.view;
-            return {
-                x: parseInt(view.style.left.replace("px", "")),
-                y: parseInt(view.style.top.replace("px", "")),
-                width: parseInt(view.style.width.replace("px", "")),
-                height: parseInt(view.style.height.replace("px", ""))
-            };
-        }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), Task = function(callbacks, context) {
+    }(Emitter), Task = function(callbacks, context) {
         this._taskData = {
             context: null == context ? this : context,
             enabled: !0,
@@ -299,7 +124,12 @@
             configurable: !0
         }
     };
-    prototypeAccessors.enabled.get = function() {
+    /*!
+     * @tawaship/task - v1.1.0
+     * 
+     * @author tawaship (makazu.mori@gmail.com)
+     * @license MIT
+     */    prototypeAccessors.enabled.get = function() {
         return this._taskData.enabled;
     }, prototypeAccessors.enabled.set = function(enabled) {
         this._taskData.enabled = enabled;
@@ -381,21 +211,15 @@
         }, Task.prototype.destroy = function() {
             _Task.prototype.destroy.call(this), this.clear();
         }, Task;
-    }(Task), _lastObserverID = 0, Container = function(superclass) {
+    }(Task), Container = function(superclass) {
         function Container() {
-            for (var this$1 = this, args = [], len = arguments.length; len--; ) {
+            for (var args = [], len = arguments.length; len--; ) {
                 args[len] = arguments[len];
             }
             superclass.call(this), this._piximData = {
                 task: new Task$1([], this),
                 taskEnabledChildren: !0
             }, this._piximData.task.first();
-            var _observerID = _lastObserverID++;
-            this.on("added", (function() {
-                TaskManager.addObserver(_observerID, this$1);
-            })), this.on("removed", (function() {
-                TaskManager.removeObserver(_observerID);
-            }));
         }
         superclass && (Container.__proto__ = superclass), Container.prototype = Object.create(superclass && superclass.prototype), 
         Container.prototype.constructor = Container;
@@ -412,16 +236,7 @@
         };
         return Container.prototype.updateTask = function(e) {
             var task = this._piximData.task;
-            if (this.taskEnabled) {
-                for (var p = this, f = !0; p; ) {
-                    if (p instanceof Container && !p.taskEnabledChildren) {
-                        f = !1;
-                        break;
-                    }
-                    p = p.parent;
-                }
-                f && (task.done(e), task.cemitAll(this, e));
-            }
+            this._piximData.task.enabled && (task.done(e), task.cemitAll(this, e));
         }, prototypeAccessors.taskEnabled.get = function() {
             return this._piximData.task.enabled;
         }, prototypeAccessors.taskEnabled.set = function(enabled) {
@@ -438,7 +253,183 @@
             }
             superclass.prototype.destroy.apply(this, args), this._piximData.task.destroy();
         }, Object.defineProperties(Container.prototype, prototypeAccessors), Container;
-    }(PIXI.Container), _cache = {}, ContentManifestBase = function() {
+    }(PIXI.Container), Layer = function(superclass) {
+        function Layer() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (Layer.__proto__ = superclass), Layer.prototype = Object.create(superclass && superclass.prototype), 
+        Layer.prototype.constructor = Layer, Layer;
+    }(PIXI.Container);
+    function taskHandler(obj, e) {
+        if (!(obj instanceof Container) || (obj.updateTask(e), obj.taskEnabledChildren)) {
+            for (var children = [], i = 0; i < obj.children.length; i++) {
+                children.push(obj.children[i]);
+            }
+            for (var i$1 = 0; i$1 < children.length; i$1++) {
+                var child = children[i$1];
+                child instanceof PIXI.Container && taskHandler(child, e);
+            }
+        }
+    }
+    var Application = function(Emitter) {
+        function Application(pixiOptions, piximOptions) {
+            var this$1 = this;
+            void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
+            Emitter.call(this);
+            var app = new PIXI.Application(pixiOptions);
+            app.stop(), app.view.style.position = "absolute";
+            var autoAdjust = piximOptions.autoAdjust || !1;
+            this._piximData = {
+                isRun: !1,
+                app: app,
+                container: piximOptions.container || document.body,
+                layers: {},
+                autoAdjuster: null,
+                roots: {}
+            }, this._piximData.app.ticker.add((function(delta) {
+                taskHandler(this$1._piximData.app.stage, {
+                    delta: delta
+                });
+            })), autoAdjust && (this.autoAdjuster = !0 === autoAdjust ? function() {
+                this$1.fullScreen();
+            } : function() {
+                autoAdjust(this$1);
+            });
+        }
+        Emitter && (Application.__proto__ = Emitter), Application.prototype = Object.create(Emitter && Emitter.prototype), 
+        Application.prototype.constructor = Application;
+        var prototypeAccessors = {
+            app: {
+                configurable: !0
+            },
+            stage: {
+                configurable: !0
+            },
+            view: {
+                configurable: !0
+            },
+            container: {
+                configurable: !0
+            },
+            autoAdjuster: {
+                configurable: !0
+            }
+        };
+        return prototypeAccessors.app.get = function() {
+            return this._piximData.app;
+        }, prototypeAccessors.stage.get = function() {
+            return this._piximData.app.stage;
+        }, prototypeAccessors.view.get = function() {
+            return this._piximData.app.view;
+        }, prototypeAccessors.container.get = function() {
+            return this._piximData.container;
+        }, prototypeAccessors.container.set = function(container) {
+            this._piximData.container = container || document.body, this._piximData.app.view.parentNode && this._piximData.container.appendChild(this._piximData.app.view);
+        }, Application.prototype._hasLayer = function(name) {
+            return !!this._piximData.layers[name];
+        }, Application.prototype.addLayer = function(name) {
+            return this._hasLayer(name) || (this._piximData.layers[name] = this._piximData.app.stage.addChild(new Layer)), 
+            this;
+        }, Application.prototype.removeLayer = function(name) {
+            return this._hasLayer(name) ? (this._piximData.app.stage.removeChild(this._piximData.layers[name]), 
+            delete this._piximData.layers[name], this) : this;
+        }, Application.prototype.attachAsync = function(content, layerName) {
+            var this$1 = this;
+            return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
+                return this$1.detach(content), this$1.addLayer(layerName), this$1._piximData.roots[content.contentID] = root, 
+                this$1._piximData.layers[layerName].addChild(root), root;
+            }));
+        }, Application.prototype.detach = function(content, stageOptions) {
+            void 0 === stageOptions && (stageOptions = {
+                children: !0
+            });
+            var root = this._piximData.roots[content.contentID];
+            return root ? (this._destroyRoot(root, stageOptions), delete this._piximData.roots[content.contentID], 
+            this) : this;
+        }, Application.prototype.play = function() {
+            return this._piximData.container.appendChild(this._piximData.app.view), this.start();
+        }, Application.prototype.start = function() {
+            return this._piximData.app.start(), this;
+        }, Application.prototype.stop = function() {
+            return this._piximData.app.stop(), this;
+        }, Application.prototype.pause = function(paused) {
+            return paused ? this.stop() : this.start(), this;
+        }, prototypeAccessors.autoAdjuster.get = function() {
+            return this._piximData.autoAdjuster;
+        }, prototypeAccessors.autoAdjuster.set = function(autoAdjuster) {
+            this._piximData.autoAdjuster && window.removeEventListener("resize", this._piximData.autoAdjuster), 
+            autoAdjuster ? (this._piximData.autoAdjuster = autoAdjuster, window.addEventListener("resize", autoAdjuster), 
+            autoAdjuster()) : this._piximData.autoAdjuster = null;
+        }, Application.prototype.preDestroy = function() {
+            this.autoAdjuster = null, this._piximData.layers = {}, this._piximData.roots = {};
+        }, Application.prototype.destroy = function(removeView, stageOptions) {
+            return this.preDestroy(), this._piximData.app.destroy(removeView, stageOptions), 
+            this;
+        }, Application.prototype._destroyRoot = function(root, stageOptions) {
+            root.destroy(stageOptions);
+        }, Application.prototype.fullScreen = function(rect) {
+            var view = this._piximData.app.view, r = rect || {
+                x: 0,
+                y: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return r.width / r.height > view.width / view.height ? this.adjustHeight(r.height).toCenter(r).toTop(r) : this.adjustWidth(r.width).toMiddle(r).toLeft(r);
+        }, Application.prototype.adjustWidth = function(width) {
+            var view = this._piximData.app.view, w = width || this._piximData.container.offsetWidth || window.innerWidth, h = w / view.width * view.height;
+            return view.style.width = w + "px", view.style.height = h + "px", this;
+        }, Application.prototype.adjustHeight = function(height) {
+            var view = this._piximData.app.view, h = height || this._piximData.container.offsetHeight || window.innerHeight, w = h / view.height * view.width;
+            return view.style.height = h + "px", view.style.width = w + "px", this;
+        }, Application.prototype.toLeft = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = hol.x + "px", this;
+        }, Application.prototype.toCenter = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = (hol.width - this._getViewRect().width) / 2 + hol.x + "px", 
+            this;
+        }, Application.prototype.toRight = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = hol.width - this._getViewRect().width + hol.x + "px", this;
+        }, Application.prototype.toTop = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = ver.y + "px", this;
+        }, Application.prototype.toMiddle = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = (ver.height - this._getViewRect().height) / 2 + ver.y + "px", 
+            this;
+        }, Application.prototype.toBottom = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = ver.height - this._getViewRect().height + ver.y + "px", 
+            this;
+        }, Application.prototype._getViewRect = function() {
+            var view = this._piximData.app.view;
+            return {
+                x: parseInt(view.style.left.replace("px", "")),
+                y: parseInt(view.style.top.replace("px", "")),
+                width: parseInt(view.style.width.replace("px", "")),
+                height: parseInt(view.style.height.replace("px", ""))
+            };
+        }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
+    }(Emitter$1), _cache = {}, ContentManifestBase = function() {
         this._manifests = {};
     };
     ContentManifestBase.prototype.add = function(manifests, options) {
@@ -763,7 +754,7 @@
     exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
     exports.ContentImageManifest = ContentImageManifest, exports.ContentManifestBase = ContentManifestBase, 
     exports.ContentSoundManifest = ContentSoundManifest, exports.ContentSpritesheetManifest = ContentSpritesheetManifest, 
-    exports.Emitter = Emitter$1, exports.Task = Task$1;
+    exports.Emitter = Emitter$1, exports.Layer = Layer, exports.Task = Task$1;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

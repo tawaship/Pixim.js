@@ -84,6 +84,7 @@
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#iadjustdelegate" class="tsd-kind-icon">IAdjust<wbr>Delegate</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#iapplicationdata" class="tsd-kind-icon">IApplication<wbr>Data</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#iapplicationoption" class="tsd-kind-icon">IApplication<wbr>Option</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#iautoadjustdelegate" class="tsd-kind-icon">IAuto<wbr>Adjust<wbr>Delegate</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#icontainerdata" class="tsd-kind-icon">IContainer<wbr>Data</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#icontentassetversion" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Version</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#icontentconfigdata" class="tsd-kind-icon">IContent<wbr>Config<wbr>Data</a></li>
@@ -120,7 +121,9 @@
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#itickerdata" class="tsd-kind-icon">ITicker<wbr>Data</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#ivariabledictionary" class="tsd-kind-icon">IVariable<wbr>Dictionary</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#ivertical" class="tsd-kind-icon">IVertical</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#layer" class="tsd-kind-icon">Layer</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a></li>
+								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#tcontentmanifesttype" class="tsd-kind-icon">TContent<wbr>Manifest<wbr>Type</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#tcontents" class="tsd-kind-icon">TContents</a></li>
 								<li class="tsd-kind-reference tsd-parent-kind-module"><a href="pixim.html#task" class="tsd-kind-icon">Task</a></li>
@@ -190,6 +193,11 @@
 					<a name="iapplicationoption" class="tsd-anchor"></a>
 					<h3>IApplication<wbr>Option</h3>
 					Re-exports <a href="../interfaces/modules_application.iapplicationoption.html">IApplicationOption</a>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="iautoadjustdelegate" class="tsd-anchor"></a>
+					<h3>IAuto<wbr>Adjust<wbr>Delegate</h3>
+					Re-exports <a href="../interfaces/modules_application.iautoadjustdelegate.html">IAutoAdjustDelegate</a>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
 					<a name="icontainerdata" class="tsd-anchor"></a>
@@ -372,9 +380,19 @@
 					Re-exports <a href="../interfaces/modules_application.ivertical.html">IVertical</a>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="layer" class="tsd-anchor"></a>
+					<h3>Layer</h3>
+					Re-exports <a href="../classes/modules_application.layer.html">Layer</a>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
 					<a name="tautoadjust" class="tsd-anchor"></a>
 					<h3>TAuto<wbr>Adjust</h3>
 					Re-exports <a href="modules_application.html#tautoadjust">TAutoAdjust</a>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
+					<a name="tautoadjuster" class="tsd-anchor"></a>
+					<h3>TAuto<wbr>Adjuster</h3>
+					Re-exports <a href="modules_application.html#tautoadjuster">TAutoAdjuster</a>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-reference tsd-parent-kind-module">
 					<a name="tcontentmanifesttype" class="tsd-anchor"></a>
@@ -432,9 +450,6 @@
 					<li class=" tsd-kind-module">
 						<a href="modules_task.html">modules/<wbr>Task</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules_taskmanager.html">modules/<wbr>Task<wbr>Manager</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -474,6 +489,9 @@
 					</li>
 					<li class=" tsd-kind-reference tsd-parent-kind-module">
 						<a href="pixim.html#iapplicationoption" class="tsd-kind-icon">IApplication<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module">
+						<a href="pixim.html#iautoadjustdelegate" class="tsd-kind-icon">IAuto<wbr>Adjust<wbr>Delegate</a>
 					</li>
 					<li class=" tsd-kind-reference tsd-parent-kind-module">
 						<a href="pixim.html#icontainerdata" class="tsd-kind-icon">IContainer<wbr>Data</a>
@@ -584,7 +602,13 @@
 						<a href="pixim.html#ivertical" class="tsd-kind-icon">IVertical</a>
 					</li>
 					<li class=" tsd-kind-reference tsd-parent-kind-module">
+						<a href="pixim.html#layer" class="tsd-kind-icon">Layer</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module">
 						<a href="pixim.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a>
+					</li>
+					<li class=" tsd-kind-reference tsd-parent-kind-module">
+						<a href="pixim.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a>
 					</li>
 					<li class=" tsd-kind-reference tsd-parent-kind-module">
 						<a href="pixim.html#tcontentmanifesttype" class="tsd-kind-icon">TContent<wbr>Manifest<wbr>Type</a>
