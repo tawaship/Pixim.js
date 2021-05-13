@@ -1,21 +1,21 @@
 /*!
- * @tawaship/pixim.js - v1.10.2
+ * @tawaship/pixim.js - v1.11.0
  * 
- * @require pixi.js v5.2.1
+ * @require pixi.js v5.3.9
  * @require howler.js v2.2.0 (If use sound)
  * @author tawaship (makazu.mori@gmail.com)
  * @license MIT
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.10.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.11.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
      * @author tawaship (makazu.mori@gmail.com)
      * @license MIT
      */
-    var Pixim, Emitter = function() {
+    var Emitter = function() {
         this._events = {};
     };
     Emitter.prototype._on = function(type, callback, once) {
@@ -101,200 +101,14 @@
     }, Emitter.prototype.clear = function(type) {
         return void 0 === type && (type = ""), type ? delete this._events[type] : this._events = {}, 
         this;
-    }, function(Pixim) {
-        var Emitter$1 = function(_Emitter) {
-            function Emitter() {
-                _Emitter.apply(this, arguments);
-            }
-            return _Emitter && (Emitter.__proto__ = _Emitter), Emitter.prototype = Object.create(_Emitter && _Emitter.prototype), 
-            Emitter.prototype.constructor = Emitter, Emitter;
-        }(Emitter);
-        Pixim.Emitter = Emitter$1;
-    }(Pixim || (Pixim = {}));
-    var Pixim$1, Emitter$1 = Pixim.Emitter;
-    !function(Pixim) {
-        var _observers = {}, _lastTickerData = {
-            delta: 1
-        }, TaskManager = function() {
-            throw new Error("This class can not instantiate.");
-        };
-        TaskManager.addObserver = function(id, observer) {
-            _observers[id] = observer, observer.updateTask(_lastTickerData);
-        }, TaskManager.removeObserver = function(id) {
-            delete _observers[id];
-        }, TaskManager.done = function(e) {
-            for (var i in _lastTickerData = e, _observers) {
-                _observers[i].updateTask(e);
-            }
-        }, Pixim.TaskManager = TaskManager;
-    }(Pixim$1 || (Pixim$1 = {}));
-    var Pixim$2, TaskManager = Pixim$1.TaskManager;
-    !function(Pixim) {
-        var _roots = {}, Application = function(Emitter) {
-            function Application(pixiOptions, piximOptions) {
-                var this$1 = this;
-                void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
-                Emitter.call(this);
-                var app = new PIXI.Application(pixiOptions);
-                app.stop();
-                var stage = app.stage, view = app.view;
-                view.style.position = "absolute";
-                var autoAdjust = piximOptions.autoAdjust || !1;
-                if (this._piximData = {
-                    isRun: !1,
-                    app: app,
-                    stage: stage,
-                    view: view,
-                    container: piximOptions.container || document.body,
-                    layers: {},
-                    options: piximOptions
-                }, this._piximData.app.ticker.add((function(delta) {
-                    TaskManager.done({
-                        delta: delta
-                    });
-                })), autoAdjust) {
-                    if (!0 === autoAdjust) {
-                        var f = function() {
-                            this$1.fullScreen();
-                        };
-                        window.addEventListener("resize", f), f();
-                    } else {
-                        var f$1 = function() {
-                            autoAdjust(this$1);
-                        };
-                        window.addEventListener("resize", f$1), f$1();
-                    }
-                }
-            }
-            Emitter && (Application.__proto__ = Emitter), Application.prototype = Object.create(Emitter && Emitter.prototype), 
-            Application.prototype.constructor = Application;
-            var prototypeAccessors = {
-                app: {
-                    configurable: !0
-                },
-                stage: {
-                    configurable: !0
-                },
-                view: {
-                    configurable: !0
-                },
-                container: {
-                    configurable: !0
-                }
-            };
-            return prototypeAccessors.app.get = function() {
-                return this._piximData.app;
-            }, prototypeAccessors.stage.get = function() {
-                return this._piximData.stage;
-            }, prototypeAccessors.view.get = function() {
-                return this._piximData.view;
-            }, prototypeAccessors.container.get = function() {
-                return this._piximData.container;
-            }, prototypeAccessors.container.set = function(container) {
-                this._piximData.container = container || document.body, this._piximData.view.parentNode && this._piximData.container.appendChild(this._piximData.view);
-            }, Application.prototype._hasLayer = function(name) {
-                return !!this._piximData.layers[name];
-            }, Application.prototype.addLayer = function(name) {
-                return this._hasLayer(name) || (this._piximData.layers[name] = this._piximData.stage.addChild(new PIXI.Container)), 
-                this;
-            }, Application.prototype.removeLayer = function(name) {
-                return this._hasLayer(name) ? (this._piximData.stage.removeChild(this._piximData.layers[name]), 
-                delete this._piximData.layers[name], this) : this;
-            }, Application.prototype.attachAsync = function(content, layerName) {
-                var this$1 = this;
-                return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
-                    return this$1.addLayer(layerName), _roots[content.contentID] = root, this$1._piximData.layers[layerName].addChild(root), 
-                    root;
-                }));
-            }, Application.prototype.detach = function(content, stageOptions) {
-                var root = _roots[content.contentID];
-                return root ? (this._destroyRoot(root, stageOptions), delete _roots[content.contentID], 
-                this) : this;
-            }, Application.prototype.play = function() {
-                return this._piximData.container.appendChild(this._piximData.view), this.start();
-            }, Application.prototype.start = function() {
-                return this._piximData.app.start(), this;
-            }, Application.prototype.stop = function() {
-                return this._piximData.app.stop(), this;
-            }, Application.prototype.destroy = function(removeView, stageOptions) {
-                var keys = [];
-                for (var i in _roots) {
-                    keys.push(i);
-                }
-                for (var i$1 = 0; i$1 < keys.length; i$1++) {
-                    delete _roots[keys[i$1]];
-                }
-                return this._piximData.app.destroy(removeView, stageOptions), this;
-            }, Application.prototype._destroyRoot = function(root, stageOptions) {
-                root.destroy(stageOptions);
-            }, Application.prototype.pause = function(paused) {
-                return paused ? this._piximData.app.stop() : this._piximData.app.start(), this;
-            }, Application.prototype.fullScreen = function(rect) {
-                var view = this._piximData.view, r = rect || {
-                    x: 0,
-                    y: 0,
-                    width: this._piximData.container.offsetWidth || window.innerWidth,
-                    height: this._piximData.container.offsetHeight || window.innerHeight
-                };
-                return r.width / r.height > view.width / view.height ? this.adjustHeight(r.height).toCenter(r).toTop(r) : this.adjustWidth(r.width).toMiddle(r).toLeft(r);
-            }, Application.prototype.adjustWidth = function(width) {
-                var view = this._piximData.view, w = width || this._piximData.container.offsetWidth || window.innerWidth, h = w / view.width * view.height;
-                return view.style.width = w + "px", view.style.height = h + "px", this;
-            }, Application.prototype.adjustHeight = function(height) {
-                var view = this._piximData.view, h = height || this._piximData.container.offsetHeight || window.innerHeight, w = h / view.height * view.width;
-                return view.style.height = h + "px", view.style.width = w + "px", this;
-            }, Application.prototype.toLeft = function(horizontal) {
-                var view = this._piximData.view, hol = horizontal || {
-                    x: 0,
-                    width: this._piximData.container.offsetWidth || window.innerWidth
-                };
-                return view.style.left = hol.x + "px", this;
-            }, Application.prototype.toCenter = function(horizontal) {
-                var view = this._piximData.view, hol = horizontal || {
-                    x: 0,
-                    width: this._piximData.container.offsetWidth || window.innerWidth
-                };
-                return view.style.left = (hol.width - this._getViewRect().width) / 2 + hol.x + "px", 
-                this;
-            }, Application.prototype.toRight = function(horizontal) {
-                var view = this._piximData.view, hol = horizontal || {
-                    x: 0,
-                    width: this._piximData.container.offsetWidth || window.innerWidth
-                };
-                return view.style.left = hol.width - this._getViewRect().width + hol.x + "px", this;
-            }, Application.prototype.toTop = function(vertical) {
-                var view = this._piximData.view, ver = vertical || {
-                    y: 0,
-                    height: this._piximData.container.offsetHeight || window.innerHeight
-                };
-                return view.style.top = ver.y + "px", this;
-            }, Application.prototype.toMiddle = function(vertical) {
-                var view = this._piximData.view, ver = vertical || {
-                    y: 0,
-                    height: this._piximData.container.offsetHeight || window.innerHeight
-                };
-                return view.style.top = (ver.height - this._getViewRect().height) / 2 + ver.y + "px", 
-                this;
-            }, Application.prototype.toBottom = function(vertical) {
-                var view = this._piximData.view, ver = vertical || {
-                    y: 0,
-                    height: this._piximData.container.offsetHeight || window.innerHeight
-                };
-                return view.style.top = ver.height - this._getViewRect().height + ver.y + "px", 
-                this;
-            }, Application.prototype._getViewRect = function() {
-                var view = this._piximData.view;
-                return {
-                    x: parseInt(view.style.left.replace("px", "")),
-                    y: parseInt(view.style.top.replace("px", "")),
-                    width: parseInt(view.style.width.replace("px", "")),
-                    height: parseInt(view.style.height.replace("px", ""))
-                };
-            }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-        }(Emitter$1);
-        Pixim.Application = Application;
-    }(Pixim$2 || (Pixim$2 = {}));
-    var Pixim$3, Application = Pixim$2.Application, Task = function(callbacks, context) {
+    };
+    var Emitter$1 = function(_Emitter) {
+        function Emitter() {
+            _Emitter.apply(this, arguments);
+        }
+        return _Emitter && (Emitter.__proto__ = _Emitter), Emitter.prototype = Object.create(_Emitter && _Emitter.prototype), 
+        Emitter.prototype.constructor = Emitter, Emitter;
+    }(Emitter), Task = function(callbacks, context) {
         this._taskData = {
             context: null == context ? this : context,
             enabled: !0,
@@ -354,466 +168,593 @@
         this.reset();
     }, prototypeAccessors.value.get = function() {
         return this._taskData.value;
-    }, Object.defineProperties(Task.prototype, prototypeAccessors), function(Pixim) {
-        var Task$1 = function(_Task) {
-            function Task(tasks, context) {
-                _Task.call(this, tasks, context), this.enabled = !0, this._piximData = {
-                    emitter: new Emitter$1
-                };
-            }
-            return _Task && (Task.__proto__ = _Task), Task.prototype = Object.create(_Task && _Task.prototype), 
-            Task.prototype.constructor = Task, Task.prototype.on = function(type, callback) {
-                return this._piximData.emitter.on(type, callback), this;
-            }, Task.prototype.once = function(type, callback) {
-                return this._piximData.emitter.once(type, callback), this;
-            }, Task.prototype.off = function(type, callback) {
-                return this._piximData.emitter.off(type, callback), this;
-            }, Task.prototype.emit = function(type) {
-                for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
-                    args[len] = arguments[len + 1];
-                }
-                return this._taskData.enabled ? ((ref = this._piximData.emitter).emit.apply(ref, [ type ].concat(args)), 
-                this) : this;
-            }, Task.prototype.cemit = function(type, context) {
-                for (var ref, args = [], len = arguments.length - 2; len-- > 0; ) {
-                    args[len] = arguments[len + 2];
-                }
-                return this._taskData.enabled ? ((ref = this._piximData.emitter).cemit.apply(ref, [ type, context ].concat(args)), 
-                this) : this;
-            }, Task.prototype.emitAll = function() {
-                for (var ref, args = [], len = arguments.length; len--; ) {
-                    args[len] = arguments[len];
-                }
-                return this._taskData.enabled ? ((ref = this._piximData.emitter).emitAll.apply(ref, args), 
-                this) : this;
-            }, Task.prototype.cemitAll = function(context) {
-                for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
-                    args[len] = arguments[len + 1];
-                }
-                return this._taskData.enabled ? ((ref = this._piximData.emitter).cemitAll.apply(ref, [ context ].concat(args)), 
-                this) : this;
-            }, Task.prototype.clear = function(type) {
-                return void 0 === type && (type = ""), this._piximData.emitter.clear(type), this;
-            }, Task.prototype.destroy = function() {
-                _Task.prototype.destroy.call(this), this.clear();
-            }, Task;
-        }(Task);
-        Pixim.Task = Task$1;
-    }(Pixim$3 || (Pixim$3 = {}));
-    var Pixim$4, Task$1 = Pixim$3.Task;
-    !function(Pixim) {
-        var _lastObserverID = 0, Container = function(superclass) {
-            function Container() {
-                for (var this$1 = this, args = [], len = arguments.length; len--; ) {
-                    args[len] = arguments[len];
-                }
-                superclass.call(this), this._piximData = {
-                    task: new Task$1([], this),
-                    taskEnabledChildren: !0
-                }, this._piximData.task.first();
-                var _observerID = _lastObserverID++;
-                this.on("added", (function() {
-                    TaskManager.addObserver(_observerID, this$1);
-                })), this.on("removed", (function() {
-                    TaskManager.removeObserver(_observerID);
-                }));
-            }
-            superclass && (Container.__proto__ = superclass), Container.prototype = Object.create(superclass && superclass.prototype), 
-            Container.prototype.constructor = Container;
-            var prototypeAccessors = {
-                taskEnabled: {
-                    configurable: !0
-                },
-                taskEnabledChildren: {
-                    configurable: !0
-                },
-                task: {
-                    configurable: !0
-                }
+    }, Object.defineProperties(Task.prototype, prototypeAccessors);
+    var Task$1 = function(_Task) {
+        function Task(tasks, context) {
+            _Task.call(this, tasks, context), this.enabled = !0, this._piximData = {
+                emitter: new Emitter$1
             };
-            return Container.prototype.updateTask = function(e) {
-                var task = this._piximData.task;
-                if (this.taskEnabled) {
-                    for (var p = this, f = !0; p; ) {
-                        if (p instanceof Container && !p.taskEnabledChildren) {
-                            f = !1;
-                            break;
-                        }
-                        p = p.parent;
-                    }
-                    f && (task.done(e), task.cemitAll(this, e));
-                }
-            }, prototypeAccessors.taskEnabled.get = function() {
-                return this._piximData.task.enabled;
-            }, prototypeAccessors.taskEnabled.set = function(enabled) {
-                this._piximData.task.enabled = enabled;
-            }, prototypeAccessors.taskEnabledChildren.get = function() {
-                return this._piximData.taskEnabledChildren;
-            }, prototypeAccessors.taskEnabledChildren.set = function(enabled) {
-                this._piximData.taskEnabledChildren = enabled;
-            }, prototypeAccessors.task.get = function() {
-                return this._piximData.task;
-            }, Container.prototype.destroy = function() {
-                for (var args = [], len = arguments.length; len--; ) {
-                    args[len] = arguments[len];
-                }
-                superclass.prototype.destroy.apply(this, args), this._piximData.task.destroy();
-            }, Object.defineProperties(Container.prototype, prototypeAccessors), Container;
-        }(PIXI.Container);
-        Pixim.Container = Container;
-    }(Pixim$4 || (Pixim$4 = {}));
-    var Pixim$5, Container = Pixim$4.Container;
-    !function(Pixim) {
-        var _cache = {}, ContentManifestBase = function() {
-            this._manifests = {};
+        }
+        return _Task && (Task.__proto__ = _Task), Task.prototype = Object.create(_Task && _Task.prototype), 
+        Task.prototype.constructor = Task, Task.prototype.on = function(type, callback) {
+            return this._piximData.emitter.on(type, callback), this;
+        }, Task.prototype.once = function(type, callback) {
+            return this._piximData.emitter.once(type, callback), this;
+        }, Task.prototype.off = function(type, callback) {
+            return this._piximData.emitter.off(type, callback), this;
+        }, Task.prototype.emit = function(type) {
+            for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
+                args[len] = arguments[len + 1];
+            }
+            return this._taskData.enabled ? ((ref = this._piximData.emitter).emit.apply(ref, [ type ].concat(args)), 
+            this) : this;
+        }, Task.prototype.cemit = function(type, context) {
+            for (var ref, args = [], len = arguments.length - 2; len-- > 0; ) {
+                args[len] = arguments[len + 2];
+            }
+            return this._taskData.enabled ? ((ref = this._piximData.emitter).cemit.apply(ref, [ type, context ].concat(args)), 
+            this) : this;
+        }, Task.prototype.emitAll = function() {
+            for (var ref, args = [], len = arguments.length; len--; ) {
+                args[len] = arguments[len];
+            }
+            return this._taskData.enabled ? ((ref = this._piximData.emitter).emitAll.apply(ref, args), 
+            this) : this;
+        }, Task.prototype.cemitAll = function(context) {
+            for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
+                args[len] = arguments[len + 1];
+            }
+            return this._taskData.enabled ? ((ref = this._piximData.emitter).cemitAll.apply(ref, [ context ].concat(args)), 
+            this) : this;
+        }, Task.prototype.clear = function(type) {
+            return void 0 === type && (type = ""), this._piximData.emitter.clear(type), this;
+        }, Task.prototype.destroy = function() {
+            _Task.prototype.destroy.call(this), this.clear();
+        }, Task;
+    }(Task), Container = function(superclass) {
+        function Container() {
+            for (var args = [], len = arguments.length; len--; ) {
+                args[len] = arguments[len];
+            }
+            superclass.call(this), this._piximData = {
+                task: new Task$1([], this),
+                taskEnabledChildren: !0
+            }, this._piximData.task.first();
+        }
+        superclass && (Container.__proto__ = superclass), Container.prototype = Object.create(superclass && superclass.prototype), 
+        Container.prototype.constructor = Container;
+        var prototypeAccessors = {
+            taskEnabled: {
+                configurable: !0
+            },
+            taskEnabledChildren: {
+                configurable: !0
+            },
+            task: {
+                configurable: !0
+            }
         };
-        ContentManifestBase.prototype.add = function(manifests, options) {
-            void 0 === options && (options = {});
-            var unrequired = options.unrequired || !1;
-            for (var i in manifests) {
-                this._manifests[i] = {
-                    url: manifests[i],
-                    unrequired: unrequired
-                };
+        return Container.prototype.updateTask = function(e) {
+            var task = this._piximData.task;
+            this._piximData.task.enabled && (task.done(e), task.cemitAll(this, e));
+        }, prototypeAccessors.taskEnabled.get = function() {
+            return this._piximData.task.enabled;
+        }, prototypeAccessors.taskEnabled.set = function(enabled) {
+            this._piximData.task.enabled = enabled;
+        }, prototypeAccessors.taskEnabledChildren.get = function() {
+            return this._piximData.taskEnabledChildren;
+        }, prototypeAccessors.taskEnabledChildren.set = function(enabled) {
+            this._piximData.taskEnabledChildren = enabled;
+        }, prototypeAccessors.task.get = function() {
+            return this._piximData.task;
+        }, Container.prototype.destroy = function() {
+            for (var args = [], len = arguments.length; len--; ) {
+                args[len] = arguments[len];
             }
-        }, ContentManifestBase.prototype.getAsync = function(basepath, version) {
-            var manifests = this._manifests, resources = {}, loadable = {}, cache = _cache;
-            for (var i in manifests) {
-                var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath), name = url.replace(/\?.*/, "");
-                cache[name] ? resources[i] = cache[name] : loadable[i] = {
-                    url: url,
-                    name: name,
-                    unrequired: manifest.unrequired
-                };
+            superclass.prototype.destroy.apply(this, args), this._piximData.task.destroy();
+        }, Object.defineProperties(Container.prototype, prototypeAccessors), Container;
+    }(PIXI.Container), Layer = function(superclass) {
+        function Layer() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (Layer.__proto__ = superclass), Layer.prototype = Object.create(superclass && superclass.prototype), 
+        Layer.prototype.constructor = Layer, Layer;
+    }(PIXI.Container);
+    function taskHandler(obj, e) {
+        if (!(obj instanceof Container) || (obj.updateTask(e), obj.taskEnabledChildren)) {
+            for (var children = [], i = 0; i < obj.children.length; i++) {
+                children.push(obj.children[i]);
             }
-            return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable, version).then((function(res) {
-                for (var i in res) {
-                    resources[i] = res[i].resource, res[i].error || (cache[loadable[i].name] = res[i].resource);
-                }
-                return resources;
+            for (var i$1 = 0; i$1 < children.length; i$1++) {
+                var child = children[i$1];
+                child instanceof PIXI.Container && taskHandler(child, e);
+            }
+        }
+    }
+    var Application = function(Emitter) {
+        function Application(pixiOptions, piximOptions) {
+            var this$1 = this;
+            void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
+            Emitter.call(this);
+            var app = new PIXI.Application(pixiOptions);
+            app.stop(), app.view.style.position = "absolute";
+            var autoAdjust = piximOptions.autoAdjust || !1;
+            this._piximData = {
+                isRun: !1,
+                app: app,
+                container: piximOptions.container || document.body,
+                layers: {},
+                autoAdjuster: null,
+                roots: {}
+            }, this._piximData.app.ticker.add((function(delta) {
+                taskHandler(this$1._piximData.app.stage, {
+                    delta: delta
+                });
+            })), autoAdjust && (this.autoAdjuster = !0 === autoAdjust ? function() {
+                this$1.fullScreen();
+            } : function() {
+                autoAdjust(this$1);
+            });
+        }
+        Emitter && (Application.__proto__ = Emitter), Application.prototype = Object.create(Emitter && Emitter.prototype), 
+        Application.prototype.constructor = Application;
+        var prototypeAccessors = {
+            app: {
+                configurable: !0
+            },
+            stage: {
+                configurable: !0
+            },
+            view: {
+                configurable: !0
+            },
+            container: {
+                configurable: !0
+            },
+            autoAdjuster: {
+                configurable: !0
+            }
+        };
+        return prototypeAccessors.app.get = function() {
+            return this._piximData.app;
+        }, prototypeAccessors.stage.get = function() {
+            return this._piximData.app.stage;
+        }, prototypeAccessors.view.get = function() {
+            return this._piximData.app.view;
+        }, prototypeAccessors.container.get = function() {
+            return this._piximData.container;
+        }, prototypeAccessors.container.set = function(container) {
+            this._piximData.container = container || document.body, this._piximData.app.view.parentNode && this._piximData.container.appendChild(this._piximData.app.view);
+        }, Application.prototype._hasLayer = function(name) {
+            return !!this._piximData.layers[name];
+        }, Application.prototype.addLayer = function(name) {
+            return this._hasLayer(name) || (this._piximData.layers[name] = this._piximData.app.stage.addChild(new Layer)), 
+            this;
+        }, Application.prototype.removeLayer = function(name) {
+            return this._hasLayer(name) ? (this._piximData.app.stage.removeChild(this._piximData.layers[name]), 
+            delete this._piximData.layers[name], this) : this;
+        }, Application.prototype.attachAsync = function(content, layerName) {
+            var this$1 = this;
+            return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
+                return this$1.detach(content), this$1.addLayer(layerName), this$1._piximData.roots[content.contentID] = root, 
+                this$1._piximData.layers[layerName].addChild(root), root;
             }));
-        }, ContentManifestBase.prototype._loadAsync = function(manifests, version) {
-            return Promise.resolve({});
-        }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
-            return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
-        }, Pixim.ContentManifestBase = ContentManifestBase;
-    }(Pixim$5 || (Pixim$5 = {}));
-    var Pixim$6, ContentManifestBase = Pixim$5.ContentManifestBase;
-    !function(Pixim) {
-        var ContentImageManifest = function(ContentManifestBase) {
-            function ContentImageManifest() {
-                ContentManifestBase.apply(this, arguments);
+        }, Application.prototype.detach = function(content, stageOptions) {
+            void 0 === stageOptions && (stageOptions = {
+                children: !0
+            });
+            var root = this._piximData.roots[content.contentID];
+            return root ? (this._destroyRoot(root, stageOptions), delete this._piximData.roots[content.contentID], 
+            this) : this;
+        }, Application.prototype.play = function() {
+            return this._piximData.container.appendChild(this._piximData.app.view), this.start();
+        }, Application.prototype.start = function() {
+            return this._piximData.app.start(), this;
+        }, Application.prototype.stop = function() {
+            return this._piximData.app.stop(), this;
+        }, Application.prototype.pause = function(paused) {
+            return paused ? this.stop() : this.start(), this;
+        }, prototypeAccessors.autoAdjuster.get = function() {
+            return this._piximData.autoAdjuster;
+        }, prototypeAccessors.autoAdjuster.set = function(autoAdjuster) {
+            this._piximData.autoAdjuster && window.removeEventListener("resize", this._piximData.autoAdjuster), 
+            autoAdjuster ? (this._piximData.autoAdjuster = autoAdjuster, window.addEventListener("resize", autoAdjuster), 
+            autoAdjuster()) : this._piximData.autoAdjuster = null;
+        }, Application.prototype.preDestroy = function() {
+            this.autoAdjuster = null, this._piximData.layers = {}, this._piximData.roots = {};
+        }, Application.prototype.destroy = function(removeView, stageOptions) {
+            return this.preDestroy(), this._piximData.app.destroy(removeView, stageOptions), 
+            this;
+        }, Application.prototype._destroyRoot = function(root, stageOptions) {
+            root.destroy(stageOptions);
+        }, Application.prototype.fullScreen = function(rect) {
+            var view = this._piximData.app.view, r = rect || {
+                x: 0,
+                y: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return r.width / r.height > view.width / view.height ? this.adjustHeight(r.height).toCenter(r).toTop(r) : this.adjustWidth(r.width).toMiddle(r).toLeft(r);
+        }, Application.prototype.adjustWidth = function(width) {
+            var view = this._piximData.app.view, w = width || this._piximData.container.offsetWidth || window.innerWidth, h = w / view.width * view.height;
+            return view.style.width = w + "px", view.style.height = h + "px", this;
+        }, Application.prototype.adjustHeight = function(height) {
+            var view = this._piximData.app.view, h = height || this._piximData.container.offsetHeight || window.innerHeight, w = h / view.height * view.width;
+            return view.style.height = h + "px", view.style.width = w + "px", this;
+        }, Application.prototype.toLeft = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = hol.x + "px", this;
+        }, Application.prototype.toCenter = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = (hol.width - this._getViewRect().width) / 2 + hol.x + "px", 
+            this;
+        }, Application.prototype.toRight = function(horizontal) {
+            var view = this._piximData.app.view, hol = horizontal || {
+                x: 0,
+                width: this._piximData.container.offsetWidth || window.innerWidth
+            };
+            return view.style.left = hol.width - this._getViewRect().width + hol.x + "px", this;
+        }, Application.prototype.toTop = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = ver.y + "px", this;
+        }, Application.prototype.toMiddle = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = (ver.height - this._getViewRect().height) / 2 + ver.y + "px", 
+            this;
+        }, Application.prototype.toBottom = function(vertical) {
+            var view = this._piximData.app.view, ver = vertical || {
+                y: 0,
+                height: this._piximData.container.offsetHeight || window.innerHeight
+            };
+            return view.style.top = ver.height - this._getViewRect().height + ver.y + "px", 
+            this;
+        }, Application.prototype._getViewRect = function() {
+            var view = this._piximData.app.view;
+            return {
+                x: parseInt(view.style.left.replace("px", "")),
+                y: parseInt(view.style.top.replace("px", "")),
+                width: parseInt(view.style.width.replace("px", "")),
+                height: parseInt(view.style.height.replace("px", ""))
+            };
+        }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
+    }(Emitter$1), _cache = {}, ContentManifestBase = function() {
+        this._manifests = {};
+    };
+    ContentManifestBase.prototype.add = function(manifests, options) {
+        void 0 === options && (options = {});
+        var unrequired = options.unrequired || !1;
+        for (var i in manifests) {
+            this._manifests[i] = {
+                url: manifests[i],
+                unrequired: unrequired
+            };
+        }
+    }, ContentManifestBase.prototype.getAsync = function(basepath, version) {
+        var manifests = this._manifests, resources = {}, loadable = {}, cache = _cache;
+        for (var i in manifests) {
+            var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath), name = url.replace(/\?.*/, "");
+            cache[name] ? resources[i] = cache[name] : loadable[i] = {
+                url: url,
+                name: name,
+                unrequired: manifest.unrequired
+            };
+        }
+        return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable, version).then((function(res) {
+            for (var i in res) {
+                resources[i] = res[i].resource, res[i].error || (cache[loadable[i].name] = res[i].resource);
             }
-            return ContentManifestBase && (ContentImageManifest.__proto__ = ContentManifestBase), 
-            ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(manifests, version) {
-                return new Promise((function(resolve, reject) {
-                    var loader = new PIXI.Loader;
-                    for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                        loader.add(i, manifests[i].url, {
-                            crossOrigin: !0
-                        });
+            return resources;
+        }));
+    }, ContentManifestBase.prototype._loadAsync = function(manifests, version) {
+        return Promise.resolve({});
+    }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
+        return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
+    };
+    var ContentImageManifest = function(ContentManifestBase) {
+        function ContentImageManifest() {
+            ContentManifestBase.apply(this, arguments);
+        }
+        return ContentManifestBase && (ContentImageManifest.__proto__ = ContentManifestBase), 
+        ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
+        ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(manifests, version) {
+            return new Promise((function(resolve, reject) {
+                var loader = new PIXI.Loader;
+                for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
+                    loader.add(i, manifests[i].url, {
+                        crossOrigin: !0
+                    });
+                }
+                var res = {};
+                loader.load((function(loader, resources) {
+                    var obj, obj$1;
+                    for (var i in resources) {
+                        var resource = resources[i];
+                        if (!resource) {
+                            return void reject((obj = {}, obj[i] = manifests[i].url, obj));
+                        }
+                        if (resource.error && !manifests[i].unrequired) {
+                            return void reject((obj$1 = {}, obj$1[i] = manifests[i].url, obj$1));
+                        }
+                        res[i] = {
+                            resource: resource.texture,
+                            error: !!resource.error
+                        };
                     }
-                    var res = {};
-                    loader.load((function(loader, resources) {
-                        var obj, obj$1;
-                        for (var i in resources) {
+                    resolve(res);
+                }));
+            }));
+        }, ContentImageManifest;
+    }(ContentManifestBase), ContentSpritesheetManifest = function(ContentManifestBase) {
+        function ContentSpritesheetManifest() {
+            ContentManifestBase.apply(this, arguments);
+        }
+        return ContentManifestBase && (ContentSpritesheetManifest.__proto__ = ContentManifestBase), 
+        ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
+        ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(manifests, version) {
+            return new Promise((function(resolve, reject) {
+                var loader = new PIXI.Loader;
+                for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
+                    loader.add(i, manifests[i].url, {
+                        crossOrigin: !0
+                    });
+                }
+                var res = {};
+                loader.load((function(loader, resources) {
+                    var obj, obj$1;
+                    for (var i in resources) {
+                        if (manifests[i]) {
                             var resource = resources[i];
                             if (!resource) {
                                 return void reject((obj = {}, obj[i] = manifests[i].url, obj));
                             }
+                            var textures = resource.textures || {};
+                            resource.error;
                             if (resource.error && !manifests[i].unrequired) {
                                 return void reject((obj$1 = {}, obj$1[i] = manifests[i].url, obj$1));
                             }
                             res[i] = {
-                                resource: resource.texture,
+                                resource: textures,
                                 error: !!resource.error
                             };
                         }
-                        resolve(res);
-                    }));
+                    }
+                    resolve(res);
                 }));
-            }, ContentImageManifest;
-        }(ContentManifestBase);
-        Pixim.ContentImageManifest = ContentImageManifest;
-    }(Pixim$6 || (Pixim$6 = {}));
-    var Pixim$7, ContentImageManifest = Pixim$6.ContentImageManifest;
-    !function(Pixim) {
-        var ContentSpritesheetManifest = function(ContentManifestBase) {
-            function ContentSpritesheetManifest() {
-                ContentManifestBase.apply(this, arguments);
-            }
-            return ContentManifestBase && (ContentSpritesheetManifest.__proto__ = ContentManifestBase), 
-            ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(manifests, version) {
-                return new Promise((function(resolve, reject) {
-                    var loader = new PIXI.Loader;
-                    for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                        loader.add(i, manifests[i].url, {
-                            crossOrigin: !0
-                        });
-                    }
-                    var res = {};
-                    loader.load((function(loader, resources) {
-                        var obj, obj$1;
-                        for (var i in resources) {
-                            if (manifests[i]) {
-                                var resource = resources[i];
-                                if (!resource) {
-                                    return void reject((obj = {}, obj[i] = manifests[i].url, obj));
-                                }
-                                var textures = resource.textures || {};
-                                resource.error;
-                                if (resource.error && !manifests[i].unrequired) {
-                                    return void reject((obj$1 = {}, obj$1[i] = manifests[i].url, obj$1));
-                                }
-                                res[i] = {
-                                    resource: textures,
-                                    error: !!resource.error
-                                };
-                            }
-                        }
-                        resolve(res);
-                    }));
-                }));
-            }, ContentSpritesheetManifest;
-        }(ContentManifestBase);
-        Pixim.ContentSpritesheetManifest = ContentSpritesheetManifest;
-    }(Pixim$7 || (Pixim$7 = {}));
-    var Pixim$8, ContentSpritesheetManifest = Pixim$7.ContentSpritesheetManifest;
-    !function(Pixim) {
-        var ContentSoundManifest = function(ContentManifestBase) {
-            function ContentSoundManifest() {
-                ContentManifestBase.apply(this, arguments);
-            }
-            return ContentManifestBase && (ContentSoundManifest.__proto__ = ContentManifestBase), 
-            ContentSoundManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-            ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(manifests, version) {
-                return new Promise((function(resolve, reject) {
-                    var obj, res = {};
-                    function loadedHandler(key, howl, error) {
-                        res[key] = {
-                            resource: howl,
-                            error: error
-                        }, ++loadedCount < loadCount || resolve(res);
-                    }
-                    var loadCount = 0, loadedCount = 0;
-                    for (var i in manifests) {
-                        if (!howler.Howl) {
-                            return console.warn('You need "howler.js" to load sound asset.'), void reject((obj = {}, 
-                            obj[i] = manifests[i].url, obj));
-                        }
-                        ++loadCount;
-                    }
-                    var loop = function(i) {
-                        var _i = i$1, url = version ? manifests[_i].url + (manifests[_i].url.match(/\?/) ? "&" : "?") + "_fv=" + version : manifests[_i].url, howl = new howler.Howl({
-                            src: url,
-                            onload: function() {
-                                loadedHandler(_i, howl, !1);
-                            },
-                            onloaderror: function() {
-                                var obj;
-                                manifests[_i].unrequired ? loadedHandler(_i, howl, !0) : reject(((obj = {})[_i] = manifests[_i].url, 
-                                obj));
-                            }
-                        });
-                    };
-                    for (var i$1 in manifests) {
-                        loop();
-                    }
-                }));
-            }, ContentSoundManifest;
-        }(ContentManifestBase);
-        Pixim.ContentSoundManifest = ContentSoundManifest;
-    }(Pixim$8 || (Pixim$8 = {}));
-    var Pixim$9, ContentSoundManifest = Pixim$8.ContentSoundManifest;
-    !function(Pixim) {
-        var ContentDeliver = function(data) {
-            this._piximData = {
-                width: data.width,
-                height: data.height,
-                lib: data.lib,
-                resources: data.resources,
-                vars: data.vars
-            };
-        }, prototypeAccessors = {
-            width: {
-                configurable: !0
-            },
-            height: {
-                configurable: !0
-            },
-            lib: {
-                configurable: !0
-            },
-            resources: {
-                configurable: !0
-            },
-            vars: {
-                configurable: !0
-            }
-        };
-        prototypeAccessors.width.get = function() {
-            return this._piximData.width;
-        }, prototypeAccessors.height.get = function() {
-            return this._piximData.height;
-        }, prototypeAccessors.lib.get = function() {
-            return this._piximData.lib;
-        }, prototypeAccessors.resources.get = function() {
-            return this._piximData.resources;
-        }, prototypeAccessors.vars.get = function() {
-            return this._piximData.vars;
-        }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors), Pixim.ContentDeliver = ContentDeliver;
-    }(Pixim$9 || (Pixim$9 = {}));
-    var Pixim$a, ContentDeliver = Pixim$9.ContentDeliver;
-    !function(Pixim) {
-        var _contents = {}, _contentID = 0;
-        function createManifests() {
-            return {
-                images: new ContentImageManifest,
-                spritesheets: new ContentSpritesheetManifest,
-                sounds: new ContentSoundManifest
-            };
+            }));
+        }, ContentSpritesheetManifest;
+    }(ContentManifestBase), ContentSoundManifest = function(ContentManifestBase) {
+        function ContentSoundManifest() {
+            ContentManifestBase.apply(this, arguments);
         }
-        var Content = function Content(options, piximData) {
-            void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
-            var basepath = (options.basepath || "").replace(/([^/])$/, "$1/");
-            "object" != typeof options.version && (options.version = {
-                images: options.version || "",
-                spritesheets: options.version || "",
-                sounds: options.version || ""
-            }), this._piximData = {
-                contentID: (++_contentID).toString(),
-                basepath: basepath,
-                version: options.version,
-                $: new ContentDeliver({
-                    width: piximData.config.width,
-                    height: piximData.config.height,
-                    lib: piximData.lib,
-                    resources: {},
-                    vars: {}
-                }),
-                manifests: piximData.manifests,
-                additionalManifests: createManifests(),
-                preloadPromise: null,
-                postloadPromise: null
-            };
-        }, prototypeAccessors = {
-            contentID: {
-                configurable: !0
-            }
-        };
-        Content.create = function(key) {
-            if (void 0 === key && (key = ""), key && key in _contents) {
-                throw new Error("Content key '" + key + "' has already exists.");
-            }
-            var ContentClone = function(Content) {
-                function ContentClone(options) {
-                    void 0 === options && (options = {}), Content.call(this, options, ContentClone._piximData);
+        return ContentManifestBase && (ContentSoundManifest.__proto__ = ContentManifestBase), 
+        ContentSoundManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
+        ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(manifests, version) {
+            return new Promise((function(resolve, reject) {
+                var obj, res = {};
+                function loadedHandler(key, howl, error) {
+                    res[key] = {
+                        resource: howl,
+                        error: error
+                    }, ++loadedCount < loadCount || resolve(res);
                 }
-                return Content && (ContentClone.__proto__ = Content), ContentClone.prototype = Object.create(Content && Content.prototype), 
-                ContentClone.prototype.constructor = ContentClone, ContentClone;
-            }(Content);
-            return ContentClone._piximData = {
-                config: {
-                    width: 450,
-                    height: 800
-                },
-                manifests: createManifests(),
-                lib: {}
-            }, key ? _contents[key] = ContentClone : ContentClone;
-        }, Content.get = function(key) {
-            return _contents[key];
-        }, Content.remove = function(key) {
-            delete _contents[key];
-        }, Content.defineManifests = function(key, data, options) {
-            return void 0 === options && (options = {}), this._piximData.manifests[key] ? (this._piximData.manifests[key].add(data, options), 
-            this) : this;
-        }, Content.defineImages = function(data, options) {
-            return void 0 === options && (options = {}), this.defineManifests("images", data, options);
-        }, Content.defineSpritesheets = function(data, options) {
-            return void 0 === options && (options = {}), this.defineManifests("spritesheets", data, options);
-        }, Content.defineSounds = function(data, options) {
-            return void 0 === options && (options = {}), this.defineManifests("sounds", data, options);
-        }, Content.setConfig = function(data) {
-            return this._piximData.config.width = data.width, this._piximData.config.height = data.height, 
-            this;
-        }, Content.defineLibraries = function(data) {
-            for (var i in data) {
-                this._piximData.lib[i] = data[i];
-            }
-            return this;
-        }, prototypeAccessors.contentID.get = function() {
-            return this._piximData.contentID;
-        }, Content.prototype.addManifests = function(key, data, options) {
-            return void 0 === options && (options = {}), this._piximData.additionalManifests[key] ? (this._piximData.additionalManifests[key].add(data, options), 
-            this) : this;
-        }, Content.prototype.addImages = function(data, options) {
-            return void 0 === options && (options = {}), this.addManifests("images", data, options);
-        }, Content.prototype.addSpritesheets = function(data, options) {
-            return void 0 === options && (options = {}), this.addManifests("spritesheets", data, options);
-        }, Content.prototype.addSounds = function(data, options) {
-            return void 0 === options && (options = {}), this.addManifests("sounds", data, options);
-        }, Content.prototype.addVars = function(data) {
-            for (var i in data) {
-                this._piximData.$.vars[i] = data[i];
-            }
-            return this;
-        }, Content.prototype.prepareAsync = function() {
-            var this$1 = this;
-            return this.preloadClassAssetAsync().then((function() {
-                return this$1.preloadInstanceAssetAsync();
-            }));
-        }, Content.prototype.buildAsync = function() {
-            var this$1 = this;
-            if (!this._piximData.$.lib.root) {
-                throw new Error('There is no library named "root" in the content.');
-            }
-            return this.prepareAsync().then((function() {
-                return new this$1._piximData.$.lib.root(this$1._piximData.$);
-            }));
-        }, Content.prototype.preloadClassAssetAsync = function() {
-            var this$1 = this;
-            return this._piximData.preloadPromise ? this._piximData.preloadPromise : this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests).catch((function(e) {
-                throw this$1._piximData.preloadPromise = null, e;
-            }));
-        }, Content.prototype.preloadInstanceAssetAsync = function() {
-            var this$1 = this;
-            return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).then((function() {
-                this$1._piximData.postloadPromise = null;
-            })).catch((function(e) {
-                throw this$1._piximData.postloadPromise = null, e;
-            }));
-        }, Content.prototype._loadAssetAsync = function(manifests) {
-            var basepath = this._piximData.basepath, version = this._piximData.version, resources = this._piximData.$.resources;
-            if (0 === Object.keys(manifests).length) {
-                return Promise.resolve();
-            }
-            var promises = [], keys = [];
-            for (var i in manifests) {
-                var type = i;
-                keys.push(type), promises.push(manifests[type].getAsync(basepath, version[type] || ""));
-            }
-            return Promise.all(promises).then((function(resolver) {
-                for (var i = 0; i < resolver.length; i++) {
-                    for (var j in resources[keys[i]] = resources[keys[i]] || {}, resolver[i]) {
-                        resources[keys[i]][j] = resolver[i][j];
+                var loadCount = 0, loadedCount = 0;
+                for (var i in manifests) {
+                    if (!howler.Howl) {
+                        return console.warn('You need "howler.js" to load sound asset.'), void reject((obj = {}, 
+                        obj[i] = manifests[i].url, obj));
                     }
+                    ++loadCount;
                 }
-            })).catch((function(e) {
-                for (var i in e) {
-                    console.error("Asset '" + i + ": " + e[i] + "' cannot load.");
+                var loop = function(i) {
+                    var _i = i$1, url = version ? manifests[_i].url + (manifests[_i].url.match(/\?/) ? "&" : "?") + "_fv=" + version : manifests[_i].url, howl = new howler.Howl({
+                        src: url,
+                        onload: function() {
+                            loadedHandler(_i, howl, !1);
+                        },
+                        onloaderror: function() {
+                            var obj;
+                            manifests[_i].unrequired ? loadedHandler(_i, howl, !0) : reject(((obj = {})[_i] = manifests[_i].url, 
+                            obj));
+                        }
+                    });
+                };
+                for (var i$1 in manifests) {
+                    loop();
                 }
-                throw e;
             }));
-        }, Object.defineProperties(Content.prototype, prototypeAccessors), Pixim.Content = Content;
-    }(Pixim$a || (Pixim$a = {}));
-    var Content = Pixim$a.Content;
-    exports.Application = Application, exports.Container = Container, exports.Content = Content, 
-    exports.ContentDeliver = ContentDeliver, exports.ContentImageManifest = ContentImageManifest, 
-    exports.ContentManifestBase = ContentManifestBase, exports.ContentSoundManifest = ContentSoundManifest, 
-    exports.ContentSpritesheetManifest = ContentSpritesheetManifest, exports.Emitter = Emitter$1, 
-    exports.Task = Task$1;
+        }, ContentSoundManifest;
+    }(ContentManifestBase), ContentDeliver = function(data) {
+        this._piximData = {
+            width: data.width,
+            height: data.height,
+            lib: data.lib,
+            resources: data.resources,
+            vars: data.vars
+        };
+    }, prototypeAccessors$1 = {
+        width: {
+            configurable: !0
+        },
+        height: {
+            configurable: !0
+        },
+        lib: {
+            configurable: !0
+        },
+        resources: {
+            configurable: !0
+        },
+        vars: {
+            configurable: !0
+        }
+    };
+    prototypeAccessors$1.width.get = function() {
+        return this._piximData.width;
+    }, prototypeAccessors$1.height.get = function() {
+        return this._piximData.height;
+    }, prototypeAccessors$1.lib.get = function() {
+        return this._piximData.lib;
+    }, prototypeAccessors$1.resources.get = function() {
+        return this._piximData.resources;
+    }, prototypeAccessors$1.vars.get = function() {
+        return this._piximData.vars;
+    }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors$1);
+    var _contents = {}, _contentID = 0;
+    function createManifests() {
+        return {
+            images: new ContentImageManifest,
+            spritesheets: new ContentSpritesheetManifest,
+            sounds: new ContentSoundManifest
+        };
+    }
+    var Content = function Content(options, piximData) {
+        void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
+        var basepath = (options.basepath || "").replace(/([^/])$/, "$1/");
+        "object" != typeof options.version && (options.version = {
+            images: options.version || "",
+            spritesheets: options.version || "",
+            sounds: options.version || ""
+        }), this._piximData = {
+            contentID: (++_contentID).toString(),
+            basepath: basepath,
+            version: options.version,
+            $: new ContentDeliver({
+                width: piximData.config.width,
+                height: piximData.config.height,
+                lib: piximData.lib,
+                resources: {},
+                vars: {}
+            }),
+            manifests: piximData.manifests,
+            additionalManifests: createManifests(),
+            preloadPromise: null,
+            postloadPromise: null
+        };
+    }, prototypeAccessors$2 = {
+        contentID: {
+            configurable: !0
+        }
+    };
+    Content.create = function(key) {
+        if (void 0 === key && (key = ""), key && key in _contents) {
+            throw new Error("Content key '" + key + "' has already exists.");
+        }
+        var ContentClone = function(Content) {
+            function ContentClone(options) {
+                void 0 === options && (options = {}), Content.call(this, options, ContentClone._piximData);
+            }
+            return Content && (ContentClone.__proto__ = Content), ContentClone.prototype = Object.create(Content && Content.prototype), 
+            ContentClone.prototype.constructor = ContentClone, ContentClone;
+        }(Content);
+        return ContentClone._piximData = {
+            config: {
+                width: 450,
+                height: 800
+            },
+            manifests: createManifests(),
+            lib: {}
+        }, key ? _contents[key] = ContentClone : ContentClone;
+    }, Content.get = function(key) {
+        return _contents[key];
+    }, Content.remove = function(key) {
+        delete _contents[key];
+    }, Content.defineManifests = function(key, data, options) {
+        return void 0 === options && (options = {}), this._piximData.manifests[key] ? (this._piximData.manifests[key].add(data, options), 
+        this) : this;
+    }, Content.defineImages = function(data, options) {
+        return void 0 === options && (options = {}), this.defineManifests("images", data, options);
+    }, Content.defineSpritesheets = function(data, options) {
+        return void 0 === options && (options = {}), this.defineManifests("spritesheets", data, options);
+    }, Content.defineSounds = function(data, options) {
+        return void 0 === options && (options = {}), this.defineManifests("sounds", data, options);
+    }, Content.setConfig = function(data) {
+        return this._piximData.config.width = data.width, this._piximData.config.height = data.height, 
+        this;
+    }, Content.defineLibraries = function(data) {
+        for (var i in data) {
+            this._piximData.lib[i] = data[i];
+        }
+        return this;
+    }, prototypeAccessors$2.contentID.get = function() {
+        return this._piximData.contentID;
+    }, Content.prototype.addManifests = function(key, data, options) {
+        return void 0 === options && (options = {}), this._piximData.additionalManifests[key] ? (this._piximData.additionalManifests[key].add(data, options), 
+        this) : this;
+    }, Content.prototype.addImages = function(data, options) {
+        return void 0 === options && (options = {}), this.addManifests("images", data, options);
+    }, Content.prototype.addSpritesheets = function(data, options) {
+        return void 0 === options && (options = {}), this.addManifests("spritesheets", data, options);
+    }, Content.prototype.addSounds = function(data, options) {
+        return void 0 === options && (options = {}), this.addManifests("sounds", data, options);
+    }, Content.prototype.addVars = function(data) {
+        for (var i in data) {
+            this._piximData.$.vars[i] = data[i];
+        }
+        return this;
+    }, Content.prototype.prepareAsync = function() {
+        var this$1 = this;
+        return this.preloadClassAssetAsync().then((function() {
+            return this$1.preloadInstanceAssetAsync();
+        }));
+    }, Content.prototype.buildAsync = function() {
+        var this$1 = this;
+        if (!this._piximData.$.lib.root) {
+            throw new Error('There is no library named "root" in the content.');
+        }
+        return this.prepareAsync().then((function() {
+            return new this$1._piximData.$.lib.root(this$1._piximData.$);
+        }));
+    }, Content.prototype.preloadClassAssetAsync = function() {
+        var this$1 = this;
+        return this._piximData.preloadPromise ? this._piximData.preloadPromise : this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests).catch((function(e) {
+            throw this$1._piximData.preloadPromise = null, e;
+        }));
+    }, Content.prototype.preloadInstanceAssetAsync = function() {
+        var this$1 = this;
+        return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).then((function() {
+            this$1._piximData.postloadPromise = null;
+        })).catch((function(e) {
+            throw this$1._piximData.postloadPromise = null, e;
+        }));
+    }, Content.prototype._loadAssetAsync = function(manifests) {
+        var basepath = this._piximData.basepath, version = this._piximData.version, resources = this._piximData.$.resources;
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve();
+        }
+        var promises = [], keys = [];
+        for (var i in manifests) {
+            var type = i;
+            keys.push(type), promises.push(manifests[type].getAsync(basepath, version[type] || ""));
+        }
+        return Promise.all(promises).then((function(resolver) {
+            for (var i = 0; i < resolver.length; i++) {
+                for (var j in resources[keys[i]] = resources[keys[i]] || {}, resolver[i]) {
+                    resources[keys[i]][j] = resolver[i][j];
+                }
+            }
+        })).catch((function(e) {
+            for (var i in e) {
+                console.error("Asset '" + i + ": " + e[i] + "' cannot load.");
+            }
+            throw e;
+        }));
+    }, Object.defineProperties(Content.prototype, prototypeAccessors$2), exports.Application = Application, 
+    exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
+    exports.ContentImageManifest = ContentImageManifest, exports.ContentManifestBase = ContentManifestBase, 
+    exports.ContentSoundManifest = ContentSoundManifest, exports.ContentSpritesheetManifest = ContentSpritesheetManifest, 
+    exports.Emitter = Emitter$1, exports.Layer = Layer, exports.Task = Task$1;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

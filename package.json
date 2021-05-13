@@ -1,10 +1,10 @@
 {
   "name": "@tawaship/pixim.js",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "description": "Framework that wraps pixi.js.",
   "main": "dist/Pixim.cjs.js",
   "module": "dist/Pixim.esm.js",
-  "types": "types/index.d.ts",
+  "types": "types/Pixim.d.ts",
   "scripts": {
     "rollup": "rollup -c",
     "d": "tsc --target ES5 --emitDeclarationOnly",
@@ -38,18 +38,18 @@
     "electron": "^11.1.1",
     "floss": "^3.0.1",
     "nyc": "^15.0.0",
-    "pixi.js-legacy": "^5.2.1",
+    "pixi.js-legacy": "^5.3.9",
     "rollup": "^1.31.1",
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^1.11.0",
-    "typedoc": "^0.19.2",
-    "typescript": "^3.8.2"
+    "typedoc": "^0.20.36",
+    "typescript": "^4.2.4"
   },
   "dependencies": {
     "@tawaship/emitter": "^3.1.1",
     "@tawaship/task": "^1.1.0",
     "@types/howler": "^2.2.1",
     "howler": "^2.2.0",
-    "pixi.js": "^5.2.1"
+    "pixi.js": "^5.3.9"
   }
 }

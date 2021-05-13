@@ -1,16 +1,16 @@
 {
-  "include": ["src/**/*.ts"],
+  "include": ["src/Pixim.ts"],
   "compilerOptions": {
     "target": "ES6",
     "strict": true,
     "declaration": true,
+    "moduleResolution": "node",
     "outDir": "./types"
   },
   "typedocOptions": {
-    "mode": "file",
     "out": "docs",
-    "moduleResolution": "node",
     "gitRevision": "master",
+    "entryPoints": ["src/Pixim.ts"],
     "includeVersion": true
   },
   "exclude": ["node_modules", "src/**/*.d.ts"]

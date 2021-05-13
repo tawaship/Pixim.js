@@ -31,7 +31,7 @@ export default (async () => {
 	
 	return [
 		{
-			input: 'src/index.ts',
+			input: 'src/Pixim.ts',
 			output: [
 				{
 					banner,
@@ -57,7 +57,7 @@ export default (async () => {
 			]
 		},
 		{
-			input: 'src/index.ts',
+			input: 'src/Pixim.ts',
 			output: [
 				{
 					banner,
@@ -93,7 +93,7 @@ export default (async () => {
 			]
 		},
 		{
-			input: 'src/index.ts',
+			input: 'src/Pixim.ts',
 			output: [
 				{
 					banner,
