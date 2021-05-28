@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.1
+ * @tawaship/pixim.js - v1.11.2
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.11.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.11.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -285,7 +285,8 @@
                 container: piximOptions.container || document.body,
                 layers: {},
                 autoAdjuster: null,
-                roots: {}
+                roots: {},
+                contents: {}
             }, this._piximData.app.ticker.add((function(delta) {
                 taskHandler(this$1._piximData.app.stage, {
                     delta: delta
@@ -337,7 +338,8 @@
             var this$1 = this;
             return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
                 return this$1.detach(content), this$1.addLayer(layerName), this$1._piximData.roots[content.contentID] = root, 
-                this$1._piximData.layers[layerName].addChild(root), root;
+                this$1._piximData.contents[content.contentID] = content, this$1._piximData.layers[layerName].addChild(root), 
+                root;
             }));
         }, Application.prototype.detach = function(content, stageOptions) {
             void 0 === stageOptions && (stageOptions = {
@@ -345,7 +347,7 @@
             });
             var root = this._piximData.roots[content.contentID];
             return root ? (this._destroyRoot(root, stageOptions), delete this._piximData.roots[content.contentID], 
-            this) : this;
+            delete this._piximData.contents[content.contentID], this) : this;
         }, Application.prototype.play = function() {
             return this._piximData.container.appendChild(this._piximData.app.view), this.start();
         }, Application.prototype.start = function() {
@@ -361,7 +363,11 @@
             autoAdjuster ? (this._piximData.autoAdjuster = autoAdjuster, window.addEventListener("resize", autoAdjuster), 
             autoAdjuster()) : this._piximData.autoAdjuster = null;
         }, Application.prototype.preDestroy = function() {
-            this.autoAdjuster = null, this._piximData.layers = {}, this._piximData.roots = {};
+            for (var i in this._piximData.contents) {
+                this._piximData.contents[i].destroy();
+            }
+            this.autoAdjuster = null, this._piximData.layers = {}, this._piximData.roots = {}, 
+            this._piximData.contents = {};
         }, Application.prototype.destroy = function(removeView, stageOptions) {
             return this.preDestroy(), this._piximData.app.destroy(removeView, stageOptions), 
             this;
@@ -429,7 +435,7 @@
                 height: parseInt(view.style.height.replace("px", ""))
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), _cache = {}, ContentManifestBase = function() {
+    }(Emitter$1), ContentManifestBase = function() {
         this._manifests = {};
     };
     ContentManifestBase.prototype.add = function(manifests, options) {
@@ -442,18 +448,17 @@
             };
         }
     }, ContentManifestBase.prototype.getAsync = function(basepath, version) {
-        var manifests = this._manifests, resources = {}, loadable = {}, cache = _cache;
+        var manifests = this._manifests, resources = {}, loadable = {};
         for (var i in manifests) {
-            var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath), name = url.replace(/\?.*/, "");
-            cache[name] ? resources[i] = cache[name] : loadable[i] = {
+            var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath);
+            loadable[i] = {
                 url: url,
-                name: name,
                 unrequired: manifest.unrequired
             };
         }
         return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable, version).then((function(res) {
             for (var i in res) {
-                resources[i] = res[i].resource, res[i].error || (cache[loadable[i].name] = res[i].resource);
+                resources[i] = res[i].resource;
             }
             return resources;
         }));
@@ -626,21 +631,24 @@
             images: options.version || "",
             spritesheets: options.version || "",
             sounds: options.version || ""
-        }), this._piximData = {
+        });
+        var contentDeliverData = {
+            width: piximData.config.width,
+            height: piximData.config.height,
+            lib: piximData.lib,
+            resources: {},
+            vars: {}
+        };
+        this._piximData = {
             contentID: (++_contentID).toString(),
             basepath: basepath,
             version: options.version,
-            $: new ContentDeliver({
-                width: piximData.config.width,
-                height: piximData.config.height,
-                lib: piximData.lib,
-                resources: {},
-                vars: {}
-            }),
+            $: new ContentDeliver(contentDeliverData),
             manifests: piximData.manifests,
             additionalManifests: createManifests(),
             preloadPromise: null,
-            postloadPromise: null
+            postloadPromise: null,
+            contentDeliverData: contentDeliverData
         };
     }, prototypeAccessors$2 = {
         contentID: {
@@ -728,6 +736,14 @@
         })).catch((function(e) {
             throw this$1._piximData.postloadPromise = null, e;
         }));
+    }, Content.prototype.destroy = function() {
+        var contentDeliverData = this._piximData.contentDeliverData;
+        if (contentDeliverData.lib = {}, contentDeliverData.vars = {}, contentDeliverData.resources.images = {}, 
+        contentDeliverData.resources.spritesheets = {}, contentDeliverData.resources.sounds) {
+            for (var i in contentDeliverData.resources.sounds) {
+                contentDeliverData.resources.sounds[i].stop(), contentDeliverData.resources.sounds[i].unload();
+            }
+        }
     }, Content.prototype._loadAssetAsync = function(manifests) {
         var basepath = this._piximData.basepath, version = this._piximData.version, resources = this._piximData.$.resources;
         if (0 === Object.keys(manifests).length) {

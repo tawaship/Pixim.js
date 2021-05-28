@@ -14,7 +14,7 @@ export interface IPreManifestDictionary {
 }
 
 export interface IPostManifest extends IPreManifest {
-	name: string;
+	//name: string;
 }
 
 export interface IPostManifestDictionary {
@@ -45,7 +45,7 @@ export interface IContentResourceDictionary {
 /**
  * @ignore
  */
-const _cache: IResourceDictionary = {};
+// const _cache: IResourceDictionary = {};
 
 export abstract class ContentManifestBase {
 	private _manifests: IPreManifestDictionary = {};
@@ -77,23 +77,26 @@ export abstract class ContentManifestBase {
 		
 		const resources: IResourceDictionary = {};
 		const loadable: IPostManifestDictionary = {};
-		const cache = _cache;
+		//const cache = _cache;
 		
 		for (let i in manifests) {
 			const manifest: IPreManifest = manifests[i];
 			const url: string = this._resolvePath(manifest.url, basepath);
 			
-			// query parameter is invalid for resource cache
-			const name: string = url.replace(/\?.*/, '');
 			
+			// query parameter is invalid for resource cache
+			//const name: string = url.replace(/\?.*/, '');
+			
+			/*
 			if (cache[name]) {
 				resources[i] = cache[name];
 				continue;
 			}
+			*/
 			
 			loadable[i] = {
 				url,
-				name,
+			//	name,
 				unrequired: manifest.unrequired
 			};
 		}
@@ -106,10 +109,11 @@ export abstract class ContentManifestBase {
 			.then((res: ILoadedResourceDictionary) => {
 				for (let i in res) {
 					resources[i] = res[i].resource;
-					
+					/*
 					if (!res[i].error) {
 						cache[loadable[i].name] = res[i].resource;
 					}
+					*/
 				}
 				
 				return resources;

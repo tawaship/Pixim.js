@@ -151,21 +151,8 @@ app.attachAsync(test)
 	
 
 setTimeout(() => {
-o.preDestroy()
-const app = new Pixim.Application({width: 300, height: 300}, {autoAdjust:app => {
-	app.fullScreen();
-} });
 
-
-
-app.attachAsync(test)
-	.then(() => {
-		app.play();
-		setTimeout(()=>{
-		app.stop();
-		},1000)
-	});
-
+o.destroy(true)
 },2000)
 </script>
 </body>

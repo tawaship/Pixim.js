@@ -3,7 +3,7 @@ import { IResourceDictionary, IContentResourceDictionary, IManifestDictionary, I
 import { ContentImageManifest } from './ContentImageManifest';
 import { ContentSpritesheetManifest } from './ContentSpritesheetManifest';
 import { ContentSoundManifest } from './ContentSoundManifest';
-import { ContentDeliver, IVariableDictionary, IContentLibrary } from './ContentDeliver';
+import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary } from './ContentDeliver';
 
 export type TContentManifestType = 'images' | 'spritesheets' | 'sounds';
 
@@ -33,6 +33,7 @@ export interface IContentData {
 	additionalManifests: IContentManifests;
 	preloadPromise: Promise<void> | null;
 	postloadPromise: Promise<void> | null;
+	contentDeliverData: IContentDeliverData;
 }
 
 export interface TContents {
@@ -107,21 +108,24 @@ export class Content {
 			};
 		}
 		
+		const contentDeliverData = {
+			width: piximData.config.width,
+			height: piximData.config.height,
+			lib: piximData.lib,
+			resources: {},
+			vars: {}
+		};
+		
 		this._piximData = {
 			contentID: (++_contentID).toString(),
 			basepath,
 			version: options.version,
-			$: new ContentDeliver({
-				width: piximData.config.width,
-				height: piximData.config.height,
-				lib: piximData.lib,
-				resources: {},
-				vars: {}
-			}),
+			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
 			additionalManifests: createManifests(),
 			preloadPromise: null,
-			postloadPromise: null
+			postloadPromise: null,
+			contentDeliverData
 		}
 	}
 	
@@ -349,6 +353,23 @@ export class Content {
 				
 				throw e;
 			});
+	}
+	
+	destroy() {
+		const contentDeliverData = this._piximData.contentDeliverData;
+		
+		contentDeliverData.lib = {};
+		contentDeliverData.vars = {};
+		
+		contentDeliverData.resources.images = {};
+		contentDeliverData.resources.spritesheets = {};
+		
+		if (contentDeliverData.resources.sounds) {
+			for (let i in contentDeliverData.resources.sounds) {
+				contentDeliverData.resources.sounds[i].stop();
+				contentDeliverData.resources.sounds[i].unload();
+			}
+		}
 	}
 	
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {

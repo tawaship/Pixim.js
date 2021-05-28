@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.1
+ * @tawaship/pixim.js - v1.11.2
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -339,7 +339,8 @@ class Application extends Emitter {
             container: piximOptions.container || document.body,
             layers: {},
             autoAdjuster: null,
-            roots: {}
+            roots: {},
+            contents: {}
         };
         const ticker = this._piximData.app.ticker;
         ticker.add((delta) => {
@@ -413,6 +414,7 @@ class Application extends Emitter {
             this.detach(content);
             this.addLayer(layerName);
             this._piximData.roots[content.contentID] = root;
+            this._piximData.contents[content.contentID] = content;
             this._piximData.layers[layerName].addChild(root);
             return root;
         });
@@ -427,6 +429,7 @@ class Application extends Emitter {
         }
         this._destroyRoot(root, stageOptions);
         delete (this._piximData.roots[content.contentID]);
+        delete (this._piximData.contents[content.contentID]);
         return this;
     }
     /**
@@ -481,9 +484,13 @@ class Application extends Emitter {
      * Pre process to destroy application.
      */
     preDestroy() {
+        for (let i in this._piximData.contents) {
+            this._piximData.contents[i].destroy();
+        }
         this.autoAdjuster = null;
         this._piximData.layers = {};
         this._piximData.roots = {};
+        this._piximData.contents = {};
     }
     /**
      * Destroy application.
@@ -640,7 +647,7 @@ class Application extends Emitter {
 /**
  * @ignore
  */
-const _cache = {};
+// const _cache: IResourceDictionary = {};
 class ContentManifestBase {
     constructor() {
         this._manifests = {};
@@ -669,19 +676,21 @@ class ContentManifestBase {
         const manifests = this._manifests;
         const resources = {};
         const loadable = {};
-        const cache = _cache;
+        //const cache = _cache;
         for (let i in manifests) {
             const manifest = manifests[i];
             const url = this._resolvePath(manifest.url, basepath);
             // query parameter is invalid for resource cache
-            const name = url.replace(/\?.*/, '');
+            //const name: string = url.replace(/\?.*/, '');
+            /*
             if (cache[name]) {
                 resources[i] = cache[name];
                 continue;
             }
+            */
             loadable[i] = {
                 url,
-                name,
+                //	name,
                 unrequired: manifest.unrequired
             };
         }
@@ -692,9 +701,11 @@ class ContentManifestBase {
             .then((res) => {
             for (let i in res) {
                 resources[i] = res[i].resource;
+                /*
                 if (!res[i].error) {
                     cache[loadable[i].name] = res[i].resource;
                 }
+                */
             }
             return resources;
         });
@@ -938,21 +949,23 @@ class Content {
                 sounds: options.version || ''
             };
         }
+        const contentDeliverData = {
+            width: piximData.config.width,
+            height: piximData.config.height,
+            lib: piximData.lib,
+            resources: {},
+            vars: {}
+        };
         this._piximData = {
             contentID: (++_contentID).toString(),
             basepath,
             version: options.version,
-            $: new ContentDeliver({
-                width: piximData.config.width,
-                height: piximData.config.height,
-                lib: piximData.lib,
-                resources: {},
-                vars: {}
-            }),
+            $: new ContentDeliver(contentDeliverData),
             manifests: piximData.manifests,
             additionalManifests: createManifests(),
             preloadPromise: null,
-            postloadPromise: null
+            postloadPromise: null,
+            contentDeliverData
         };
     }
     /**
@@ -1145,6 +1158,19 @@ class Content {
             this._piximData.postloadPromise = null;
             throw e;
         });
+    }
+    destroy() {
+        const contentDeliverData = this._piximData.contentDeliverData;
+        contentDeliverData.lib = {};
+        contentDeliverData.vars = {};
+        contentDeliverData.resources.images = {};
+        contentDeliverData.resources.spritesheets = {};
+        if (contentDeliverData.resources.sounds) {
+            for (let i in contentDeliverData.resources.sounds) {
+                contentDeliverData.resources.sounds[i].stop();
+                contentDeliverData.resources.sounds[i].unload();
+            }
+        }
     }
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;

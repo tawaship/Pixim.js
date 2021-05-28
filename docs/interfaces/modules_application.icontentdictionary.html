@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ILoadedImageResource | @tawaship/pixim.js - v1.11.2</title>
+	<title>IContentDictionary | @tawaship/pixim.js - v1.11.2</title>
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.11.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">@tawaship/pixim.js - v1.11.2</a>
 				</li>
 				<li>
-					<a href="../modules/modules_contentimagemanifest.html">modules/ContentImageManifest</a>
+					<a href="../modules/modules_application.html">modules/Application</a>
 				</li>
 				<li>
-					<a href="modules_contentimagemanifest.iloadedimageresource.html">ILoadedImageResource</a>
+					<a href="modules_application.icontentdictionary.html">IContentDictionary</a>
 				</li>
 			</ul>
-			<h1>Interface ILoadedImageResource</h1>
+			<h1>Interface IContentDictionary</h1>
 		</div>
 	</div>
 </header>
@@ -72,53 +72,13 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="modules_contentmanifestbase.iloadedresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedResource</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">ILoadedImageResource</span>
-							</li>
-						</ul>
+						<span class="target">IContentDictionary</span>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="modules_contentimagemanifest.iloadedimageresource.html#error" class="tsd-kind-icon">error</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="modules_contentimagemanifest.iloadedimageresource.html#resource" class="tsd-kind-icon">resource</a></li>
-							</ul>
-						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>error</h3>
-					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="modules_contentmanifestbase.iloadedresource.html">ILoadedResource</a>.<a href="modules_contentmanifestbase.iloadedresource.html#error">error</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L30">src/modules/ContentManifestBase.ts:30</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-					<a name="resource" class="tsd-anchor"></a>
-					<h3>resource</h3>
-					<div class="tsd-signature tsd-kind-icon">resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Texture</span></div>
-					<aside class="tsd-sources">
-						<p>Overrides <a href="modules_contentmanifestbase.iloadedresource.html">ILoadedResource</a>.<a href="modules_contentmanifestbase.iloadedresource.html#resource">resource</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentImageManifest.ts#L5">src/modules/ContentImageManifest.ts:5</a></li>
-						</ul>
-					</aside>
-				</section>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-module">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="../classes/modules_content.content.html" class="tsd-signature-type" data-tsd-kind="Class">Content</a></div>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -130,7 +90,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/pixim.html">Pixim</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/modules_application.html">modules/<wbr>Application</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -142,7 +102,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/modules_contentdeliver.html">modules/<wbr>Content<wbr>Deliver</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/modules_contentimagemanifest.html">modules/<wbr>Content<wbr>Image<wbr>Manifest</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -165,25 +125,62 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/modules_contentimagemanifest.contentimagemanifest.html" class="tsd-kind-icon">Content<wbr>Image<wbr>Manifest</a>
+						<a href="../classes/modules_application.application.html" class="tsd-kind-icon">Application</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/modules_application.layer.html" class="tsd-kind-icon">Layer</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.iadjustdelegate.html" class="tsd-kind-icon">IAdjust<wbr>Delegate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.iapplicationdata.html" class="tsd-kind-icon">IApplication<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.iapplicationoption.html" class="tsd-kind-icon">IApplication<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.iautoadjustdelegate.html" class="tsd-kind-icon">IAuto<wbr>Adjust<wbr>Delegate</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentimagemanifest.iloadedimageresource.html" class="tsd-kind-icon">ILoaded<wbr>Image<wbr>Resource</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="modules_contentimagemanifest.iloadedimageresource.html#error" class="tsd-kind-icon">error</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite">
-								<a href="modules_contentimagemanifest.iloadedimageresource.html#resource" class="tsd-kind-icon">resource</a>
-							</li>
-						</ul>
+						<a href="modules_application.icontentdictionary.html" class="tsd-kind-icon">IContent<wbr>Dictionary</a>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentimagemanifest.iloadedimageresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Image<wbr>Resource<wbr>Dictionary</a>
+						<a href="modules_application.idestroyoptions.html" class="tsd-kind-icon">IDestroy<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.ihorizontal.html" class="tsd-kind-icon">IHorizontal</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.ilayerdictionary.html" class="tsd-kind-icon">ILayer<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.iposition.html" class="tsd-kind-icon">IPosition</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.irect.html" class="tsd-kind-icon">IRect</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.irootdictionary.html" class="tsd-kind-icon">IRoot<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.isize.html" class="tsd-kind-icon">ISize</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_application.ivertical.html" class="tsd-kind-icon">IVertical</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/modules_application.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/modules_application.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a>
 					</li>
 				</ul>
 			</nav>
@@ -195,11 +192,10 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>

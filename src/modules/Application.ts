@@ -4,6 +4,10 @@ import { Container } from './Container';
 import { Emitter } from './Emitter';
 //import { TaskManager } from './TaskManager';
 
+export interface IContentDictionary {
+	[id: string]: Content;
+}
+
 export interface IRootDictionary {
 	[id: string]: PIXI.Container;
 }
@@ -51,6 +55,7 @@ export interface IApplicationData {
 	layers: ILayerDictionary;
 	autoAdjuster: TAutoAdjuster;
 	roots: IRootDictionary;
+	contents: IContentDictionary;
 }
 
 export interface ISize {
@@ -133,7 +138,8 @@ export class Application extends Emitter {
 			container: piximOptions.container || document.body,
 			layers: {},
 			autoAdjuster: null,
-			roots: {}
+			roots: {},
+			contents: {}
 		};
 		
 		const ticker: PIXI.Ticker = this._piximData.app.ticker;
@@ -224,6 +230,7 @@ export class Application extends Emitter {
 				this.addLayer(layerName);
 				
 				this._piximData.roots[content.contentID] = root;
+				this._piximData.contents[content.contentID] = content;
 				this._piximData.layers[layerName].addChild(root);
 				
 				return root;
@@ -242,6 +249,7 @@ export class Application extends Emitter {
 		
 		this._destroyRoot(root, stageOptions);
 		delete(this._piximData.roots[content.contentID]);
+		delete(this._piximData.contents[content.contentID]);
 		
 		return this;
 	}
@@ -309,9 +317,14 @@ export class Application extends Emitter {
 	 * Pre process to destroy application.
 	 */
 	preDestroy() {
+		for (let i in this._piximData.contents) {
+			this._piximData.contents[i].destroy();
+		}
+		
 		this.autoAdjuster = null;
 		this._piximData.layers = {};
 		this._piximData.roots = {};
+		this._piximData.contents = {};
 	}
 	
 	/**
