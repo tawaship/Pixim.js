@@ -13,6 +13,12 @@ export interface IContentAssetVersion {
 	sounds?: string;
 }
 
+export interface IContentAssetCache {
+	images?: boolean;
+	spritesheets?: boolean;
+	sounds?: boolean;
+}
+
 export interface IContentManifests { 
 	images: ContentImageManifest;
 	spritesheets: ContentSpritesheetManifest;
@@ -28,6 +34,7 @@ export interface IContentData {
 	contentID: string;
 	basepath: string;
 	version: IContentAssetVersion;
+	useCache: IContentAssetCache;
 	$: ContentDeliver;
 	manifests: IContentManifests;
 	additionalManifests: IContentManifests;
@@ -50,6 +57,11 @@ export interface IContentOption {
 	 * Asset version.
 	 */
 	version?: string | IContentAssetVersion;
+	
+	/**
+	 * Whether cache textures.
+	 */
+	useCache?: boolean | IContentAssetCache;
 }
 
 /**
@@ -108,6 +120,14 @@ export class Content {
 			};
 		}
 		
+		if (typeof(options.useCache) !== 'object') {
+			options.useCache = {
+				images: options.useCache || false,
+				spritesheets: options.useCache || false,
+				sounds: options.useCache || false
+			};
+		}
+		
 		const contentDeliverData = {
 			width: piximData.config.width,
 			height: piximData.config.height,
@@ -120,6 +140,7 @@ export class Content {
 			contentID: (++_contentID).toString(),
 			basepath,
 			version: options.version,
+			useCache: options.useCache || false,
 			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
 			additionalManifests: createManifests(),
@@ -375,6 +396,7 @@ export class Content {
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 		const basepath: string = this._piximData.basepath;
 		const version: IContentAssetVersion = this._piximData.version;
+		const useCache: IContentAssetCache = this._piximData.useCache;
 		const resources: IContentResourceDictionary = this._piximData.$.resources;
 		
 		const loaderCount = Object.keys(manifests).length;
@@ -389,7 +411,7 @@ export class Content {
 			const type: TContentManifestType = <TContentManifestType>i;
 			keys.push(type);
 			
-			promises.push(manifests[type].getAsync(basepath, version[type] || ''));
+			promises.push(manifests[type].getAsync(basepath, version[type] || '', useCache[type] || false));
 		}
 		
 		return Promise.all(promises)

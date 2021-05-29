@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.2
+ * @tawaship/pixim.js - v1.11.3
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import { Container as Container$1, Application as Application$1, utils, Loader } from 'pixi.js';
+import { Container as Container$1, Application as Application$1, utils, Loader, Texture, BaseTexture } from 'pixi.js';
 import { Emitter as Emitter$1 } from '@tawaship/emitter';
 import { Howl } from 'howler';
 
@@ -672,7 +672,7 @@ class ContentManifestBase {
      *
      * @param basepath Basement directory path of assets.
      */
-    getAsync(basepath, version) {
+    getAsync(basepath, version, useCache) {
         const manifests = this._manifests;
         const resources = {};
         const loadable = {};
@@ -697,7 +697,7 @@ class ContentManifestBase {
         if (Object.keys(loadable).length === 0) {
             return Promise.resolve(resources);
         }
-        return this._loadAsync(loadable, version)
+        return this._loadAsync(loadable, version, useCache)
             .then((res) => {
             for (let i in res) {
                 resources[i] = res[i].resource;
@@ -713,7 +713,7 @@ class ContentManifestBase {
     /**
      * Load resources.
      */
-    _loadAsync(manifests, version) {
+    _loadAsync(manifests, version, useTextureCache) {
         return Promise.resolve({});
     }
     /**
@@ -735,7 +735,7 @@ class ContentImageManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version) {
+    _loadAsync(manifests, version, useCache) {
         return new Promise((resolve, reject) => {
             const loader = new Loader();
             if (version) {
@@ -744,6 +744,17 @@ class ContentImageManifest extends ContentManifestBase {
             for (let i in manifests) {
                 loader.add(i, manifests[i].url, {
                     crossOrigin: true
+                });
+            }
+            if (!useCache) {
+                loader.use((resource, next) => {
+                    if (resource.texture) {
+                        Texture.removeFromCache(resource.texture);
+                        if (resource.texture.baseTexture) {
+                            BaseTexture.removeFromCache(resource.texture.baseTexture);
+                        }
+                    }
+                    next();
                 });
             }
             const res = {};
@@ -775,7 +786,7 @@ class ContentSpritesheetManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version) {
+    _loadAsync(manifests, version, useCache) {
         return new Promise((resolve, reject) => {
             const loader = new Loader();
             if (version) {
@@ -784,6 +795,29 @@ class ContentSpritesheetManifest extends ContentManifestBase {
             for (let i in manifests) {
                 loader.add(i, manifests[i].url, {
                     crossOrigin: true
+                });
+            }
+            if (!useCache) {
+                loader.use((resource, next) => {
+                    if (resource.textures) {
+                        for (let i in resource.textures) {
+                            const texture = resource.textures[i];
+                            if (!texture) {
+                                continue;
+                            }
+                            Texture.removeFromCache(texture);
+                            if (texture.baseTexture) {
+                                BaseTexture.removeFromCache(texture.baseTexture);
+                            }
+                        }
+                    }
+                    if (resource.texture) {
+                        Texture.removeFromCache(resource.texture);
+                        if (resource.texture.baseTexture) {
+                            BaseTexture.removeFromCache(resource.texture.baseTexture);
+                        }
+                    }
+                    next();
                 });
             }
             const res = {};
@@ -820,7 +854,7 @@ class ContentSoundManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version) {
+    _loadAsync(manifests, version, useCache) {
         return new Promise((resolve, reject) => {
             const res = {};
             function loadedHandler(key, howl, error) {
@@ -949,6 +983,13 @@ class Content {
                 sounds: options.version || ''
             };
         }
+        if (typeof (options.useCache) !== 'object') {
+            options.useCache = {
+                images: options.useCache || false,
+                spritesheets: options.useCache || false,
+                sounds: options.useCache || false
+            };
+        }
         const contentDeliverData = {
             width: piximData.config.width,
             height: piximData.config.height,
@@ -960,6 +1001,7 @@ class Content {
             contentID: (++_contentID).toString(),
             basepath,
             version: options.version,
+            useCache: options.useCache || false,
             $: new ContentDeliver(contentDeliverData),
             manifests: piximData.manifests,
             additionalManifests: createManifests(),
@@ -1175,6 +1217,7 @@ class Content {
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;
         const version = this._piximData.version;
+        const useCache = this._piximData.useCache;
         const resources = this._piximData.$.resources;
         const loaderCount = Object.keys(manifests).length;
         if (loaderCount === 0) {
@@ -1185,7 +1228,7 @@ class Content {
         for (let i in manifests) {
             const type = i;
             keys.push(type);
-            promises.push(manifests[type].getAsync(basepath, version[type] || ''));
+            promises.push(manifests[type].getAsync(basepath, version[type] || '', useCache[type] || false));
         }
         return Promise.all(promises)
             .then((resolver) => {

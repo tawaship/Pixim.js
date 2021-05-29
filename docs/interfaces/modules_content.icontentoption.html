@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IContentOption | @tawaship/pixim.js - v1.11.2</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.11.2">
+	<title>IContentOption | @tawaship/pixim.js - v1.11.3</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.11.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@tawaship/pixim.js - v1.11.2</a>
+					<a href="../index.html" class="title">@tawaship/pixim.js - v1.11.3</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">@tawaship/pixim.js - v1.11.2</a>
+					<a href="../modules.html">@tawaship/pixim.js - v1.11.3</a>
 				</li>
 				<li>
 					<a href="../modules/modules_content.html">modules/Content</a>
@@ -84,6 +84,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentoption.html#basepath" class="tsd-kind-icon">basepath</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentoption.html#usecache" class="tsd-kind-icon">use<wbr>Cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentoption.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
@@ -98,7 +99,7 @@
 					<div class="tsd-signature tsd-kind-icon">basepath<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L47">src/modules/Content.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L54">src/modules/Content.ts:54</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -108,12 +109,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="usecache" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">use<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="modules_content.icontentassetcache.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentAssetCache</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L64">src/modules/Content.ts:64</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether cache textures.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="version" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> version</h3>
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="modules_content.icontentassetversion.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentAssetVersion</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L52">src/modules/Content.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L59">src/modules/Content.ts:59</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -171,6 +187,9 @@
 						<a href="../classes/modules_content.content.html" class="tsd-kind-icon">Content</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="modules_content.icontentassetcache.html" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Cache</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="modules_content.icontentassetversion.html" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Version</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -189,6 +208,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="modules_content.icontentoption.html#basepath" class="tsd-kind-icon">basepath</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="modules_content.icontentoption.html#usecache" class="tsd-kind-icon">use<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="modules_content.icontentoption.html#version" class="tsd-kind-icon">version</a>

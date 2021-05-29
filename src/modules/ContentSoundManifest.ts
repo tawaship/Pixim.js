@@ -15,7 +15,7 @@ export class ContentSoundManifest extends ContentManifestBase {
 	 * 
 	 * @override
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedSoundResourceDictionary> {
+	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useCache: boolean): Promise<ILoadedSoundResourceDictionary> {
 		return new Promise((resolve: (resource: ILoadedSoundResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
 			const res: ILoadedSoundResourceDictionary = {};
 			
@@ -43,6 +43,10 @@ export class ContentSoundManifest extends ContentManifestBase {
 				}
 				
 				++loadCount;
+			}
+			
+			if (useCache) {
+			
 			}
 			
 			for (let i in manifests) {

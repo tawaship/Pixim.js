@@ -72,7 +72,7 @@ export abstract class ContentManifestBase {
 	 * 
 	 * @param basepath Basement directory path of assets.
 	 */
-	getAsync(basepath: string, version: string): Promise<IResourceDictionary> {
+	getAsync(basepath: string, version: string, useCache: boolean): Promise<IResourceDictionary> {
 		const manifests: IPreManifestDictionary = this._manifests;
 		
 		const resources: IResourceDictionary = {};
@@ -105,7 +105,7 @@ export abstract class ContentManifestBase {
 			return Promise.resolve(resources);
 		}
 		
-		return this._loadAsync(loadable, version)
+		return this._loadAsync(loadable, version, useCache)
 			.then((res: ILoadedResourceDictionary) => {
 				for (let i in res) {
 					resources[i] = res[i].resource;
@@ -123,7 +123,7 @@ export abstract class ContentManifestBase {
 	/**
 	 * Load resources.
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedResourceDictionary> {
+	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useTextureCache: boolean): Promise<ILoadedResourceDictionary> {
 		return Promise.resolve({});
 	}
 	

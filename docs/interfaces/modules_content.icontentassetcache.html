@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ILoadedResource | @tawaship/pixim.js - v1.11.3</title>
+	<title>IContentAssetCache | @tawaship/pixim.js - v1.11.3</title>
 	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.11.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">@tawaship/pixim.js - v1.11.3</a>
 				</li>
 				<li>
-					<a href="../modules/modules_contentmanifestbase.html">modules/ContentManifestBase</a>
+					<a href="../modules/modules_content.html">modules/Content</a>
 				</li>
 				<li>
-					<a href="modules_contentmanifestbase.iloadedresource.html">ILoadedResource</a>
+					<a href="modules_content.icontentassetcache.html">IContentAssetCache</a>
 				</li>
 			</ul>
-			<h1>Interface ILoadedResource</h1>
+			<h1>Interface IContentAssetCache</h1>
 		</div>
 	</div>
 </header>
@@ -72,18 +72,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ILoadedResource</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<a href="modules_contentimagemanifest.iloadedimageresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedImageResource</a>
-							</li>
-							<li>
-								<a href="modules_contentsoundmanifest.iloadedsoundresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedSoundResource</a>
-							</li>
-							<li>
-								<a href="modules_contentspritesheetmanifest.iloadedspritesheetresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedSpritesheetResource</a>
-							</li>
-						</ul>
+						<span class="target">IContentAssetCache</span>
 					</li>
 				</ul>
 			</section>
@@ -94,8 +83,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_contentmanifestbase.iloadedresource.html#error" class="tsd-kind-icon">error</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_contentmanifestbase.iloadedresource.html#resource" class="tsd-kind-icon">resource</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentassetcache.html#images" class="tsd-kind-icon">images</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentassetcache.html#sounds" class="tsd-kind-icon">sounds</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="modules_content.icontentassetcache.html#spritesheets" class="tsd-kind-icon">spritesheets</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,22 +94,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>error</h3>
-					<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="images" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> images</h3>
+					<div class="tsd-signature tsd-kind-icon">images<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L30">src/modules/ContentManifestBase.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L17">src/modules/Content.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="resource" class="tsd-anchor"></a>
-					<h3>resource</h3>
-					<div class="tsd-signature tsd-kind-icon">resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="sounds" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> sounds</h3>
+					<div class="tsd-signature tsd-kind-icon">sounds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L29">src/modules/ContentManifestBase.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L19">src/modules/Content.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="spritesheets" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> spritesheets</h3>
+					<div class="tsd-signature tsd-kind-icon">spritesheets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/Content.ts#L18">src/modules/Content.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -140,7 +140,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/modules_container.html">modules/<wbr>Container</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/modules_content.html">modules/<wbr>Content</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -149,7 +149,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/modules_contentimagemanifest.html">modules/<wbr>Content<wbr>Image<wbr>Manifest</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/modules_contentmanifestbase.html">modules/<wbr>Content<wbr>Manifest<wbr>Base</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -168,47 +168,50 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.icontentmanifestoption.html" class="tsd-kind-icon">IContent<wbr>Manifest<wbr>Option</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.icontentresourcedictionary.html" class="tsd-kind-icon">IContent<wbr>Resource<wbr>Dictionary</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/modules_content.content.html" class="tsd-kind-icon">Content</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.iloadedresource.html" class="tsd-kind-icon">ILoaded<wbr>Resource</a>
+						<a href="modules_content.icontentassetcache.html" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Cache</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="modules_contentmanifestbase.iloadedresource.html#error" class="tsd-kind-icon">error</a>
+								<a href="modules_content.icontentassetcache.html#images" class="tsd-kind-icon">images</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="modules_contentmanifestbase.iloadedresource.html#resource" class="tsd-kind-icon">resource</a>
+								<a href="modules_content.icontentassetcache.html#sounds" class="tsd-kind-icon">sounds</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="modules_content.icontentassetcache.html#spritesheets" class="tsd-kind-icon">spritesheets</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.iloadedresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Resource<wbr>Dictionary</a>
+						<a href="modules_content.icontentassetversion.html" class="tsd-kind-icon">IContent<wbr>Asset<wbr>Version</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.imanifestdictionary.html" class="tsd-kind-icon">IManifest<wbr>Dictionary</a>
+						<a href="modules_content.icontentconfigdata.html" class="tsd-kind-icon">IContent<wbr>Config<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.ipostmanifest.html" class="tsd-kind-icon">IPost<wbr>Manifest</a>
+						<a href="modules_content.icontentdata.html" class="tsd-kind-icon">IContent<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.ipostmanifestdictionary.html" class="tsd-kind-icon">IPost<wbr>Manifest<wbr>Dictionary</a>
+						<a href="modules_content.icontentmanifests.html" class="tsd-kind-icon">IContent<wbr>Manifests</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.ipremanifest.html" class="tsd-kind-icon">IPre<wbr>Manifest</a>
+						<a href="modules_content.icontentoption.html" class="tsd-kind-icon">IContent<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.ipremanifestdictionary.html" class="tsd-kind-icon">IPre<wbr>Manifest<wbr>Dictionary</a>
+						<a href="modules_content.icontentstaticdata.html" class="tsd-kind-icon">IContent<wbr>Static<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="modules_contentmanifestbase.iresourcedictionary.html" class="tsd-kind-icon">IResource<wbr>Dictionary</a>
+						<a href="modules_content.tcontents.html" class="tsd-kind-icon">TContents</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/modules_content.html#tcontentmanifesttype" class="tsd-kind-icon">TContent<wbr>Manifest<wbr>Type</a>
 					</li>
 				</ul>
 			</nav>

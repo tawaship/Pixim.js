@@ -15,7 +15,7 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 	 * 
 	 * @override
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string): Promise<ILoadedSpritesheetResourceDictionary> {
+	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useCache: boolean): Promise<ILoadedSpritesheetResourceDictionary> {
 		return new Promise((resolve: (resource: ILoadedSpritesheetResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
 			const loader: PIXI.Loader = new PIXI.Loader();
 			
@@ -26,6 +26,35 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 			for (let i in manifests) {
 				loader.add(i, manifests[i].url, {
 					crossOrigin: true
+				});
+			}
+			
+			if (!useCache) {
+				loader.use((resource: PIXI.LoaderResource, next: () => void) => {
+					if (resource.textures) {
+						for (let i in resource.textures) {
+							const texture = resource.textures[i];
+							if (!texture) {
+								continue;
+							}
+							
+							PIXI.Texture.removeFromCache(texture);
+							
+							if (texture.baseTexture) {
+								PIXI.BaseTexture.removeFromCache(texture.baseTexture);
+							}
+						}
+					}
+					
+					if (resource.texture) {
+						PIXI.Texture.removeFromCache(resource.texture);
+						
+						if (resource.texture.baseTexture) {
+							PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
+						}
+					}
+					
+					next();
 				});
 			}
 			
