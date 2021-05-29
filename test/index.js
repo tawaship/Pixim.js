@@ -1,5 +1,5 @@
 const assert = require('assert');
-const PIXI = require('pixi.js');
+const PIXI = require('pixi.js-legacy');
 const { Howl } = require('howler');
 const Pixim = require('../');
 const path = require('path');
