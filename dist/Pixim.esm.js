@@ -1213,6 +1213,7 @@ class Content {
                 contentDeliverData.resources.sounds[i].unload();
             }
         }
+        contentDeliverData.resources.sounds = {};
     }
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;

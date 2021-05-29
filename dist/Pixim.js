@@ -763,6 +763,7 @@
                 contentDeliverData.resources.sounds[i].stop(), contentDeliverData.resources.sounds[i].unload();
             }
         }
+        contentDeliverData.resources.sounds = {};
     }, Content.prototype._loadAssetAsync = function(manifests) {
         var basepath = this._piximData.basepath, version = this._piximData.version, useCache = this._piximData.useCache, resources = this._piximData.$.resources;
         if (0 === Object.keys(manifests).length) {

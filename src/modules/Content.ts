@@ -391,6 +391,7 @@ export class Content {
 				contentDeliverData.resources.sounds[i].unload();
 			}
 		}
+		contentDeliverData.resources.sounds = {};
 	}
 	
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
