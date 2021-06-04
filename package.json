@@ -8,7 +8,7 @@
   "scripts": {
     "rollup": "rollup -c",
     "d": "tsc --target ES5 --emitDeclarationOnly",
-    "docs": "typedoc src/",
+    "docs": "typedoc --tsconfig tsconfig.json",
     "test": "npm run rollup && npm run check",
     "test-browser": "npm run rollup && npm run check -- --debug",
     "check": "floss --path test/ --reporter=tap",
