@@ -7,15 +7,15 @@
 
 ---
 
-## How to install
+## Setup
 
-1. on your npm project
+### NPM
 
 ```sh
 npm install --save @tawaship/pixim.js
 ```
 
-2. on your code
+<br />
 
 ```javascript
 import * as Pixim from '@tawaship/pixim.js';
@@ -25,24 +25,16 @@ import * as Pixim from '@tawaship/pixim.js';
 const Pixim = require('@tawaship/pixim.js');
 ```
 
-## How to build
+### Browser
 
 ```sh
 git clone https://github.com/tawaship/Pixim.js
-
-cd Pixim.js
-
-npm install
-
-npm run build
 ```
 
-## How to load on browser
-
-After [install](#how-to-install) or [build](#how-to-build)
+<br />
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.2.1/pixi.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.2/pixi.min.js"></script>
 <script src="/path/to/dist/Pixim.min.js"></script>
 ```
 
