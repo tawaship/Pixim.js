@@ -12,17 +12,14 @@
 ### NPM
 
 ```sh
-npm install --save @tawaship/pixim.js
+npm install --save pixi.js @tawaship/pixim.js
 ```
 
 <br />
 
 ```javascript
+import * as PIXI from 'pixi.js';
 import * as Pixim from '@tawaship/pixim.js';
-
-// or
-
-const Pixim = require('@tawaship/pixim.js');
 ```
 
 ### Browser
