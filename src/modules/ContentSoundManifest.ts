@@ -1,22 +1,19 @@
 import { Howl } from 'howler';
-import { ContentManifestBase, IManifestDictionary, IContentManifestOption, IPostManifestDictionary, ILoadedResource } from './ContentManifestBase';
+import { ContentManifestBase, IManifestDictionary, ILoadedResourceDictionary, IResourceDictionary } from './ContentManifestBase';
 
-export interface ILoadedSoundResource extends ILoadedResource {
-	resource: Howl
+export interface ILoadedSoundResourceDictionary extends ILoadedResourceDictionary<Howl> {
 }
 
-export interface ILoadedSoundResourceDictionary{
-	[name: string]: ILoadedSoundResource;
-}
-
-export class ContentSoundManifest extends ContentManifestBase {
+export class ContentSoundManifest extends ContentManifestBase<string, Howl> {
 	/**
 	 * Load image resources.
 	 * 
 	 * @override
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useCache: boolean): Promise<ILoadedSoundResourceDictionary> {
-		return new Promise((resolve: (resource: ILoadedSoundResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
+	protected _loadAsync(basepath: string, version: string, useCache: boolean): Promise<ILoadedSoundResourceDictionary> {
+		const manifests = this._manifests;
+		
+		return new Promise((resolve: (resource: ILoadedSoundResourceDictionary) => void, reject: (manifest: IManifestDictionary<string>) => void): void => {
 			const res: ILoadedSoundResourceDictionary = {};
 			
 			function loadedHandler(key: string, howl: Howl, error: boolean): void {
@@ -38,7 +35,7 @@ export class ContentSoundManifest extends ContentManifestBase {
 			for (let i in manifests) {
 				if (!Howl) {
 					console.warn('You need "howler.js" to load sound asset.');
-					reject({ [i]: manifests[i].url});
+					reject({ [i]: manifests[i].data});
 					return;
 				}
 				
@@ -51,10 +48,14 @@ export class ContentSoundManifest extends ContentManifestBase {
 			
 			for (let i in manifests) {
 				const _i = i;
+				
+				const manifest = manifests[_i];
+				manifest.data = this._resolvePath(manifest.data, basepath);
+				
 				const url =
 					version
-					?`${manifests[_i].url}${manifests[_i].url.match(/\?/) ? '&' : '?'}_fv=${version}`
-					: manifests[_i].url;
+					?`${manifest.data}${manifest.data.match(/\?/) ? '&' : '?'}_fv=${version}`
+					: manifest.data;
 				
 				const howl = new Howl({
 					src: url,
@@ -62,8 +63,8 @@ export class ContentSoundManifest extends ContentManifestBase {
 						loadedHandler(_i, howl, false);
 					},
 					onloaderror: () => {
-						if (!manifests[_i].unrequired) {
-							reject({ [_i]: manifests[_i].url});
+						if (!manifest.unrequired) {
+							reject({ [_i]: manifest.data});
 							return;
 						}
 						
@@ -72,5 +73,17 @@ export class ContentSoundManifest extends ContentManifestBase {
 				});
 			}
 		});
+	}
+	
+	/**
+	 * Destroy resources.
+	 * 
+	 * @override
+	 */
+	destroyResources(resources: IResourceDictionary<Howl>) {
+		for (let i in resources) {
+			resources[i].stop();
+			resources[i].unload();
+		}
 	}
 }

@@ -1,64 +1,64 @@
 import * as PIXI from 'pixi.js';
-import { ContentManifestBase, IManifestDictionary, IContentManifestOption, IPostManifestDictionary, ILoadedResource } from './ContentManifestBase';
+import { ContentManifestBase, IManifestDictionary, ILoadedResourceDictionary, IResourceDictionary } from './ContentManifestBase';
 
-export interface ILoadedSpritesheetResource extends ILoadedResource {
-	resource: PIXI.ITextureDictionary
+export interface ILoadedSpritesheetResourceDictionary extends ILoadedResourceDictionary<PIXI.ITextureDictionary> {
 }
 
-export interface ILoadedSpritesheetResourceDictionary {
-	[name: string]: ILoadedSpritesheetResource;
-}
-
-export class ContentSpritesheetManifest extends ContentManifestBase {
+export class ContentSpritesheetManifest extends ContentManifestBase<string, PIXI.ITextureDictionary> {
 	/**
 	 * Load image resources.
 	 * 
 	 * @override
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useCache: boolean): Promise<ILoadedSpritesheetResourceDictionary> {
-		return new Promise((resolve: (resource: ILoadedSpritesheetResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
-			const loader: PIXI.Loader = new PIXI.Loader();
+	protected _loadAsync(basepath: string, version: string, useCache: boolean): Promise<ILoadedSpritesheetResourceDictionary> {
+		const manifests = this._manifests;
+		const loader: PIXI.Loader = new PIXI.Loader();
+		
+		if (version) {
+			loader.defaultQueryString = `_fv=${version}`;
+		}
+		
+		for (let i in manifests) {
+			const manifest = manifests[i];
+			manifest.data = this._resolvePath(manifest.data, basepath);
 			
-			if (version) {
-				loader.defaultQueryString = `_fv=${version}`;
-			}
-			
-			for (let i in manifests) {
-				loader.add(i, manifests[i].url, {
-					crossOrigin: true
-				});
-			}
-			
-			if (!useCache) {
-				loader.use((resource: PIXI.LoaderResource, next: () => void) => {
-					if (resource.textures) {
-						for (let i in resource.textures) {
-							const texture = resource.textures[i];
-							if (!texture) {
-								continue;
-							}
-							
-							PIXI.Texture.removeFromCache(texture);
-							
-							if (texture.baseTexture) {
-								PIXI.BaseTexture.removeFromCache(texture.baseTexture);
-							}
+			loader.add(i, manifest.data, {
+				crossOrigin: true
+			});
+		}
+		
+		if (!useCache) {
+			loader.use((resource: PIXI.LoaderResource, next: () => void) => {
+				if (resource.textures) {
+					for (let i in resource.textures) {
+						const texture = resource.textures[i];
+						if (!texture) {
+							continue;
 						}
-					}
-					
-					if (resource.texture) {
-						PIXI.Texture.removeFromCache(resource.texture);
 						
-						if (resource.texture.baseTexture) {
-							PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
+						PIXI.Texture.removeFromCache(texture);
+						
+						if (texture.baseTexture) {
+							PIXI.BaseTexture.removeFromCache(texture.baseTexture);
 						}
 					}
+				}
+				
+				if (resource.texture) {
+					PIXI.Texture.removeFromCache(resource.texture);
 					
-					next();
-				});
-			}
-			
+					if (resource.texture.baseTexture) {
+						PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
+					}
+				}
+				
+				next();
+			});
+		}
+		
+		return new Promise((resolve: (resource: ILoadedSpritesheetResourceDictionary) => void, reject: (manifest: IManifestDictionary<string>) => void): void => {
 			const res: ILoadedSpritesheetResourceDictionary = {};
+			
 			loader.load((loader, resources): void => {
 				for (let i in resources) {
 					if (!manifests[i]) {
@@ -68,7 +68,7 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 					const resource: PIXI.LoaderResource | undefined = resources[i];
 					
 					if (!resource) {
-						reject({ [i]: manifests[i].url});
+						reject({ [i]: manifests[i].data});
 						return;
 					}
 					
@@ -76,7 +76,7 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 					
 					const error: boolean = !!resource.error;
 					if (resource.error && !manifests[i].unrequired) {
-						reject({ [i]: manifests[i].url});
+						reject({ [i]: manifests[i].data});
 						return;
 					}
 					
@@ -89,5 +89,14 @@ export class ContentSpritesheetManifest extends ContentManifestBase {
 				resolve(res);
 			});
 		});
+	}
+	
+	/**
+	 * Destroy resources.
+	 * 
+	 * @override
+	 */
+	destroyResources(resources: IResourceDictionary<PIXI.ITextureDictionary>) {
+		
 	}
 }

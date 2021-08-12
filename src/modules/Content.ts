@@ -1,28 +1,20 @@
 import * as PIXI from 'pixi.js';
-import { IResourceDictionary, IContentResourceDictionary, IManifestDictionary, IContentManifestOption } from './ContentManifestBase';
+import { IManifestClass, ContentManifestBase, IResourceDictionary, IManifestDictionary, IContentManifestOption } from './ContentManifestBase';
 import { ContentImageManifest } from './ContentImageManifest';
 import { ContentSpritesheetManifest } from './ContentSpritesheetManifest';
 import { ContentSoundManifest } from './ContentSoundManifest';
-import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary } from './ContentDeliver';
-
-export type TContentManifestType = 'images' | 'spritesheets' | 'sounds';
+import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary, IContentResourceDictionary } from './ContentDeliver';
 
 export interface IContentAssetVersion {
-	images?: string;
-	spritesheets?: string;
-	sounds?: string;
+	[key: string]: string;
 }
 
 export interface IContentAssetCache {
-	images?: boolean;
-	spritesheets?: boolean;
-	sounds?: boolean;
+	[key: string]: boolean;
 }
 
-export interface IContentManifests { 
-	images: ContentImageManifest;
-	spritesheets: ContentSpritesheetManifest;
-	sounds: ContentSoundManifest;
+export interface IContentManifests {
+	[key: string]: ContentManifestBase<any, any>;
 }
 
 export interface IContentConfigData {
@@ -84,11 +76,13 @@ export interface IContentStaticData {
  * @ignore
  */
 function createManifests(): IContentManifests {
-	return {
-		images: new ContentImageManifest(),
-		spritesheets: new ContentSpritesheetManifest(),
-		sounds: new ContentSoundManifest()
-	};
+	const res: IContentManifests = {};
+	
+	for (let i in _manifests) {
+		res[i] = new _manifests[i]();
+	}
+	
+	return res;
 }
 
 /**
@@ -105,6 +99,11 @@ function createContentStatic(): IContentStaticData {
 	};
 }
 
+/**
+ * @ignore
+ */
+const _manifests: { [key: string]: IManifestClass } = {};
+
 export class Content {
 	protected static _piximData: IContentStaticData;
 	protected _piximData: IContentData;
@@ -113,19 +112,21 @@ export class Content {
 		const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
 		
 		if (typeof(options.version) !== 'object') {
-			options.version = {
-				images: options.version || '',
-				spritesheets: options.version || '',
-				sounds: options.version || ''
-			};
+			const version: IContentAssetVersion = {};
+			const v = options.version || '';
+			for (let i in _manifests) {
+				version[i] = v;
+			}
+			options.version = version;
 		}
 		
 		if (typeof(options.useCache) !== 'object') {
-			options.useCache = {
-				images: options.useCache || false,
-				spritesheets: options.useCache || false,
-				sounds: options.useCache || false
-			};
+			const useCache: IContentAssetCache = {};
+			const v = options.useCache || false;
+			for (let i in _manifests) {
+				useCache[i] = v;
+			}
+			options.useCache = useCache;
 		}
 		
 		const contentDeliverData = {
@@ -148,6 +149,13 @@ export class Content {
 			postloadPromise: null,
 			contentDeliverData
 		}
+	}
+	
+	/**
+	 * Register manifest class.
+	 */
+	static registerManifest(key: string, Manifest: IManifestClass) {
+		_manifests[key] = Manifest;
 	}
 	
 	/**
@@ -196,8 +204,9 @@ export class Content {
 	/**
 	 * Define assets for class.
 	 */
-	static defineManifests(key: TContentManifestType, data: IManifestDictionary, options: IContentManifestOption = {}) {
+	static defineManifests<T>(key: string, data: IManifestDictionary<T>, options: IContentManifestOption = {}) {
 		if (!this._piximData.manifests[key]) {
+			console.warn(`Manifest '${key}' is not registered.`);
 			return this;
 		}
 		
@@ -209,21 +218,21 @@ export class Content {
 	/**
 	 * Define image assets for class.
 	 */
-	static defineImages(data: IManifestDictionary, options: IContentManifestOption = {}) {
+	static defineImages(data: IManifestDictionary<string>, options: IContentManifestOption = {}) {
 		return this.defineManifests('images', data, options);
 	}
 	
 	/**
 	 * Define spritesheet assets for class.
 	 */
-	static defineSpritesheets(data: IManifestDictionary, options: IContentManifestOption = {}) {
+	static defineSpritesheets(data: IManifestDictionary<string>, options: IContentManifestOption = {}) {
 		return this.defineManifests('spritesheets', data, options);
 	}
 	
 	/**
 	 * Define sound assets for class.
 	 */
-	static defineSounds(data: IManifestDictionary, options: IContentManifestOption = {}) {
+	static defineSounds(data: IManifestDictionary<string>, options: IContentManifestOption = {}) {
 		return this.defineManifests('sounds', data, options);
 	}
 	
@@ -267,8 +276,9 @@ export class Content {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addManifests(key: TContentManifestType, data: IManifestDictionary, options: IContentManifestOption = {}): this {
+	addManifests<T>(key: string, data: IManifestDictionary<T>, options: IContentManifestOption = {}): this {
 		if (!this._piximData.additionalManifests[key]) {
+			console.warn(`Manifest '${key}' is not registered.`);
 			return this;
 		}
 		
@@ -282,7 +292,7 @@ export class Content {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addImages(data: IManifestDictionary, options: IContentManifestOption = {}): this {
+	addImages(data: IManifestDictionary<string>, options: IContentManifestOption = {}): this {
 		return this.addManifests('images', data, options);
 	}
 	
@@ -291,7 +301,7 @@ export class Content {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addSpritesheets(data: IManifestDictionary, options: IContentManifestOption = {}): this {
+	addSpritesheets(data: IManifestDictionary<string>, options: IContentManifestOption = {}): this {
 		return this.addManifests('spritesheets', data, options);
 	}
 	
@@ -300,7 +310,7 @@ export class Content {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addSounds(data: IManifestDictionary, options: IContentManifestOption = {}): this {
+	addSounds(data: IManifestDictionary<string>, options: IContentManifestOption = {}): this {
 		return this.addManifests('sounds', data, options);
 	}
 	
@@ -350,7 +360,7 @@ export class Content {
 		}
 		
 		return this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests)
-			.catch((e: IManifestDictionary) => {
+			.catch(e => {
 				this._piximData.preloadPromise = null;
 				
 				throw e;
@@ -369,7 +379,7 @@ export class Content {
 			.then(() => {
 				this._piximData.postloadPromise = null;
 			})
-			.catch((e: IManifestDictionary) => {
+			.catch(e => {
 				this._piximData.postloadPromise = null;
 				
 				throw e;
@@ -382,16 +392,16 @@ export class Content {
 		contentDeliverData.lib = {};
 		contentDeliverData.vars = {};
 		
-		contentDeliverData.resources.images = {};
-		contentDeliverData.resources.spritesheets = {};
+		const resources = contentDeliverData.resources;
+		const manifests = this._piximData.manifests;
 		
-		if (contentDeliverData.resources.sounds) {
-			for (let i in contentDeliverData.resources.sounds) {
-				contentDeliverData.resources.sounds[i].stop();
-				contentDeliverData.resources.sounds[i].unload();
+		for (let i in resources) {
+			if (i in manifests) {
+				manifests[i].destroyResources(resources[i]);
 			}
+			
+			resources[i] = {};
 		}
-		contentDeliverData.resources.sounds = {};
 	}
 	
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
@@ -406,17 +416,17 @@ export class Content {
 			return Promise.resolve();
 		}
 		
-		const promises: Promise<IResourceDictionary>[] = [];
-		const keys: TContentManifestType[] = [];
+		const promises: Promise<IResourceDictionary<any>>[] = [];
+		const keys: string[] = [];
 		for (let i in manifests) {
-			const type: TContentManifestType = <TContentManifestType>i;
+			const type = i;
 			keys.push(type);
 			
 			promises.push(manifests[type].getAsync(basepath, version[type] || '', useCache[type] || false));
 		}
 		
 		return Promise.all(promises)
-			.then((resolver: IResourceDictionary) => {
+			.then(resolver => {
 				for (let i: number = 0; i < resolver.length;i++) {
 					resources[keys[i]] = resources[keys[i]] || {};
 					
@@ -425,7 +435,7 @@ export class Content {
 					}
 				}
 			})
-			.catch((e: IManifestDictionary) => {
+			.catch(e => {
 				for (let i in e) {
 					console.error(`Asset '${i}: ${e[i]}' cannot load.`);
 				}
@@ -434,3 +444,7 @@ export class Content {
 			});
 	}
 }
+
+Content.registerManifest('images', ContentImageManifest);
+Content.registerManifest('spritesheets', ContentSpritesheetManifest);
+Content.registerManifest('sounds', ContentSoundManifest);

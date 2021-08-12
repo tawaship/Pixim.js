@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Container } from './Container';
-import { IContentResourceDictionary } from './ContentManifestBase';
+import { IResourceDictionary } from './ContentManifestBase';
 
 export interface IContentLibrary {
 	[name: string]: typeof PIXI.Container | typeof Container
@@ -8,6 +8,10 @@ export interface IContentLibrary {
 
 export interface IVariableDictionary {
 	[name: string]: any;
+}
+
+export interface IContentResourceDictionary {
+	[name: string]: IResourceDictionary<any>;
 }
 
 export interface IContentDeliverData {

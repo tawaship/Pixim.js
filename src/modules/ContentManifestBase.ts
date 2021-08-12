@@ -1,45 +1,45 @@
 import * as PIXI from 'pixi.js';
 
-export interface IManifestDictionary {
-	[name: string]: string;
+export interface IManifestDictionary<T> {
+	[name: string]: T;
 }
 
-export interface IPreManifest {
-	url: string;
+export interface IPreManifest<T> {
+	data: T;
 	unrequired: boolean;
 }
 
-export interface IPreManifestDictionary {
-	[name: string]: IPreManifest;
+export interface IPreManifestDictionary<T> {
+	[name: string]: IPreManifest<T>;
 }
 
-export interface IPostManifest extends IPreManifest {
+export interface IPostManifest<T> extends IPreManifest<T> {
 	//name: string;
 }
 
-export interface IPostManifestDictionary {
-	[name: string]: IPostManifest;
+export interface IPostManifestDictionary<T> {
+	[name: string]: IPostManifest<T>;
 }
 
 export interface IContentManifestOption {
 	unrequired?: boolean
 }
 
-export interface ILoadedResource {
-	resource: any;
+export interface ILoadedResource<T> {
+	resource: T;
 	error: boolean;
 }
 
-export interface ILoadedResourceDictionary {
-	[name: string]: ILoadedResource;
+export interface ILoadedResourceDictionary<T> {
+	[name: string]: ILoadedResource<T>;
 }
 
-export interface IResourceDictionary {
-	[name: string]: any;
+export interface IResourceDictionary<T> {
+	[name: string]: T;
 }
 
-export interface IContentResourceDictionary {
-	[name: string]: IResourceDictionary;
+export interface IManifestClass {
+	new(): ContentManifestBase<any, any>;
 }
 
 /**
@@ -47,8 +47,8 @@ export interface IContentResourceDictionary {
  */
 // const _cache: IResourceDictionary = {};
 
-export abstract class ContentManifestBase {
-	private _manifests: IPreManifestDictionary = {};
+export abstract class ContentManifestBase<TData, TResource> {
+	protected _manifests: IPreManifestDictionary<TData> = {};
 	
 	/**
 	 * Register manifests.
@@ -56,12 +56,12 @@ export abstract class ContentManifestBase {
 	 * @param manifests Defined manifests.
 	 * @param option Manifest option data.
 	 */
-	add(manifests: IManifestDictionary, options: IContentManifestOption = {}): void {
+	add(manifests: IManifestDictionary<TData>, options: IContentManifestOption = {}): void {
 		const unrequired: boolean = options.unrequired || false;
 		
 		for (let i in manifests) {
 			this._manifests[i] = {
-				url: manifests[i],
+				data: manifests[i],
 				unrequired
 			};
 		}
@@ -72,48 +72,17 @@ export abstract class ContentManifestBase {
 	 * 
 	 * @param basepath Basement directory path of assets.
 	 */
-	getAsync(basepath: string, version: string, useCache: boolean): Promise<IResourceDictionary> {
-		const manifests: IPreManifestDictionary = this._manifests;
+	getAsync(basepath: string, version: string, useCache: boolean): Promise<IResourceDictionary<TResource>> {
+		const resources: IResourceDictionary<TResource> = {};
 		
-		const resources: IResourceDictionary = {};
-		const loadable: IPostManifestDictionary = {};
-		//const cache = _cache;
-		
-		for (let i in manifests) {
-			const manifest: IPreManifest = manifests[i];
-			const url: string = this._resolvePath(manifest.url, basepath);
-			
-			
-			// query parameter is invalid for resource cache
-			//const name: string = url.replace(/\?.*/, '');
-			
-			/*
-			if (cache[name]) {
-				resources[i] = cache[name];
-				continue;
-			}
-			*/
-			
-			loadable[i] = {
-				url,
-			//	name,
-				unrequired: manifest.unrequired
-			};
-		}
-		
-		if (Object.keys(loadable).length === 0) {
+		if (Object.keys(this._manifests).length === 0) {
 			return Promise.resolve(resources);
 		}
 		
-		return this._loadAsync(loadable, version, useCache)
-			.then((res: ILoadedResourceDictionary) => {
+		return this._loadAsync(basepath, version, useCache)
+			.then((res: ILoadedResourceDictionary<TResource>) => {
 				for (let i in res) {
 					resources[i] = res[i].resource;
-					/*
-					if (!res[i].error) {
-						cache[loadable[i].name] = res[i].resource;
-					}
-					*/
 				}
 				
 				return resources;
@@ -123,14 +92,17 @@ export abstract class ContentManifestBase {
 	/**
 	 * Load resources.
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useTextureCache: boolean): Promise<ILoadedResourceDictionary> {
-		return Promise.resolve({});
-	}
+	protected abstract _loadAsync(basepath: string, version: string, useCache: boolean): Promise<ILoadedResourceDictionary<TResource>>;
+	
+	/**
+	 * Destroy resources.
+	 */
+	abstract destroyResources(resources: IResourceDictionary<TResource>): void;
 	
 	/**
 	 * Normalize asset path.
 	 */
-	private _resolvePath(path: string, basepath: string): string {
+	protected _resolvePath(path: string, basepath: string): string {
 		if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
 			return path;
 		} else {
