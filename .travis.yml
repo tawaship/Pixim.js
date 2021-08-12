@@ -3,7 +3,7 @@ node_js:
   - "node"
 
 install:
-    - yarn install xvfb-maybe
+    - yarn add xvfb-maybe
     - yarn install
  
 before_script:
