@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.3
+ * @tawaship/pixim.js - v1.12.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -666,7 +666,7 @@ class ContentManifestBase {
         const unrequired = options.unrequired || false;
         for (let i in manifests) {
             this._manifests[i] = {
-                url: manifests[i],
+                data: manifests[i],
                 unrequired
             };
         }
@@ -677,48 +677,17 @@ class ContentManifestBase {
      * @param basepath Basement directory path of assets.
      */
     getAsync(basepath, version, useCache) {
-        const manifests = this._manifests;
         const resources = {};
-        const loadable = {};
-        //const cache = _cache;
-        for (let i in manifests) {
-            const manifest = manifests[i];
-            const url = this._resolvePath(manifest.url, basepath);
-            // query parameter is invalid for resource cache
-            //const name: string = url.replace(/\?.*/, '');
-            /*
-            if (cache[name]) {
-                resources[i] = cache[name];
-                continue;
-            }
-            */
-            loadable[i] = {
-                url,
-                //	name,
-                unrequired: manifest.unrequired
-            };
-        }
-        if (Object.keys(loadable).length === 0) {
+        if (Object.keys(this._manifests).length === 0) {
             return Promise.resolve(resources);
         }
-        return this._loadAsync(loadable, version, useCache)
+        return this._loadAsync(basepath, version, useCache)
             .then((res) => {
             for (let i in res) {
                 resources[i] = res[i].resource;
-                /*
-                if (!res[i].error) {
-                    cache[loadable[i].name] = res[i].resource;
-                }
-                */
             }
             return resources;
         });
-    }
-    /**
-     * Load resources.
-     */
-    _loadAsync(manifests, version, useTextureCache) {
-        return Promise.resolve({});
     }
     /**
      * Normalize asset path.
@@ -739,38 +708,41 @@ class ContentImageManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version, useCache) {
-        return new Promise((resolve, reject) => {
-            const loader = new PIXI.Loader();
-            if (version) {
-                loader.defaultQueryString = `_fv=${version}`;
-            }
-            for (let i in manifests) {
-                loader.add(i, manifests[i].url, {
-                    crossOrigin: true
-                });
-            }
-            if (!useCache) {
-                loader.use((resource, next) => {
-                    if (resource.texture) {
-                        PIXI.Texture.removeFromCache(resource.texture);
-                        if (resource.texture.baseTexture) {
-                            PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
-                        }
+    _loadAsync(basepath, version, useCache) {
+        const manifests = this._manifests;
+        const loader = new PIXI.Loader();
+        if (version) {
+            loader.defaultQueryString = `_fv=${version}`;
+        }
+        for (let i in manifests) {
+            const manifest = manifests[i];
+            const url = this._resolvePath(manifest.data, basepath);
+            loader.add(i, url, {
+                crossOrigin: true
+            });
+        }
+        if (!useCache) {
+            loader.use((resource, next) => {
+                if (resource.texture) {
+                    PIXI.Texture.removeFromCache(resource.texture);
+                    if (resource.texture.baseTexture) {
+                        PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
                     }
-                    next();
-                });
-            }
+                }
+                next();
+            });
+        }
+        return new Promise((resolve, reject) => {
             const res = {};
             loader.load((loader, resources) => {
                 for (let i in resources) {
                     const resource = resources[i];
                     if (!resource) {
-                        reject({ [i]: manifests[i].url });
+                        reject(`Image: '${i}' cannot load.`);
                         return;
                     }
                     if (resource.error && !manifests[i].unrequired) {
-                        reject({ [i]: manifests[i].url });
+                        reject(`Image: '${i}' cannot load.`);
                         return;
                     }
                     res[i] = {
@@ -782,6 +754,13 @@ class ContentImageManifest extends ContentManifestBase {
             });
         });
     }
+    /**
+     * Destroy resources.
+     *
+     * @override
+     */
+    destroyResources(resources) {
+    }
 }
 
 class ContentSpritesheetManifest extends ContentManifestBase {
@@ -790,40 +769,43 @@ class ContentSpritesheetManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version, useCache) {
+    _loadAsync(basepath, version, useCache) {
+        const manifests = this._manifests;
+        const loader = new PIXI.Loader();
+        if (version) {
+            loader.defaultQueryString = `_fv=${version}`;
+        }
+        for (let i in manifests) {
+            const manifest = manifests[i];
+            const url = this._resolvePath(manifest.data, basepath);
+            loader.add(i, url, {
+                crossOrigin: true
+            });
+        }
+        if (!useCache) {
+            loader.use((resource, next) => {
+                if (resource.textures) {
+                    for (let i in resource.textures) {
+                        const texture = resource.textures[i];
+                        if (!texture) {
+                            continue;
+                        }
+                        PIXI.Texture.removeFromCache(texture);
+                        if (texture.baseTexture) {
+                            PIXI.BaseTexture.removeFromCache(texture.baseTexture);
+                        }
+                    }
+                }
+                if (resource.texture) {
+                    PIXI.Texture.removeFromCache(resource.texture);
+                    if (resource.texture.baseTexture) {
+                        PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
+                    }
+                }
+                next();
+            });
+        }
         return new Promise((resolve, reject) => {
-            const loader = new PIXI.Loader();
-            if (version) {
-                loader.defaultQueryString = `_fv=${version}`;
-            }
-            for (let i in manifests) {
-                loader.add(i, manifests[i].url, {
-                    crossOrigin: true
-                });
-            }
-            if (!useCache) {
-                loader.use((resource, next) => {
-                    if (resource.textures) {
-                        for (let i in resource.textures) {
-                            const texture = resource.textures[i];
-                            if (!texture) {
-                                continue;
-                            }
-                            PIXI.Texture.removeFromCache(texture);
-                            if (texture.baseTexture) {
-                                PIXI.BaseTexture.removeFromCache(texture.baseTexture);
-                            }
-                        }
-                    }
-                    if (resource.texture) {
-                        PIXI.Texture.removeFromCache(resource.texture);
-                        if (resource.texture.baseTexture) {
-                            PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
-                        }
-                    }
-                    next();
-                });
-            }
             const res = {};
             loader.load((loader, resources) => {
                 for (let i in resources) {
@@ -832,13 +814,13 @@ class ContentSpritesheetManifest extends ContentManifestBase {
                     }
                     const resource = resources[i];
                     if (!resource) {
-                        reject({ [i]: manifests[i].url });
+                        reject(`Spritesheet: '${i}' cannot load.`);
                         return;
                     }
                     const textures = resource.textures || {};
                     const error = !!resource.error;
                     if (resource.error && !manifests[i].unrequired) {
-                        reject({ [i]: manifests[i].url });
+                        reject(`Spritesheet: '${i}' cannot load.`);
                         return;
                     }
                     res[i] = {
@@ -850,6 +832,13 @@ class ContentSpritesheetManifest extends ContentManifestBase {
             });
         });
     }
+    /**
+     * Destroy resources.
+     *
+     * @override
+     */
+    destroyResources(resources) {
+    }
 }
 
 class ContentSoundManifest extends ContentManifestBase {
@@ -858,7 +847,11 @@ class ContentSoundManifest extends ContentManifestBase {
      *
      * @override
      */
-    _loadAsync(manifests, version, useCache) {
+    _loadAsync(basepath, version, useCache) {
+        const manifests = this._manifests;
+        if (!howler.Howl) {
+            return Promise.reject('You need "howler.js" to load sound asset.');
+        }
         return new Promise((resolve, reject) => {
             const res = {};
             function loadedHandler(key, howl, error) {
@@ -874,26 +867,23 @@ class ContentSoundManifest extends ContentManifestBase {
             let loadCount = 0;
             let loadedCount = 0;
             for (let i in manifests) {
-                if (!howler.Howl) {
-                    console.warn('You need "howler.js" to load sound asset.');
-                    reject({ [i]: manifests[i].url });
-                    return;
-                }
                 ++loadCount;
             }
             for (let i in manifests) {
                 const _i = i;
+                const manifest = manifests[_i];
+                const preUrl = this._resolvePath(manifest.data, basepath);
                 const url = version
-                    ? `${manifests[_i].url}${manifests[_i].url.match(/\?/) ? '&' : '?'}_fv=${version}`
-                    : manifests[_i].url;
+                    ? `${preUrl}${preUrl.match(/\?/) ? '&' : '?'}_fv=${version}`
+                    : preUrl;
                 const howl = new howler.Howl({
                     src: url,
                     onload: () => {
                         loadedHandler(_i, howl, false);
                     },
                     onloaderror: () => {
-                        if (!manifests[_i].unrequired) {
-                            reject({ [_i]: manifests[_i].url });
+                        if (!manifest.unrequired) {
+                            reject(`Sound: '${_i}' cannot load.`);
                             return;
                         }
                         loadedHandler(_i, howl, true);
@@ -901,6 +891,17 @@ class ContentSoundManifest extends ContentManifestBase {
                 });
             }
         });
+    }
+    /**
+     * Destroy resources.
+     *
+     * @override
+     */
+    destroyResources(resources) {
+        for (let i in resources) {
+            resources[i].stop();
+            resources[i].unload();
+        }
     }
 }
 
@@ -958,11 +959,11 @@ let _contentID = 0;
  * @ignore
  */
 function createManifests() {
-    return {
-        images: new ContentImageManifest(),
-        spritesheets: new ContentSpritesheetManifest(),
-        sounds: new ContentSoundManifest()
-    };
+    const res = {};
+    for (let i in _manifests) {
+        res[i] = new _manifests[i]();
+    }
+    return res;
 }
 /**
  * @ignore
@@ -977,22 +978,28 @@ function createContentStatic() {
         lib: {}
     };
 }
+/**
+ * @ignore
+ */
+const _manifests = {};
 class Content {
     constructor(options = {}, piximData = Content._piximData) {
         const basepath = (options.basepath || '').replace(/([^/])$/, '$1/');
         if (typeof (options.version) !== 'object') {
-            options.version = {
-                images: options.version || '',
-                spritesheets: options.version || '',
-                sounds: options.version || ''
-            };
+            const version = {};
+            const v = options.version || '';
+            for (let i in _manifests) {
+                version[i] = v;
+            }
+            options.version = version;
         }
         if (typeof (options.useCache) !== 'object') {
-            options.useCache = {
-                images: options.useCache || false,
-                spritesheets: options.useCache || false,
-                sounds: options.useCache || false
-            };
+            const useCache = {};
+            const v = options.useCache || false;
+            for (let i in _manifests) {
+                useCache[i] = v;
+            }
+            options.useCache = useCache;
         }
         const contentDeliverData = {
             width: piximData.config.width,
@@ -1013,6 +1020,12 @@ class Content {
             postloadPromise: null,
             contentDeliverData
         };
+    }
+    /**
+     * Register manifest class.
+     */
+    static registerManifest(key, Manifest) {
+        _manifests[key] = Manifest;
     }
     /**
      * Create a cloned content class.
@@ -1055,6 +1068,7 @@ class Content {
      */
     static defineManifests(key, data, options = {}) {
         if (!this._piximData.manifests[key]) {
+            console.warn(`Manifest '${key}' is not registered.`);
             return this;
         }
         this._piximData.manifests[key].add(data, options);
@@ -1115,6 +1129,7 @@ class Content {
      */
     addManifests(key, data, options = {}) {
         if (!this._piximData.additionalManifests[key]) {
+            console.warn(`Manifest '${key}' is not registered.`);
             return this;
         }
         this._piximData.additionalManifests[key].add(data, options);
@@ -1184,7 +1199,7 @@ class Content {
             return this._piximData.preloadPromise;
         }
         return this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests)
-            .catch((e) => {
+            .catch(e => {
             this._piximData.preloadPromise = null;
             throw e;
         });
@@ -1200,7 +1215,7 @@ class Content {
             .then(() => {
             this._piximData.postloadPromise = null;
         })
-            .catch((e) => {
+            .catch(e => {
             this._piximData.postloadPromise = null;
             throw e;
         });
@@ -1209,15 +1224,14 @@ class Content {
         const contentDeliverData = this._piximData.contentDeliverData;
         contentDeliverData.lib = {};
         contentDeliverData.vars = {};
-        contentDeliverData.resources.images = {};
-        contentDeliverData.resources.spritesheets = {};
-        if (contentDeliverData.resources.sounds) {
-            for (let i in contentDeliverData.resources.sounds) {
-                contentDeliverData.resources.sounds[i].stop();
-                contentDeliverData.resources.sounds[i].unload();
+        const resources = contentDeliverData.resources;
+        const manifests = this._piximData.manifests;
+        for (let i in resources) {
+            if (i in manifests) {
+                manifests[i].destroyResources(resources[i]);
             }
+            resources[i] = {};
         }
-        contentDeliverData.resources.sounds = {};
     }
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;
@@ -1236,22 +1250,19 @@ class Content {
             promises.push(manifests[type].getAsync(basepath, version[type] || '', useCache[type] || false));
         }
         return Promise.all(promises)
-            .then((resolver) => {
+            .then(resolver => {
             for (let i = 0; i < resolver.length; i++) {
                 resources[keys[i]] = resources[keys[i]] || {};
                 for (let j in resolver[i]) {
                     resources[keys[i]][j] = resolver[i][j];
                 }
             }
-        })
-            .catch((e) => {
-            for (let i in e) {
-                console.error(`Asset '${i}: ${e[i]}' cannot load.`);
-            }
-            throw e;
         });
     }
 }
+Content.registerManifest('images', ContentImageManifest);
+Content.registerManifest('spritesheets', ContentSpritesheetManifest);
+Content.registerManifest('sounds', ContentSoundManifest);
 
 exports.Application = Application;
 exports.Container = Container;

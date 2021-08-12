@@ -1,60 +1,59 @@
 import * as PIXI from 'pixi.js';
-import { ContentManifestBase, IManifestDictionary, IContentManifestOption, IPostManifestDictionary, ILoadedResource } from './ContentManifestBase';
+import { ContentManifestBase, ILoadedResourceDictionary, IResourceDictionary } from './ContentManifestBase';
 
-export interface ILoadedImageResource extends ILoadedResource {
-	resource: PIXI.Texture
+export interface ILoadedImageResourceDictionary extends ILoadedResourceDictionary<PIXI.Texture> {
 }
 
-export interface ILoadedImageResourceDictionary {
-	[name: string]: ILoadedImageResource;
-}
-
-export class ContentImageManifest extends ContentManifestBase {
+export class ContentImageManifest extends ContentManifestBase<string, PIXI.Texture> {
 	/**
 	 * Load image resources.
 	 * 
 	 * @override
 	 */
-	protected _loadAsync(manifests: IPostManifestDictionary, version: string, useCache: boolean): Promise<ILoadedImageResourceDictionary> {
-		return new Promise((resolve: (resource: ILoadedImageResourceDictionary) => void, reject: (manifest: IManifestDictionary) => void): void => {
-			const loader: PIXI.Loader = new PIXI.Loader();
+	protected _loadAsync(basepath: string, version: string, useCache: boolean): Promise<ILoadedImageResourceDictionary> {
+		const manifests = this._manifests;
+		const loader: PIXI.Loader = new PIXI.Loader();
+		
+		if (version) {
+			loader.defaultQueryString = `_fv=${version}`;
+		}
+		
+		for (let i in manifests) {
+			const manifest = manifests[i];
+			const url = this._resolvePath(manifest.data, basepath);
 			
-			if (version) {
-				loader.defaultQueryString = `_fv=${version}`;
-			}
-			
-			for (let i in manifests) {
-				loader.add(i, manifests[i].url, {
-					crossOrigin: true
-				});
-			}
-			
-			if (!useCache) {
-				loader.use((resource: PIXI.LoaderResource, next: () => void) => {
-					if (resource.texture) {
-						PIXI.Texture.removeFromCache(resource.texture);
-						
-						if (resource.texture.baseTexture) {
-							PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
-						}
-					}
+			loader.add(i, url, {
+				crossOrigin: true
+			});
+		}
+		
+		if (!useCache) {
+			loader.use((resource: PIXI.LoaderResource, next: () => void) => {
+				if (resource.texture) {
+					PIXI.Texture.removeFromCache(resource.texture);
 					
-					next();
-				});
-			}
-			
+					if (resource.texture.baseTexture) {
+						PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture);
+					}
+				}
+				
+				next();
+			});
+		}
+		
+		return new Promise((resolve: (resource: ILoadedImageResourceDictionary) => void, reject: (path: string) => void): void => {
 			const res: ILoadedImageResourceDictionary = {};
 			loader.load((loader, resources): void => {
 				for (let i in resources) {
 					const resource: PIXI.LoaderResource | undefined = resources[i];
 					
 					if (!resource) {
-						reject({ [i]: manifests[i].url});
+						reject(`Image: '${i}' cannot load.`);
 						return;
 					}
 					
 					if (resource.error && !manifests[i].unrequired) {
-						reject({ [i]: manifests[i].url});
+						reject(`Image: '${i}' cannot load.`);
 						return;
 					}
 					
@@ -67,5 +66,14 @@ export class ContentImageManifest extends ContentManifestBase {
 				resolve(res);
 			});
 		});
+	}
+	
+	/**
+	 * Destroy resources.
+	 * 
+	 * @override
+	 */
+	destroyResources(resources: IResourceDictionary<PIXI.Texture>) {
+		
 	}
 }

@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.3
+ * @tawaship/pixim.js - v1.12.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.11.3 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.12.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -443,27 +443,18 @@
         var unrequired = options.unrequired || !1;
         for (var i in manifests) {
             this._manifests[i] = {
-                url: manifests[i],
+                data: manifests[i],
                 unrequired: unrequired
             };
         }
     }, ContentManifestBase.prototype.getAsync = function(basepath, version, useCache) {
-        var manifests = this._manifests, resources = {}, loadable = {};
-        for (var i in manifests) {
-            var manifest = manifests[i], url = this._resolvePath(manifest.url, basepath);
-            loadable[i] = {
-                url: url,
-                unrequired: manifest.unrequired
-            };
-        }
-        return 0 === Object.keys(loadable).length ? Promise.resolve(resources) : this._loadAsync(loadable, version, useCache).then((function(res) {
+        var resources = {};
+        return 0 === Object.keys(this._manifests).length ? Promise.resolve(resources) : this._loadAsync(basepath, version, useCache).then((function(res) {
             for (var i in res) {
                 resources[i] = res[i].resource;
             }
             return resources;
         }));
-    }, ContentManifestBase.prototype._loadAsync = function(manifests, version, useTextureCache) {
-        return Promise.resolve({});
     }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
         return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
     };
@@ -473,28 +464,27 @@
         }
         return ContentManifestBase && (ContentImageManifest.__proto__ = ContentManifestBase), 
         ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-        ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(manifests, version, useCache) {
-            return new Promise((function(resolve, reject) {
-                var loader = new PIXI.Loader;
-                for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                    loader.add(i, manifests[i].url, {
-                        crossOrigin: !0
-                    });
-                }
-                useCache || loader.use((function(resource, next) {
-                    resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
-                    next();
-                }));
+        ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(basepath, version, useCache) {
+            var manifests = this._manifests, loader = new PIXI.Loader;
+            for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
+                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+                loader.add(i, url, {
+                    crossOrigin: !0
+                });
+            }
+            return useCache || loader.use((function(resource, next) {
+                resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
+                next();
+            })), new Promise((function(resolve, reject) {
                 var res = {};
                 loader.load((function(loader, resources) {
-                    var obj, obj$1;
                     for (var i in resources) {
                         var resource = resources[i];
                         if (!resource) {
-                            return void reject((obj = {}, obj[i] = manifests[i].url, obj));
+                            return void reject("Image: '" + i + "' cannot load.");
                         }
                         if (resource.error && !manifests[i].unrequired) {
-                            return void reject((obj$1 = {}, obj$1[i] = manifests[i].url, obj$1));
+                            return void reject("Image: '" + i + "' cannot load.");
                         }
                         res[i] = {
                             resource: resource.texture,
@@ -504,44 +494,43 @@
                     resolve(res);
                 }));
             }));
-        }, ContentImageManifest;
+        }, ContentImageManifest.prototype.destroyResources = function(resources) {}, ContentImageManifest;
     }(ContentManifestBase), ContentSpritesheetManifest = function(ContentManifestBase) {
         function ContentSpritesheetManifest() {
             ContentManifestBase.apply(this, arguments);
         }
         return ContentManifestBase && (ContentSpritesheetManifest.__proto__ = ContentManifestBase), 
         ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-        ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(manifests, version, useCache) {
-            return new Promise((function(resolve, reject) {
-                var loader = new PIXI.Loader;
-                for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                    loader.add(i, manifests[i].url, {
-                        crossOrigin: !0
-                    });
-                }
-                useCache || loader.use((function(resource, next) {
-                    if (resource.textures) {
-                        for (var i in resource.textures) {
-                            var texture = resource.textures[i];
-                            texture && (PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture));
-                        }
+        ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(basepath, version, useCache) {
+            var manifests = this._manifests, loader = new PIXI.Loader;
+            for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
+                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+                loader.add(i, url, {
+                    crossOrigin: !0
+                });
+            }
+            return useCache || loader.use((function(resource, next) {
+                if (resource.textures) {
+                    for (var i in resource.textures) {
+                        var texture = resource.textures[i];
+                        texture && (PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture));
                     }
-                    resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
-                    next();
-                }));
+                }
+                resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
+                next();
+            })), new Promise((function(resolve, reject) {
                 var res = {};
                 loader.load((function(loader, resources) {
-                    var obj, obj$1;
                     for (var i in resources) {
                         if (manifests[i]) {
                             var resource = resources[i];
                             if (!resource) {
-                                return void reject((obj = {}, obj[i] = manifests[i].url, obj));
+                                return void reject("Spritesheet: '" + i + "' cannot load.");
                             }
                             var textures = resource.textures || {};
                             resource.error;
                             if (resource.error && !manifests[i].unrequired) {
-                                return void reject((obj$1 = {}, obj$1[i] = manifests[i].url, obj$1));
+                                return void reject("Spritesheet: '" + i + "' cannot load.");
                             }
                             res[i] = {
                                 resource: textures,
@@ -552,16 +541,18 @@
                     resolve(res);
                 }));
             }));
-        }, ContentSpritesheetManifest;
+        }, ContentSpritesheetManifest.prototype.destroyResources = function(resources) {}, 
+        ContentSpritesheetManifest;
     }(ContentManifestBase), ContentSoundManifest = function(ContentManifestBase) {
         function ContentSoundManifest() {
             ContentManifestBase.apply(this, arguments);
         }
         return ContentManifestBase && (ContentSoundManifest.__proto__ = ContentManifestBase), 
         ContentSoundManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
-        ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(manifests, version, useCache) {
-            return new Promise((function(resolve, reject) {
-                var obj, res = {};
+        ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(basepath, version, useCache) {
+            var this$1 = this, manifests = this._manifests;
+            return howler.Howl ? new Promise((function(resolve, reject) {
+                var res = {};
                 function loadedHandler(key, howl, error) {
                     res[key] = {
                         resource: howl,
@@ -570,29 +561,27 @@
                 }
                 var loadCount = 0, loadedCount = 0;
                 for (var i in manifests) {
-                    if (!howler.Howl) {
-                        return console.warn('You need "howler.js" to load sound asset.'), void reject((obj = {}, 
-                        obj[i] = manifests[i].url, obj));
-                    }
                     ++loadCount;
                 }
                 var loop = function(i) {
-                    var _i = i$1, url = version ? manifests[_i].url + (manifests[_i].url.match(/\?/) ? "&" : "?") + "_fv=" + version : manifests[_i].url, howl = new howler.Howl({
+                    var _i = i$1, manifest = manifests[_i], preUrl = this$1._resolvePath(manifest.data, basepath), url = version ? preUrl + (preUrl.match(/\?/) ? "&" : "?") + "_fv=" + version : preUrl, howl = new howler.Howl({
                         src: url,
                         onload: function() {
                             loadedHandler(_i, howl, !1);
                         },
                         onloaderror: function() {
-                            var obj;
-                            manifests[_i].unrequired ? loadedHandler(_i, howl, !0) : reject(((obj = {})[_i] = manifests[_i].url, 
-                            obj));
+                            manifest.unrequired ? loadedHandler(_i, howl, !0) : reject("Sound: '" + _i + "' cannot load.");
                         }
                     });
                 };
                 for (var i$1 in manifests) {
                     loop();
                 }
-            }));
+            })) : Promise.reject('You need "howler.js" to load sound asset.');
+        }, ContentSoundManifest.prototype.destroyResources = function(resources) {
+            for (var i in resources) {
+                resources[i].stop(), resources[i].unload();
+            }
         }, ContentSoundManifest;
     }(ContentManifestBase), ContentDeliver = function(data) {
         this._piximData = {
@@ -632,24 +621,29 @@
     }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors$1);
     var _contents = {}, _contentID = 0;
     function createManifests() {
-        return {
-            images: new ContentImageManifest,
-            spritesheets: new ContentSpritesheetManifest,
-            sounds: new ContentSoundManifest
-        };
+        var res = {};
+        for (var i in _manifests) {
+            res[i] = new _manifests[i];
+        }
+        return res;
     }
-    var Content = function Content(options, piximData) {
+    var _manifests = {}, Content = function Content(options, piximData) {
         void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
         var basepath = (options.basepath || "").replace(/([^/])$/, "$1/");
-        "object" != typeof options.version && (options.version = {
-            images: options.version || "",
-            spritesheets: options.version || "",
-            sounds: options.version || ""
-        }), "object" != typeof options.useCache && (options.useCache = {
-            images: options.useCache || !1,
-            spritesheets: options.useCache || !1,
-            sounds: options.useCache || !1
-        });
+        if ("object" != typeof options.version) {
+            var version = {}, v = options.version || "";
+            for (var i in _manifests) {
+                version[i] = v;
+            }
+            options.version = version;
+        }
+        if ("object" != typeof options.useCache) {
+            var useCache = {}, v$1 = options.useCache || !1;
+            for (var i$1 in _manifests) {
+                useCache[i$1] = v$1;
+            }
+            options.useCache = useCache;
+        }
         var contentDeliverData = {
             width: piximData.config.width,
             height: piximData.config.height,
@@ -674,7 +668,9 @@
             configurable: !0
         }
     };
-    Content.create = function(key) {
+    Content.registerManifest = function(key, Manifest) {
+        _manifests[key] = Manifest;
+    }, Content.create = function(key) {
         if (void 0 === key && (key = ""), key && key in _contents) {
             throw new Error("Content key '" + key + "' has already exists.");
         }
@@ -699,7 +695,7 @@
         delete _contents[key];
     }, Content.defineManifests = function(key, data, options) {
         return void 0 === options && (options = {}), this._piximData.manifests[key] ? (this._piximData.manifests[key].add(data, options), 
-        this) : this;
+        this) : (console.warn("Manifest '" + key + "' is not registered."), this);
     }, Content.defineImages = function(data, options) {
         return void 0 === options && (options = {}), this.defineManifests("images", data, options);
     }, Content.defineSpritesheets = function(data, options) {
@@ -718,7 +714,7 @@
         return this._piximData.contentID;
     }, Content.prototype.addManifests = function(key, data, options) {
         return void 0 === options && (options = {}), this._piximData.additionalManifests[key] ? (this._piximData.additionalManifests[key].add(data, options), 
-        this) : this;
+        this) : (console.warn("Manifest '" + key + "' is not registered."), this);
     }, Content.prototype.addImages = function(data, options) {
         return void 0 === options && (options = {}), this.addManifests("images", data, options);
     }, Content.prototype.addSpritesheets = function(data, options) {
@@ -757,13 +753,11 @@
         }));
     }, Content.prototype.destroy = function() {
         var contentDeliverData = this._piximData.contentDeliverData;
-        if (contentDeliverData.lib = {}, contentDeliverData.vars = {}, contentDeliverData.resources.images = {}, 
-        contentDeliverData.resources.spritesheets = {}, contentDeliverData.resources.sounds) {
-            for (var i in contentDeliverData.resources.sounds) {
-                contentDeliverData.resources.sounds[i].stop(), contentDeliverData.resources.sounds[i].unload();
-            }
+        contentDeliverData.lib = {}, contentDeliverData.vars = {};
+        var resources = contentDeliverData.resources, manifests = this._piximData.manifests;
+        for (var i in resources) {
+            i in manifests && manifests[i].destroyResources(resources[i]), resources[i] = {};
         }
-        contentDeliverData.resources.sounds = {};
     }, Content.prototype._loadAssetAsync = function(manifests) {
         var basepath = this._piximData.basepath, version = this._piximData.version, useCache = this._piximData.useCache, resources = this._piximData.$.resources;
         if (0 === Object.keys(manifests).length) {
@@ -780,17 +774,14 @@
                     resources[keys[i]][j] = resolver[i][j];
                 }
             }
-        })).catch((function(e) {
-            for (var i in e) {
-                console.error("Asset '" + i + ": " + e[i] + "' cannot load.");
-            }
-            throw e;
         }));
-    }, Object.defineProperties(Content.prototype, prototypeAccessors$2), exports.Application = Application, 
-    exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
-    exports.ContentImageManifest = ContentImageManifest, exports.ContentManifestBase = ContentManifestBase, 
-    exports.ContentSoundManifest = ContentSoundManifest, exports.ContentSpritesheetManifest = ContentSpritesheetManifest, 
-    exports.Emitter = Emitter$1, exports.Layer = Layer, exports.Task = Task$1;
+    }, Object.defineProperties(Content.prototype, prototypeAccessors$2), Content.registerManifest("images", ContentImageManifest), 
+    Content.registerManifest("spritesheets", ContentSpritesheetManifest), Content.registerManifest("sounds", ContentSoundManifest), 
+    exports.Application = Application, exports.Container = Container, exports.Content = Content, 
+    exports.ContentDeliver = ContentDeliver, exports.ContentImageManifest = ContentImageManifest, 
+    exports.ContentManifestBase = ContentManifestBase, exports.ContentSoundManifest = ContentSoundManifest, 
+    exports.ContentSpritesheetManifest = ContentSpritesheetManifest, exports.Emitter = Emitter$1, 
+    exports.Layer = Layer, exports.Task = Task$1;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

@@ -34,7 +34,7 @@ Test.defineLibraries({
 	main: class Main extends Pixim.Container {
 		constructor($) {
 			super();
-			
+			console.log($)
 			$.resources.sounds.a.play();
 			$.resources.sounds.a.loop(true);
 			$.resources.sounds.b.play();
@@ -121,6 +121,7 @@ Test.defineSounds({
 });
 
 const test = new Test({
+	basepath: './',
 	version: {
 		images: 2,
 		spritesheets: 3,
@@ -148,167 +149,15 @@ app.attachAsync(test)
 	.then(() => {
 		app.play();
 		//app.app.destroy(true, {children: true})
-		app = null
+		//app = null
 	});
 	
-/*
+//*
 setTimeout(() => {
 
-o.destroy(true)
-},2000)*/
-}
-
-{
-const Test = Pixim.Content.create();
-
-Test.setConfig({
-	width: 300,
-	height: 300
-});
-
-Test.defineLibraries({
-	root: class Root extends Pixim.Container {
-		constructor($) {
-			super();
-			
-			//this.taskEnabledChildren = false;
-			
-			this.addChild(new PIXI.Graphics())
-				.beginFill(0xFFEEEE, 1)
-				.drawRect(0, 0, $.width, $.height);
-			
-			this.task.add(e => {
-			this.addChild(new $.lib.main($))
-			this.task.reset();
-			})
-		}
-	},
-	
-	main: class Main extends Pixim.Container {
-		constructor($) {
-			super();
-			
-			$.resources.sounds.a.play();
-			$.resources.sounds.a.loop(true);
-			$.resources.sounds.b.play();
-			
-			//*
-			this.addChild(new PIXI.Graphics())
-				.beginFill(0xFFFFFF, 1)
-				.drawRect(0, 0, 100, 100);
-			//*/
-			
-			/*
-			this.addChild(new PIXI.Sprite($.resources.images.image_1));
-			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_1)).y = 105;
-			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_1.ss_1_2)).x = 105;
-			//*/
-			
-			//*
-			this.addChild(new PIXI.Sprite($.resources.images.image_2));
-			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_1)).y = 105;
-			this.addChild(new PIXI.Sprite($.resources.spritesheets.ss_2.ss_2_2)).x = 105;
-			//*/
-			
-			//*
-			
-			//*/
-			this.task.add(e => {
-				this.y += e.delta / 2;
-			});
-			const a = this.addChild(new $.lib.sub($));
-			//a.taskEnabled = false
-			//this.taskEnabled = false;
-		}
-	},
-	
-	sub: class Sub extends Pixim.Container {
-		constructor($) {
-			super();
-			
-			this.task.add([
-				e => {
-					this.parent.x += e.delta;
-					if (this.parent.x > 100) {
-						this.task.next();
-					}
-				},
-				e => {
-					this.parent.x -= e.delta;
-					if (this.parent.x < 0) {
-						this.task.next();
-					}
-				}
-			]);
-			
-			const t = [
-				e => {
-					this.parent.x += e.delta * 5;
-					if (this.parent.x > 100) {
-						this.task.next();
-					}
-				},
-				e => {
-					this.parent.x -= e.delta * 5;
-					if (this.parent.x < 0) {
-						this.task.first();
-					}
-				}
-			]
-			
-			this.task.add(t);
-		}
-	}
-});
-
-Test.defineImages({
-	image_1: 'img/image_1.png'
-});
-
-Test.defineSpritesheets({
-	ss_1: 'img/ss_1.json'
-});
-
-Test.defineSounds({
-	a: 'sound/a.mp3'
-});
-
-const test = new Test({
-	version: {
-		images: 2,
-		spritesheets: 3,
-		sounds: 54
-	}
-});
-test.addImages({
-	image_2: 'img/image_2.png'
-});
-
-test.addSpritesheets({
-	ss_2: 'img/ss_2.json'
-});
-
-test.addSounds({
-	b: 'sound/b.mp3?a=1'
-});
-let o
-let app = o = new Pixim.Application({width: 300, height: 300}, {autoAdjust:app => {
-	console.log(app)
-	app.fullScreen();
-} });
-setTimeout(()=>{
-app.attachAsync(test)
-	.then(() => {
-		app.play();
-		//app.app.destroy(true, {children: true})
-		app = null
-	});
-	},2000)
-/*
-setTimeout(() => {
-
-o.destroy(true)
-},2000)*/
+console.log(test)
+},2000)
+//*/
 }
 </script>
 </body>
