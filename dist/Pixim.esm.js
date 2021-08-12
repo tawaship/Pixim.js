@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.3
+ * @tawaship/pixim.js - v1.12.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -712,8 +712,8 @@ class ContentImageManifest extends ContentManifestBase {
         }
         for (let i in manifests) {
             const manifest = manifests[i];
-            manifest.data = this._resolvePath(manifest.data, basepath);
-            loader.add(i, manifest.data, {
+            const url = this._resolvePath(manifest.data, basepath);
+            loader.add(i, url, {
                 crossOrigin: true
             });
         }
@@ -734,11 +734,11 @@ class ContentImageManifest extends ContentManifestBase {
                 for (let i in resources) {
                     const resource = resources[i];
                     if (!resource) {
-                        reject({ [i]: manifests[i].data });
+                        reject(`Image: '${i}' cannot load.`);
                         return;
                     }
                     if (resource.error && !manifests[i].unrequired) {
-                        reject({ [i]: manifests[i].data });
+                        reject(`Image: '${i}' cannot load.`);
                         return;
                     }
                     res[i] = {
@@ -773,8 +773,8 @@ class ContentSpritesheetManifest extends ContentManifestBase {
         }
         for (let i in manifests) {
             const manifest = manifests[i];
-            manifest.data = this._resolvePath(manifest.data, basepath);
-            loader.add(i, manifest.data, {
+            const url = this._resolvePath(manifest.data, basepath);
+            loader.add(i, url, {
                 crossOrigin: true
             });
         }
@@ -810,13 +810,13 @@ class ContentSpritesheetManifest extends ContentManifestBase {
                     }
                     const resource = resources[i];
                     if (!resource) {
-                        reject({ [i]: manifests[i].data });
+                        reject(`Spritesheet: '${i}' cannot load.`);
                         return;
                     }
                     const textures = resource.textures || {};
                     const error = !!resource.error;
                     if (resource.error && !manifests[i].unrequired) {
-                        reject({ [i]: manifests[i].data });
+                        reject(`Spritesheet: '${i}' cannot load.`);
                         return;
                     }
                     res[i] = {
@@ -845,6 +845,9 @@ class ContentSoundManifest extends ContentManifestBase {
      */
     _loadAsync(basepath, version, useCache) {
         const manifests = this._manifests;
+        if (!Howl) {
+            return Promise.reject('You need "howler.js" to load sound asset.');
+        }
         return new Promise((resolve, reject) => {
             const res = {};
             function loadedHandler(key, howl, error) {
@@ -860,20 +863,15 @@ class ContentSoundManifest extends ContentManifestBase {
             let loadCount = 0;
             let loadedCount = 0;
             for (let i in manifests) {
-                if (!Howl) {
-                    console.warn('You need "howler.js" to load sound asset.');
-                    reject({ [i]: manifests[i].data });
-                    return;
-                }
                 ++loadCount;
             }
             for (let i in manifests) {
                 const _i = i;
                 const manifest = manifests[_i];
-                manifest.data = this._resolvePath(manifest.data, basepath);
+                const preUrl = this._resolvePath(manifest.data, basepath);
                 const url = version
-                    ? `${manifest.data}${manifest.data.match(/\?/) ? '&' : '?'}_fv=${version}`
-                    : manifest.data;
+                    ? `${preUrl}${preUrl.match(/\?/) ? '&' : '?'}_fv=${version}`
+                    : preUrl;
                 const howl = new Howl({
                     src: url,
                     onload: () => {
@@ -881,7 +879,7 @@ class ContentSoundManifest extends ContentManifestBase {
                     },
                     onloaderror: () => {
                         if (!manifest.unrequired) {
-                            reject({ [_i]: manifest.data });
+                            reject(`Sound: '${_i}' cannot load.`);
                             return;
                         }
                         loadedHandler(_i, howl, true);
@@ -1255,12 +1253,6 @@ class Content {
                     resources[keys[i]][j] = resolver[i][j];
                 }
             }
-        })
-            .catch(e => {
-            for (let i in e) {
-                console.error(`Asset '${i}: ${e[i]}' cannot load.`);
-            }
-            throw e;
         });
     }
 }

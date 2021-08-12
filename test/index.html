@@ -121,6 +121,7 @@ Test.defineSounds({
 });
 
 const test = new Test({
+	basepath: './',
 	version: {
 		images: 2,
 		spritesheets: 3,
@@ -148,13 +149,13 @@ app.attachAsync(test)
 	.then(() => {
 		app.play();
 		//app.app.destroy(true, {children: true})
-		app = null
+		//app = null
 	});
 	
 //*
 setTimeout(() => {
 
-o.destroy(true)
+console.log(test)
 },2000)
 //*/
 }

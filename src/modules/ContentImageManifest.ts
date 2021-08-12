@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ContentManifestBase, IManifestDictionary, ILoadedResourceDictionary, IResourceDictionary } from './ContentManifestBase';
+import { ContentManifestBase, ILoadedResourceDictionary, IResourceDictionary } from './ContentManifestBase';
 
 export interface ILoadedImageResourceDictionary extends ILoadedResourceDictionary<PIXI.Texture> {
 }
@@ -20,9 +20,9 @@ export class ContentImageManifest extends ContentManifestBase<string, PIXI.Textu
 		
 		for (let i in manifests) {
 			const manifest = manifests[i];
-			manifest.data = this._resolvePath(manifest.data, basepath);
+			const url = this._resolvePath(manifest.data, basepath);
 			
-			loader.add(i, manifest.data, {
+			loader.add(i, url, {
 				crossOrigin: true
 			});
 		}
@@ -41,19 +41,19 @@ export class ContentImageManifest extends ContentManifestBase<string, PIXI.Textu
 			});
 		}
 		
-		return new Promise((resolve: (resource: ILoadedImageResourceDictionary) => void, reject: (manifest: IManifestDictionary<string>) => void): void => {
+		return new Promise((resolve: (resource: ILoadedImageResourceDictionary) => void, reject: (path: string) => void): void => {
 			const res: ILoadedImageResourceDictionary = {};
 			loader.load((loader, resources): void => {
 				for (let i in resources) {
 					const resource: PIXI.LoaderResource | undefined = resources[i];
 					
 					if (!resource) {
-						reject({ [i]: manifests[i].data});
+						reject(`Image: '${i}' cannot load.`);
 						return;
 					}
 					
 					if (resource.error && !manifests[i].unrequired) {
-						reject({ [i]: manifests[i].data});
+						reject(`Image: '${i}' cannot load.`);
 						return;
 					}
 					

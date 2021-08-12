@@ -434,13 +434,6 @@ export class Content {
 						resources[keys[i]][j] = resolver[i][j];
 					}
 				}
-			})
-			.catch(e => {
-				for (let i in e) {
-					console.error(`Asset '${i}: ${e[i]}' cannot load.`);
-				}
-				
-				throw e;
 			});
 	}
 }

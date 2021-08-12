@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.11.3
+ * @tawaship/pixim.js - v1.12.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.11.3 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.12.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -467,8 +467,8 @@
         ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(basepath, version, useCache) {
             var manifests = this._manifests, loader = new PIXI.Loader;
             for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                var manifest = manifests[i];
-                manifest.data = this._resolvePath(manifest.data, basepath), loader.add(i, manifest.data, {
+                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+                loader.add(i, url, {
                     crossOrigin: !0
                 });
             }
@@ -478,14 +478,13 @@
             })), new Promise((function(resolve, reject) {
                 var res = {};
                 loader.load((function(loader, resources) {
-                    var obj, obj$1;
                     for (var i in resources) {
                         var resource = resources[i];
                         if (!resource) {
-                            return void reject((obj = {}, obj[i] = manifests[i].data, obj));
+                            return void reject("Image: '" + i + "' cannot load.");
                         }
                         if (resource.error && !manifests[i].unrequired) {
-                            return void reject((obj$1 = {}, obj$1[i] = manifests[i].data, obj$1));
+                            return void reject("Image: '" + i + "' cannot load.");
                         }
                         res[i] = {
                             resource: resource.texture,
@@ -505,8 +504,8 @@
         ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(basepath, version, useCache) {
             var manifests = this._manifests, loader = new PIXI.Loader;
             for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                var manifest = manifests[i];
-                manifest.data = this._resolvePath(manifest.data, basepath), loader.add(i, manifest.data, {
+                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+                loader.add(i, url, {
                     crossOrigin: !0
                 });
             }
@@ -522,17 +521,16 @@
             })), new Promise((function(resolve, reject) {
                 var res = {};
                 loader.load((function(loader, resources) {
-                    var obj, obj$1;
                     for (var i in resources) {
                         if (manifests[i]) {
                             var resource = resources[i];
                             if (!resource) {
-                                return void reject((obj = {}, obj[i] = manifests[i].data, obj));
+                                return void reject("Spritesheet: '" + i + "' cannot load.");
                             }
                             var textures = resource.textures || {};
                             resource.error;
                             if (resource.error && !manifests[i].unrequired) {
-                                return void reject((obj$1 = {}, obj$1[i] = manifests[i].data, obj$1));
+                                return void reject("Spritesheet: '" + i + "' cannot load.");
                             }
                             res[i] = {
                                 resource: textures,
@@ -553,8 +551,8 @@
         ContentSoundManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
         ContentSoundManifest.prototype.constructor = ContentSoundManifest, ContentSoundManifest.prototype._loadAsync = function(basepath, version, useCache) {
             var this$1 = this, manifests = this._manifests;
-            return new Promise((function(resolve, reject) {
-                var obj, res = {};
+            return howler.Howl ? new Promise((function(resolve, reject) {
+                var res = {};
                 function loadedHandler(key, howl, error) {
                     res[key] = {
                         resource: howl,
@@ -563,31 +561,23 @@
                 }
                 var loadCount = 0, loadedCount = 0;
                 for (var i in manifests) {
-                    if (!howler.Howl) {
-                        return console.warn('You need "howler.js" to load sound asset.'), void reject((obj = {}, 
-                        obj[i] = manifests[i].data, obj));
-                    }
                     ++loadCount;
                 }
                 var loop = function(i) {
-                    var _i = i$1, manifest = manifests[_i];
-                    manifest.data = this$1._resolvePath(manifest.data, basepath);
-                    var url = version ? manifest.data + (manifest.data.match(/\?/) ? "&" : "?") + "_fv=" + version : manifest.data, howl = new howler.Howl({
+                    var _i = i$1, manifest = manifests[_i], preUrl = this$1._resolvePath(manifest.data, basepath), url = version ? preUrl + (preUrl.match(/\?/) ? "&" : "?") + "_fv=" + version : preUrl, howl = new howler.Howl({
                         src: url,
                         onload: function() {
                             loadedHandler(_i, howl, !1);
                         },
                         onloaderror: function() {
-                            var obj;
-                            manifest.unrequired ? loadedHandler(_i, howl, !0) : reject(((obj = {})[_i] = manifest.data, 
-                            obj));
+                            manifest.unrequired ? loadedHandler(_i, howl, !0) : reject("Sound: '" + _i + "' cannot load.");
                         }
                     });
                 };
                 for (var i$1 in manifests) {
                     loop();
                 }
-            }));
+            })) : Promise.reject('You need "howler.js" to load sound asset.');
         }, ContentSoundManifest.prototype.destroyResources = function(resources) {
             for (var i in resources) {
                 resources[i].stop(), resources[i].unload();
@@ -784,11 +774,6 @@
                     resources[keys[i]][j] = resolver[i][j];
                 }
             }
-        })).catch((function(e) {
-            for (var i in e) {
-                console.error("Asset '" + i + ": " + e[i] + "' cannot load.");
-            }
-            throw e;
         }));
     }, Object.defineProperties(Content.prototype, prototypeAccessors$2), Content.registerManifest("images", ContentImageManifest), 
     Content.registerManifest("spritesheets", ContentSpritesheetManifest), Content.registerManifest("sounds", ContentSoundManifest), 
