@@ -3,8 +3,8 @@ node_js:
   - "node"
 
 install:
-    - npm install xvfb-maybe
-    - npm install
+    - yarn install xvfb-maybe
+    - yarn install
  
 before_script:
   - export DISPLAY=':99.0'
