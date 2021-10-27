@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.12.0
+ * @tawaship/pixim.js - v1.12.1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.12.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.12.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -457,6 +457,15 @@
         }));
     }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
         return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
+    }, ContentManifestBase.prototype._resolveQuery = function(uri, queries) {
+        if (0 === uri.indexOf("data:")) {
+            return uri;
+        }
+        var q = [];
+        for (var i in queries) {
+            q.push(i + "=" + queries[i]);
+        }
+        return uri + (uri.match(/\?/) ? "&" : "?") + q.join("&");
     };
     var ContentImageManifest = function(ContentManifestBase) {
         function ContentImageManifest() {
@@ -466,8 +475,10 @@
         ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
         ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(basepath, version, useCache) {
             var manifests = this._manifests, loader = new PIXI.Loader;
-            for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+            for (var i in manifests) {
+                var manifest = manifests[i], preUrl = this._resolvePath(manifest.data, basepath), url = version ? this._resolveQuery(preUrl, {
+                    _fv: version
+                }) : preUrl;
                 loader.add(i, url, {
                     crossOrigin: !0
                 });
@@ -503,8 +514,10 @@
         ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
         ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(basepath, version, useCache) {
             var manifests = this._manifests, loader = new PIXI.Loader;
-            for (var i in version && (loader.defaultQueryString = "_fv=" + version), manifests) {
-                var manifest = manifests[i], url = this._resolvePath(manifest.data, basepath);
+            for (var i in manifests) {
+                var manifest = manifests[i], preUrl = this._resolvePath(manifest.data, basepath), url = version ? this._resolveQuery(preUrl, {
+                    _fv: version
+                }) : preUrl;
                 loader.add(i, url, {
                     crossOrigin: !0
                 });
@@ -564,7 +577,9 @@
                     ++loadCount;
                 }
                 var loop = function(i) {
-                    var _i = i$1, manifest = manifests[_i], preUrl = this$1._resolvePath(manifest.data, basepath), url = version ? preUrl + (preUrl.match(/\?/) ? "&" : "?") + "_fv=" + version : preUrl, howl = new howler.Howl({
+                    var _i = i$1, manifest = manifests[_i], preUrl = this$1._resolvePath(manifest.data, basepath), url = version ? this$1._resolveQuery(preUrl, {
+                        _fv: version
+                    }) : preUrl, howl = new howler.Howl({
                         src: url,
                         onload: function() {
                             loadedHandler(_i, howl, !1);

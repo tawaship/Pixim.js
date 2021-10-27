@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.12.0
+ * @tawaship/pixim.js - v1.12.1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -700,6 +700,21 @@ class ContentManifestBase {
             return PIXI.utils.url.resolve(basepath, path);
         }
     }
+    /**
+     * Normalize uri query.
+     */
+    _resolveQuery(uri, queries) {
+        if (uri.indexOf('data:') === 0) {
+            return uri;
+        }
+        else {
+            const q = [];
+            for (let i in queries) {
+                q.push(`${i}=${queries[i]}`);
+            }
+            return `${uri}${uri.match(/\?/) ? '&' : '?'}${q.join('&')}`;
+        }
+    }
 }
 
 class ContentImageManifest extends ContentManifestBase {
@@ -711,12 +726,17 @@ class ContentImageManifest extends ContentManifestBase {
     _loadAsync(basepath, version, useCache) {
         const manifests = this._manifests;
         const loader = new PIXI.Loader();
+        /*
         if (version) {
             loader.defaultQueryString = `_fv=${version}`;
         }
+        */
         for (let i in manifests) {
             const manifest = manifests[i];
-            const url = this._resolvePath(manifest.data, basepath);
+            const preUrl = this._resolvePath(manifest.data, basepath);
+            const url = version
+                ? this._resolveQuery(preUrl, { _fv: version })
+                : preUrl;
             loader.add(i, url, {
                 crossOrigin: true
             });
@@ -772,12 +792,17 @@ class ContentSpritesheetManifest extends ContentManifestBase {
     _loadAsync(basepath, version, useCache) {
         const manifests = this._manifests;
         const loader = new PIXI.Loader();
+        /*
         if (version) {
             loader.defaultQueryString = `_fv=${version}`;
         }
+        */
         for (let i in manifests) {
             const manifest = manifests[i];
-            const url = this._resolvePath(manifest.data, basepath);
+            const preUrl = this._resolvePath(manifest.data, basepath);
+            const url = version
+                ? this._resolveQuery(preUrl, { _fv: version })
+                : preUrl;
             loader.add(i, url, {
                 crossOrigin: true
             });
@@ -874,7 +899,7 @@ class ContentSoundManifest extends ContentManifestBase {
                 const manifest = manifests[_i];
                 const preUrl = this._resolvePath(manifest.data, basepath);
                 const url = version
-                    ? `${preUrl}${preUrl.match(/\?/) ? '&' : '?'}_fv=${version}`
+                    ? this._resolveQuery(preUrl, { _fv: version })
                     : preUrl;
                 const howl = new howler.Howl({
                     src: url,

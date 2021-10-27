@@ -109,4 +109,20 @@ export abstract class ContentManifestBase<TData, TResource> {
 			return PIXI.utils.url.resolve(basepath, path);
 		}
 	}
+	
+	/**
+	 * Normalize uri query.
+	 */
+	protected _resolveQuery(uri: string, queries: { [ name: string ]: string }): string {
+		if (uri.indexOf('data:') === 0) {
+			return uri;
+		} else {
+			const q = [];
+			for (let i in queries) {
+				q.push(`${i}=${queries[i]}`);
+			}
+			
+			return `${uri}${uri.match(/\?/) ? '&' : '?'}${q.join('&')}`;
+		}
+	}
 }

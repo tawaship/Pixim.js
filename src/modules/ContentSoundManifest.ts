@@ -52,7 +52,7 @@ export class ContentSoundManifest extends ContentManifestBase<string, Howl> {
 				
 				const url =
 					version
-					?`${preUrl}${preUrl.match(/\?/) ? '&' : '?'}_fv=${version}`
+					? this._resolveQuery(preUrl, { _fv: version })
 					: preUrl;
 				
 				const howl = new Howl({

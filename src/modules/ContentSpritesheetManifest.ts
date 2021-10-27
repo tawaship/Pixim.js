@@ -14,13 +14,20 @@ export class ContentSpritesheetManifest extends ContentManifestBase<string, PIXI
 		const manifests = this._manifests;
 		const loader: PIXI.Loader = new PIXI.Loader();
 		
+		/*
 		if (version) {
 			loader.defaultQueryString = `_fv=${version}`;
 		}
+		*/
 		
 		for (let i in manifests) {
 			const manifest = manifests[i];
-			const url = this._resolvePath(manifest.data, basepath);
+			const preUrl = this._resolvePath(manifest.data, basepath);
+			
+			const url =
+				version
+				? this._resolveQuery(preUrl, { _fv: version })
+				: preUrl;
 			
 			loader.add(i, url, {
 				crossOrigin: true
