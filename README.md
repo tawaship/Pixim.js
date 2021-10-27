@@ -2,7 +2,7 @@
 
 **"pixim.js" is a little useful "[pixi.js](https://github.com/pixijs/pixi.js)" wrapper framework.**
 
-[![Build Status](https://travis-ci.com/tawaship/Pixim.js.svg?branch=master)](https://travis-ci.com/tawaship/Pixim.js)
+[![Build Status](https://travis-ci.com/tawaship/Pixim.js.svg?branch=master)](https://app.travis-ci.com/tawaship/Pixim.js)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 ---
