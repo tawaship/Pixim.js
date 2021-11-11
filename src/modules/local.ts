@@ -1,44 +1,26 @@
 import * as PIXI from 'pixi.js';
-import { ContentManifestBase, ILoadedResource, ILoadedResourceDictionary, IResourceDictionary, IPreManifest, IPreManifestDictionary, resolvePath, resolveQuery } from './ContentManifestBase';
+				
+import { ContentManifestBase, ILoadedResource, ILoadedResourceDictionary, IResourceDictionary, IPreManifest, IPreManifestDictionary } from './ContentManifestBase';
 
 export interface ILoadedImageResourceDictionary extends ILoadedResourceDictionary<PIXI.Texture> {
 }
 
-export interface IImageUriManifestDictionary extends IPreManifestDictionary<string> {
-}
-
-export interface IImageElementManifestDictionary extends IPreManifestDictionary<HTMLImageElement> {
-}
-
-export interface IImageElementManifest extends IPreManifest<HTMLImageElement> {
+export interface IImageUrlManifestDictionary extends IPreManifestDictionary<string> {
 }
 
 /**
  * @ignore
  */
-function loadImagesFromUrisAsync(manifests: IImageUriManifestDictionary, basepath: string, version: string, useCache: boolean) {
+function loadImagesFromUrisAsync(manifests: IImageUrlManifestDictionary, useCache: boolean) {
 	if (Object.keys(manifests).length === 0) {
 		return Promise.resolve({});
 	}
 	
 	const loader: PIXI.Loader = new PIXI.Loader();
-	if (version) {
-		loader.defaultQueryString = `_fv=${version}`;
-	}
-	
 	const res: ILoadedImageResourceDictionary = {};
 	
 	for (let i in manifests) {
-		const manifest = manifests[i];
-		
-		const preUrl = resolvePath(manifest.data, basepath);
-		
-		const uri =
-			version
-			? resolveQuery(preUrl, { _fv: version })
-			: preUrl;
-		
-		loader.add(i, manifest.data, {
+		loader.add(i, manifests[i].data, {
 			crossOrigin: true
 		});
 	}
@@ -85,10 +67,13 @@ function loadImagesFromUrisAsync(manifests: IImageUriManifestDictionary, basepat
 	});
 }
 
+export interface IImageElementManifestDictionary extends IPreManifestDictionary<HTMLImageElement> {
+}
+
 /**
  * @ignore
  */
-function loadImagesFromElementsAsync(manifests: IImageElementManifestDictionary, version: string) {
+function loadImagesFromElementsAsync(manifests: IImageElementManifestDictionary, useCache: boolean) {
 	if (Object.keys(manifests).length === 0) {
 		return Promise.resolve({});
 	}
@@ -98,76 +83,36 @@ function loadImagesFromElementsAsync(manifests: IImageElementManifestDictionary,
 	const promises: Promise<void>[] = [];
 	for (let i in manifests) {
 		promises.push(
-			loadImageFromElementAsync(manifests[i], version)
+			loadImageFromElementAsync(manifests[i], useCache)
 				.then(resource => {
 					res[i] = resource;
 				})
-				.catch(() => {
+				.catch((uri: string) => {
 					throw i;
 				})
-		);
+		)
 	}
 	
 	return Promise.all(promises)
 		.then(() => {
 			return res;
 		});
-}
-
-export function loadImageFromElementAsync(manifest: IPreManifest<HTMLImageElement>, version: string) {
-	const element = manifest.data;
-	manifest.data.crossOrigin = 'anonymous';
-	//const preUrl = resolvePath(manifest.data.src, basepath);
-	const preUri = manifest.data.src;
-	
-	const uri =
-		version
-		? resolveQuery(preUri, { _fv: version })
-		: preUri;
-	
-	manifest.data.src = uri;
-	
-	return loadImageAsync(manifest);
 }
 
 /**
- * @ognore
+ * @ignore
  */
-function loadImagesFromDataUrisAsync(manifests: IImageUriManifestDictionary) {
-	if (Object.keys(manifests).length === 0) {
-		return Promise.resolve({});
-	}
-	
-	const res: ILoadedImageResourceDictionary = {};
-	
-	const promises: Promise<void>[] = [];
-	for (let i in manifests) {
-		promises.push(
-			loadImageAsync(manifests[i])
-				.then(resource => {
-					res[i] = resource;
-				})
-				.catch(() => {
-					throw i;
-				})
-		);
-	}
-	
-	return Promise.all(promises)
-		.then(() => {
-			return res;
-		});
-}
-
-export function loadImageAsync(manifest: IPreManifest<string | HTMLImageElement>) {
+function loadImageFromElementAsync(manifest: IPreManifest<HTMLImageElement>, useCache: boolean) {
 	return new Promise<ILoadedResource<PIXI.Texture>>((resolve, reject) => {
-		const bt = PIXI.BaseTexture.from(manifest.data);
+		const element = manifest.data;
+		element.crossOrigin = 'anonymous';
+		
+		const bt = PIXI.BaseTexture.from(element);
 		if (bt.valid) {
 			resolve({
 				resource: new PIXI.Texture(bt),
 				error: false
 			});
-			
 			return;
 		}
 		
@@ -188,7 +133,7 @@ export function loadImageAsync(manifest: IPreManifest<string | HTMLImageElement>
 				return;
 			}
 			
-			reject();
+			reject(element.src);
 		});
 	});
 }
@@ -209,36 +154,42 @@ export class ContentImageManifest extends ContentManifestBase<string | HTMLImage
 		*/
 		
 		const elements: IImageElementManifestDictionary = {};
-		const dataUris: IImageUriManifestDictionary = {};
-		const uris: IImageUriManifestDictionary = {};
+		const uris: IImageUrlManifestDictionary = {};
 		
 		for (let i in manifests) {
 			const manifest = manifests[i];
 			
 			if (manifest.data instanceof HTMLImageElement) {
+				const preUrl = this._resolvePath(manifest.data.src, basepath);
+				
+				const uri =
+					version
+					? this._resolveQuery(preUrl, { _fv: version })
+					: preUrl;
+				
+				manifest.data.src = uri;
+				
 				elements[i] = {
 					data: manifest.data,
 					unrequired: manifest.unrequired
 				};
-			} else if (typeof manifest.data === 'string') {
-				if (manifest.data.indexOf('data:') === 0) {
-					dataUris[i] = {
-						data: manifest.data,
-						unrequired: manifest.unrequired
-					};
-				} else {
-					uris[i] = {
-						data: manifest.data,
-						unrequired: manifest.unrequired
-					};
-				}
+			} else {
+				const preUrl = this._resolvePath(manifest.data, basepath);
+				const uri =
+					version
+					? this._resolveQuery(preUrl, { _fv: version })
+					: preUrl;
+				manifest.data = uri;
+				uris[i] = {
+					data: manifest.data,
+					unrequired: manifest.unrequired
+				};
 			}
 		}
 		
 		return Promise.all([
-			loadImagesFromElementsAsync(elements, version),
-			loadImagesFromDataUrisAsync(dataUris),
-			loadImagesFromUrisAsync(uris, basepath, version, useCache)
+			loadImagesFromElementsAsync(elements, useCache),
+			loadImagesFromUrisAsync(uris, useCache)
 		])
 		.then((resolvers: ILoadedImageResourceDictionary[]) => {
 			return Object.assign({}, ...resolvers);

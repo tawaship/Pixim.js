@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.12.1
+ * @tawaship/pixim.js - v1.12.2
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.12.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.12.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -435,9 +435,129 @@
                 height: parseInt(view.style.height.replace("px", ""))
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), ContentManifestBase = function() {
+    }(Emitter$1);
+    function resolvePath(path, basepath) {
+        return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
+    }
+    function resolveQuery(uri, queries) {
+        if (0 === uri.indexOf("data:")) {
+            return uri;
+        }
+        var q = [], t = uri.split("?");
+        if (t[1]) {
+            for (var search = t[1].split("&"), i = 0; i < search.length; i++) {
+                search[i].split("=")[0] in queries || q.push(search[i]);
+            }
+        }
+        for (var i$1 in queries) {
+            q.push(i$1 + "=" + queries[i$1]);
+        }
+        return t[0] + "?" + q.join("&");
+    }
+    var ContentManifestBase = function() {
         this._manifests = {};
     };
+    function loadImagesFromUrisAsync(manifests, basepath, version, useCache) {
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve({});
+        }
+        var loader = new PIXI.Loader;
+        version && (loader.defaultQueryString = "_fv=" + version);
+        var res = {};
+        for (var i in manifests) {
+            var manifest = manifests[i], preUrl = resolvePath(manifest.data, basepath);
+            version && resolveQuery(preUrl, {
+                _fv: version
+            });
+            loader.add(i, manifest.data, {
+                crossOrigin: !0
+            });
+        }
+        return useCache || loader.use((function(resource, next) {
+            resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
+            next();
+        })), new Promise((function(resolve, reject) {
+            loader.load((function(loader, resources) {
+                for (var i in resources) {
+                    var resource = resources[i];
+                    if (!resource) {
+                        return void reject(i);
+                    }
+                    if (resource.error && !manifests[i].unrequired) {
+                        return void reject(i);
+                    }
+                    res[i] = {
+                        resource: resource.texture,
+                        error: !!resource.error
+                    };
+                }
+                resolve(res);
+            }));
+        }));
+    }
+    function loadImagesFromElementsAsync(manifests, version) {
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve({});
+        }
+        var res = {}, promises = [], loop = function(i) {
+            promises.push(loadImageFromElementAsync(manifests[i], version).then((function(resource) {
+                res[i] = resource;
+            })).catch((function() {
+                throw i;
+            })));
+        };
+        for (var i in manifests) {
+            loop(i);
+        }
+        return Promise.all(promises).then((function() {
+            return res;
+        }));
+    }
+    function loadImageFromElementAsync(manifest, version) {
+        manifest.data;
+        manifest.data.crossOrigin = "anonymous";
+        var preUri = manifest.data.src, uri = version ? resolveQuery(preUri, {
+            _fv: version
+        }) : preUri;
+        return manifest.data.src = uri, loadImageAsync(manifest);
+    }
+    function loadImagesFromDataUrisAsync(manifests) {
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve({});
+        }
+        var res = {}, promises = [], loop = function(i) {
+            promises.push(loadImageAsync(manifests[i]).then((function(resource) {
+                res[i] = resource;
+            })).catch((function() {
+                throw i;
+            })));
+        };
+        for (var i in manifests) {
+            loop(i);
+        }
+        return Promise.all(promises).then((function() {
+            return res;
+        }));
+    }
+    function loadImageAsync(manifest) {
+        return new Promise((function(resolve, reject) {
+            var bt = PIXI.BaseTexture.from(manifest.data);
+            bt.valid ? resolve({
+                resource: new PIXI.Texture(bt),
+                error: !1
+            }) : (bt.on("loaded", (function(baseTexture) {
+                resolve({
+                    resource: new PIXI.Texture(baseTexture),
+                    error: !1
+                });
+            })), bt.on("error", (function(baseTexture, e) {
+                manifest.unrequired ? resolve({
+                    resource: new PIXI.Texture(baseTexture),
+                    error: !0
+                }) : reject();
+            })));
+        }));
+    }
     ContentManifestBase.prototype.add = function(manifests, options) {
         void 0 === options && (options = {});
         var unrequired = options.unrequired || !1;
@@ -456,16 +576,9 @@
             return resources;
         }));
     }, ContentManifestBase.prototype._resolvePath = function(path, basepath) {
-        return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath, path);
+        return resolvePath(path, basepath);
     }, ContentManifestBase.prototype._resolveQuery = function(uri, queries) {
-        if (0 === uri.indexOf("data:")) {
-            return uri;
-        }
-        var q = [];
-        for (var i in queries) {
-            q.push(i + "=" + queries[i]);
-        }
-        return uri + (uri.match(/\?/) ? "&" : "?") + q.join("&");
+        return resolveQuery(uri, queries);
     };
     var ContentImageManifest = function(ContentManifestBase) {
         function ContentImageManifest() {
@@ -474,85 +587,148 @@
         return ContentManifestBase && (ContentImageManifest.__proto__ = ContentManifestBase), 
         ContentImageManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
         ContentImageManifest.prototype.constructor = ContentImageManifest, ContentImageManifest.prototype._loadAsync = function(basepath, version, useCache) {
-            var manifests = this._manifests, loader = new PIXI.Loader;
+            var manifests = this._manifests, elements = {}, dataUris = {}, uris = {};
             for (var i in manifests) {
-                var manifest = manifests[i], preUrl = this._resolvePath(manifest.data, basepath), url = version ? this._resolveQuery(preUrl, {
-                    _fv: version
-                }) : preUrl;
-                loader.add(i, url, {
-                    crossOrigin: !0
+                var manifest = manifests[i];
+                manifest.data instanceof HTMLImageElement ? elements[i] = {
+                    data: manifest.data,
+                    unrequired: manifest.unrequired
+                } : "string" == typeof manifest.data && (0 === manifest.data.indexOf("data:") ? dataUris[i] = {
+                    data: manifest.data,
+                    unrequired: manifest.unrequired
+                } : uris[i] = {
+                    data: manifest.data,
+                    unrequired: manifest.unrequired
                 });
             }
-            return useCache || loader.use((function(resource, next) {
-                resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
-                next();
-            })), new Promise((function(resolve, reject) {
-                var res = {};
-                loader.load((function(loader, resources) {
-                    for (var i in resources) {
+            return Promise.all([ loadImagesFromElementsAsync(elements, version), loadImagesFromDataUrisAsync(dataUris), loadImagesFromUrisAsync(uris, basepath, version, useCache) ]).then((function(resolvers) {
+                return Object.assign.apply(Object, [ {} ].concat(resolvers));
+            })).catch((function(key) {
+                throw new Error("Image: '" + key + "' cannot load.");
+            }));
+        }, ContentImageManifest.prototype.destroyResources = function(resources) {}, ContentImageManifest;
+    }(ContentManifestBase);
+    function loadSpritesheetsFromUrisAsync(manifests, basepath, version, useCache) {
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve({});
+        }
+        var loader = new PIXI.Loader;
+        version && (loader.defaultQueryString = "_fv=" + version);
+        var res = {};
+        for (var i in manifests) {
+            var manifest = manifests[i], preUrl = resolvePath(manifest.data, basepath);
+            version && resolveQuery(preUrl, {
+                _fv: version
+            });
+            loader.add(i, manifest.data, {
+                crossOrigin: !0
+            });
+        }
+        return useCache || loader.use((function(resource, next) {
+            if (resource.textures) {
+                for (var i in resource.textures) {
+                    var texture = resource.textures[i];
+                    texture && (PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture));
+                }
+            }
+            resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
+            next();
+        })), new Promise((function(resolve, reject) {
+            loader.load((function(loader, resources) {
+                for (var i in resources) {
+                    if (manifests[i]) {
                         var resource = resources[i];
                         if (!resource) {
-                            return void reject("Image: '" + i + "' cannot load.");
+                            return void reject(i);
                         }
+                        var textures = resource.textures || {};
+                        resource.error;
                         if (resource.error && !manifests[i].unrequired) {
-                            return void reject("Image: '" + i + "' cannot load.");
+                            return void reject(i);
                         }
                         res[i] = {
-                            resource: resource.texture,
+                            resource: textures,
                             error: !!resource.error
                         };
                     }
-                    resolve(res);
-                }));
+                }
+                resolve(res);
             }));
-        }, ContentImageManifest.prototype.destroyResources = function(resources) {}, ContentImageManifest;
-    }(ContentManifestBase), ContentSpritesheetManifest = function(ContentManifestBase) {
+        }));
+    }
+    function loadSpritesheetsFromJsonsAsync(manifests, basepath, version) {
+        if (0 === Object.keys(manifests).length) {
+            return Promise.resolve({});
+        }
+        var res = {}, promises = [], loop = function(i) {
+            var manifest = manifests[i], data = manifest.data.meta.image, unrequired = manifest.unrequired;
+            promises.push(function() {
+                if (data instanceof HTMLImageElement) {
+                    return loadImageFromElementAsync({
+                        data: data,
+                        unrequired: unrequired
+                    }, version);
+                }
+                if ("string" == typeof data) {
+                    if (0 === data.indexOf("data:")) {
+                        return loadImageAsync({
+                            data: data,
+                            unrequired: unrequired
+                        });
+                    }
+                    var preUri = resolvePath(data, basepath);
+                    return loadImageAsync({
+                        data: version ? resolveQuery(preUri, {
+                            _fv: version
+                        }) : preUri,
+                        unrequired: unrequired
+                    });
+                }
+                return Promise.reject();
+            }().then((function(resource) {
+                var ss = new PIXI.Spritesheet(resource.resource, manifest.data);
+                return new Promise((function(resolve) {
+                    ss.parse((function() {
+                        res[i] = {
+                            resource: ss.textures,
+                            error: !1
+                        }, resolve();
+                    }));
+                }));
+            })).catch((function() {
+                throw i;
+            })));
+        };
+        for (var i in manifests) {
+            loop(i);
+        }
+        return Promise.all(promises).then((function() {
+            return res;
+        }));
+    }
+    var ContentSpritesheetManifest = function(ContentManifestBase) {
         function ContentSpritesheetManifest() {
             ContentManifestBase.apply(this, arguments);
         }
         return ContentManifestBase && (ContentSpritesheetManifest.__proto__ = ContentManifestBase), 
         ContentSpritesheetManifest.prototype = Object.create(ContentManifestBase && ContentManifestBase.prototype), 
         ContentSpritesheetManifest.prototype.constructor = ContentSpritesheetManifest, ContentSpritesheetManifest.prototype._loadAsync = function(basepath, version, useCache) {
-            var manifests = this._manifests, loader = new PIXI.Loader;
+            var manifests = this._manifests, jsons = {}, uris = {};
             for (var i in manifests) {
-                var manifest = manifests[i], preUrl = this._resolvePath(manifest.data, basepath), url = version ? this._resolveQuery(preUrl, {
-                    _fv: version
-                }) : preUrl;
-                loader.add(i, url, {
-                    crossOrigin: !0
+                var manifest = manifests[i];
+                "object" == typeof manifest.data ? jsons[i] = {
+                    data: manifest.data,
+                    unrequired: manifest.unrequired
+                } : "string" == typeof manifest.data && (uris[i] = {
+                    data: manifest.data,
+                    unrequired: manifest.unrequired
                 });
             }
-            return useCache || loader.use((function(resource, next) {
-                if (resource.textures) {
-                    for (var i in resource.textures) {
-                        var texture = resource.textures[i];
-                        texture && (PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture));
-                    }
-                }
-                resource.texture && (PIXI.Texture.removeFromCache(resource.texture), resource.texture.baseTexture && PIXI.BaseTexture.removeFromCache(resource.texture.baseTexture)), 
-                next();
-            })), new Promise((function(resolve, reject) {
-                var res = {};
-                loader.load((function(loader, resources) {
-                    for (var i in resources) {
-                        if (manifests[i]) {
-                            var resource = resources[i];
-                            if (!resource) {
-                                return void reject("Spritesheet: '" + i + "' cannot load.");
-                            }
-                            var textures = resource.textures || {};
-                            resource.error;
-                            if (resource.error && !manifests[i].unrequired) {
-                                return void reject("Spritesheet: '" + i + "' cannot load.");
-                            }
-                            res[i] = {
-                                resource: textures,
-                                error: !!resource.error
-                            };
-                        }
-                    }
-                    resolve(res);
-                }));
+            return Promise.all([ loadSpritesheetsFromJsonsAsync(jsons, basepath, version), loadSpritesheetsFromUrisAsync(uris, basepath, version, useCache) ]).then((function(resolvers) {
+                return console.log(resolvers), console.log(Object.assign({}, resolvers[0], resolvers[1])), 
+                Object.assign.apply(Object, [ {} ].concat(resolvers));
+            })).catch((function(key) {
+                throw new Error("Spritesheet: '" + key + "' cannot load.");
             }));
         }, ContentSpritesheetManifest.prototype.destroyResources = function(resources) {}, 
         ContentSpritesheetManifest;
@@ -796,7 +972,9 @@
     exports.ContentDeliver = ContentDeliver, exports.ContentImageManifest = ContentImageManifest, 
     exports.ContentManifestBase = ContentManifestBase, exports.ContentSoundManifest = ContentSoundManifest, 
     exports.ContentSpritesheetManifest = ContentSpritesheetManifest, exports.Emitter = Emitter$1, 
-    exports.Layer = Layer, exports.Task = Task$1;
+    exports.Layer = Layer, exports.Task = Task$1, exports.loadImageAsync = loadImageAsync, 
+    exports.loadImageFromElementAsync = loadImageFromElementAsync, exports.resolvePath = resolvePath, 
+    exports.resolveQuery = resolveQuery;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

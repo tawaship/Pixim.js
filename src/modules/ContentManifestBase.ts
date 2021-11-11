@@ -42,10 +42,39 @@ export interface IManifestClass {
 	new(): ContentManifestBase<any, any>;
 }
 
-/**
- * @ignore
- */
-// const _cache: IResourceDictionary = {};
+export function resolvePath(path: string, basepath: string) {
+	if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
+		return path;
+	} else {
+		return PIXI.utils.url.resolve(basepath, path);
+	}
+}
+
+export function resolveQuery(uri: string, queries: { [ name: string ]: string }): string {
+	if (uri.indexOf('data:') === 0) {
+		return uri;
+	} else {
+		const q = [];
+		
+		const t = uri.split('?');
+		
+		if (t[1]) {
+			const search = t[1].split('&');
+			for (let i = 0; i < search.length; i++) {
+				const p = search[i].split('=');
+				if (!(p[0] in queries)) {
+					q.push(search[i]);
+				}
+			}
+		}
+		
+		for (let i in queries) {
+			q.push(`${i}=${queries[i]}`);
+		}
+		
+		return `${t[0]}?${q.join('&')}`;
+	}
+}
 
 export abstract class ContentManifestBase<TData, TResource> {
 	protected _manifests: IPreManifestDictionary<TData> = {};
@@ -103,26 +132,13 @@ export abstract class ContentManifestBase<TData, TResource> {
 	 * Normalize asset path.
 	 */
 	protected _resolvePath(path: string, basepath: string): string {
-		if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
-			return path;
-		} else {
-			return PIXI.utils.url.resolve(basepath, path);
-		}
+		return resolvePath(path, basepath);
 	}
 	
 	/**
 	 * Normalize uri query.
 	 */
 	protected _resolveQuery(uri: string, queries: { [ name: string ]: string }): string {
-		if (uri.indexOf('data:') === 0) {
-			return uri;
-		} else {
-			const q = [];
-			for (let i in queries) {
-				q.push(`${i}=${queries[i]}`);
-			}
-			
-			return `${uri}${uri.match(/\?/) ? '&' : '?'}${q.join('&')}`;
-		}
+		return resolveQuery(uri, queries);
 	}
 }
