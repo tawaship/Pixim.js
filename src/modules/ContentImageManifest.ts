@@ -31,13 +31,13 @@ function loadImagesFromUrisAsync(manifests: IImageUriManifestDictionary, basepat
 	for (let i in manifests) {
 		const manifest = manifests[i];
 		
-		const preUrl = resolvePath(manifest.data, basepath);
-		
+		const uri = resolvePath(manifest.data, basepath);
+		/*
 		const uri =
 			version
 			? resolveQuery(preUrl, { _fv: version })
 			: preUrl;
-		
+		*/
 		loader.add(i, uri, {
 			crossOrigin: true
 		});

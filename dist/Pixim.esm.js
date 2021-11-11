@@ -739,10 +739,13 @@ function loadImagesFromUrisAsync(manifests, basepath, version, useCache) {
     const res = {};
     for (let i in manifests) {
         const manifest = manifests[i];
-        const preUrl = resolvePath(manifest.data, basepath);
-        const uri = version
+        const uri = resolvePath(manifest.data, basepath);
+        /*
+        const uri =
+            version
             ? resolveQuery(preUrl, { _fv: version })
             : preUrl;
+        */
         loader.add(i, uri, {
             crossOrigin: true
         });
@@ -940,10 +943,13 @@ function loadSpritesheetsFromUrisAsync(manifests, basepath, version, useCache) {
     const res = {};
     for (let i in manifests) {
         const manifest = manifests[i];
-        const preUrl = resolvePath(manifest.data, basepath);
-        const uri = version
+        const uri = resolvePath(manifest.data, basepath);
+        /*
+        const uri =
+            version
             ? resolveQuery(preUrl, { _fv: version })
             : preUrl;
+        */
         loader.add(i, uri, {
             crossOrigin: true
         });

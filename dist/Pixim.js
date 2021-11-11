@@ -465,9 +465,7 @@
         version && (loader.defaultQueryString = "_fv=" + version);
         var res = {};
         for (var i in manifests) {
-            var preUrl = resolvePath(manifests[i].data, basepath), uri = version ? resolveQuery(preUrl, {
-                _fv: version
-            }) : preUrl;
+            var uri = resolvePath(manifests[i].data, basepath);
             loader.add(i, uri, {
                 crossOrigin: !0
             });
@@ -615,9 +613,7 @@
         version && (loader.defaultQueryString = "_fv=" + version);
         var res = {};
         for (var i in manifests) {
-            var preUrl = resolvePath(manifests[i].data, basepath), uri = version ? resolveQuery(preUrl, {
-                _fv: version
-            }) : preUrl;
+            var uri = resolvePath(manifests[i].data, basepath);
             loader.add(i, uri, {
                 crossOrigin: !0
             });
