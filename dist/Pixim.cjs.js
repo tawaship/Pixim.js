@@ -747,7 +747,7 @@ function loadImagesFromUrisAsync(manifests, basepath, version, useCache) {
         const uri = version
             ? resolveQuery(preUrl, { _fv: version })
             : preUrl;
-        loader.add(i, manifest.data, {
+        loader.add(i, uri, {
             crossOrigin: true
         });
     }
@@ -770,7 +770,6 @@ function loadImagesFromUrisAsync(manifests, basepath, version, useCache) {
                     reject(i);
                     return;
                 }
-                console.log(resource.error)
                 if (resource.error) {
                     if (!manifests[i].unrequired) {
                         reject(i);
@@ -949,7 +948,7 @@ function loadSpritesheetsFromUrisAsync(manifests, basepath, version, useCache) {
         const uri = version
             ? resolveQuery(preUrl, { _fv: version })
             : preUrl;
-        loader.add(i, manifest.data, {
+        loader.add(i, uri, {
             crossOrigin: true
         });
     }
@@ -988,7 +987,6 @@ function loadSpritesheetsFromUrisAsync(manifests, basepath, version, useCache) {
                     return;
                 }
                 const textures = resource.textures || {};
-                const error = !!resource.error;
                 if (resource.error && !manifests[i].unrequired) {
                     reject(i);
                     return;
@@ -1091,8 +1089,6 @@ class ContentSpritesheetManifest extends ContentManifestBase {
             loadSpritesheetsFromUrisAsync(uris, basepath, version, useCache)
         ])
             .then((resolvers) => {
-            console.log(resolvers);
-            console.log(Object.assign({}, resolvers[0], resolvers[1]));
             return Object.assign({}, ...resolvers);
         })
             .catch((key) => {

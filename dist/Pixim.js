@@ -465,11 +465,10 @@
         version && (loader.defaultQueryString = "_fv=" + version);
         var res = {};
         for (var i in manifests) {
-            var manifest = manifests[i], preUrl = resolvePath(manifest.data, basepath);
-            version && resolveQuery(preUrl, {
+            var preUrl = resolvePath(manifests[i].data, basepath), uri = version ? resolveQuery(preUrl, {
                 _fv: version
-            });
-            loader.add(i, manifest.data, {
+            }) : preUrl;
+            loader.add(i, uri, {
                 crossOrigin: !0
             });
         }
@@ -616,11 +615,10 @@
         version && (loader.defaultQueryString = "_fv=" + version);
         var res = {};
         for (var i in manifests) {
-            var manifest = manifests[i], preUrl = resolvePath(manifest.data, basepath);
-            version && resolveQuery(preUrl, {
+            var preUrl = resolvePath(manifests[i].data, basepath), uri = version ? resolveQuery(preUrl, {
                 _fv: version
-            });
-            loader.add(i, manifest.data, {
+            }) : preUrl;
+            loader.add(i, uri, {
                 crossOrigin: !0
             });
         }
@@ -642,7 +640,6 @@
                             return void reject(i);
                         }
                         var textures = resource.textures || {};
-                        resource.error;
                         if (resource.error && !manifests[i].unrequired) {
                             return void reject(i);
                         }
@@ -725,8 +722,7 @@
                 });
             }
             return Promise.all([ loadSpritesheetsFromJsonsAsync(jsons, basepath, version), loadSpritesheetsFromUrisAsync(uris, basepath, version, useCache) ]).then((function(resolvers) {
-                return console.log(resolvers), console.log(Object.assign({}, resolvers[0], resolvers[1])), 
-                Object.assign.apply(Object, [ {} ].concat(resolvers));
+                return Object.assign.apply(Object, [ {} ].concat(resolvers));
             })).catch((function(key) {
                 throw new Error("Spritesheet: '" + key + "' cannot load.");
             }));

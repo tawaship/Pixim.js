@@ -48,7 +48,7 @@ function loadSpritesheetsFromUrisAsync(manifests: ISpritesheetUriManifestDiction
 			? resolveQuery(preUrl, { _fv: version })
 			: preUrl;
 		
-		loader.add(i, manifest.data, {
+		loader.add(i, uri, {
 			crossOrigin: true
 		});
 	}
@@ -98,7 +98,6 @@ function loadSpritesheetsFromUrisAsync(manifests: ISpritesheetUriManifestDiction
 				
 				const textures: PIXI.ITextureDictionary = resource.textures || {};
 				
-				const error: boolean = !!resource.error;
 				if (resource.error && !manifests[i].unrequired) {
 					reject(i);
 					return;
@@ -221,8 +220,6 @@ export class ContentSpritesheetManifest extends ContentManifestBase<string, PIXI
 			loadSpritesheetsFromUrisAsync(uris, basepath, version, useCache)
 		])
 		.then((resolvers: ILoadedSpritesheetResourceDictionary[]) => {
-		console.log(resolvers)
-		console.log(Object.assign({},resolvers[0], resolvers[1]))
 			return Object.assign({}, ...resolvers);
 		})
 		.catch((key: string) => {

@@ -38,7 +38,7 @@ function loadImagesFromUrisAsync(manifests: IImageUriManifestDictionary, basepat
 			? resolveQuery(preUrl, { _fv: version })
 			: preUrl;
 		
-		loader.add(i, manifest.data, {
+		loader.add(i, uri, {
 			crossOrigin: true
 		});
 	}
