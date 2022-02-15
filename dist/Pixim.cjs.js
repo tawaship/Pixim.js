@@ -1253,7 +1253,7 @@ function createContentStatic() {
 const _manifests = {};
 class Content {
     constructor(options = {}, piximData = Content._piximData) {
-        const basepath = (options.basepath || '').replace(/([^/])$/, '$1/');
+        const basepath = (options.basepath || '');
         if (typeof (options.version) !== 'object') {
             const version = {};
             const v = options.version || '';
@@ -1533,6 +1533,374 @@ Content.registerManifest('images', ContentImageManifest);
 Content.registerManifest('spritesheets', ContentSpritesheetManifest);
 Content.registerManifest('sounds', ContentSoundManifest);
 
+function resolvePath$1(path, basepath) {
+    if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
+        return path;
+    }
+    else {
+        return PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
+    }
+}
+function resolveQuery$1(uri, queries) {
+    if (uri.indexOf('data:') === 0) {
+        return uri;
+    }
+    else {
+        const q = [];
+        const t = uri.split('?');
+        if (t[1]) {
+            const search = t[1].split('&');
+            for (let i = 0; i < search.length; i++) {
+                const p = search[i].split('=');
+                if (!(p[0] in queries)) {
+                    q.push(search[i]);
+                }
+            }
+        }
+        for (let i in queries) {
+            q.push(`${i}=${queries[i]}`);
+        }
+        return `${t[0]}?${q.join('&')}`;
+    }
+}
+
+var index = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    resolvePath: resolvePath$1,
+    resolveQuery: resolveQuery$1
+});
+
+class LoaderResource {
+    constructor(data, error) {
+        this._data = data;
+        this._error = error;
+    }
+    get data() {
+        return this._data;
+    }
+    get error() {
+        return this._error;
+    }
+}
+class LoaderBase {
+    constructor(options = {}) {
+        this._options = options;
+    }
+    _resolveBasepath(basepath) {
+        return typeof basepath === 'string' ? basepath : (this._options.basepath || '');
+    }
+    _resolveVersion(version) {
+        return (typeof version === 'string' || typeof version === 'number') ? version : (this._options.version || '');
+    }
+    _resolveUseCache(useCache) {
+        return typeof useCache === 'boolean' ? useCache : (this._options.useCache || false);
+    }
+    _resolveUrl(url, options = {}) {
+        const preUri = resolvePath$1(url, this._resolveBasepath(options.basepath));
+        const version = this._resolveVersion(options.version);
+        const uri = version
+            ? resolveQuery$1(preUri, { _fv: version })
+            : preUri;
+        return uri;
+    }
+}
+
+class TextureLoaderResource extends LoaderResource {
+    destroy() {
+        TextureLoaderResource.removeCache(this._data);
+        this._data.destroy(true);
+    }
+    static removeCache(texture) {
+        PIXI.Texture.removeFromCache(texture);
+        if (texture.baseTexture) {
+            PIXI.BaseTexture.removeFromCache(texture.baseTexture);
+        }
+    }
+}
+class TextureLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
+            return this._loadFromElementAsync(target, options);
+        }
+        else if (target.indexOf('data:') === 0) {
+            return this._loadFromDataUriAsync(target, options);
+        }
+        else {
+            return this._loadFromUrlAsync(target, options);
+        }
+    }
+    loadWithManifestAsync(manifest, options = {}) {
+        if (Object.keys(manifest).length === 0) {
+            return Promise.resolve({});
+        }
+        const promises = [];
+        const res = {};
+        for (let i in manifest) {
+            promises.push(this.loadAsync(manifest[i], options)
+                .then(resource => {
+                res[i] = resource;
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            return res;
+        });
+    }
+    _loadFromUrlAsync(url, options = {}) {
+        return this._loadTextureAsync(this._resolveUrl(url, options), options);
+    }
+    _loadFromElementAsync(element, options = {}) {
+        element.crossOrigin = 'anonymous';
+        element.src = this._resolveUrl(element.src, options);
+        return this._loadTextureAsync(element);
+    }
+    _loadFromDataUriAsync(dataUri, options = {}) {
+        return this._loadTextureAsync(dataUri, options);
+    }
+    _loadTextureAsync(target, options = {}) {
+        const useCache = this._resolveUseCache(options.useCache);
+        return new Promise(resolve => {
+            const bt = PIXI.BaseTexture.from(target);
+            if (bt.valid) {
+                resolve(new TextureLoaderResource(new PIXI.Texture(bt), null));
+                return;
+            }
+            bt.on('loaded', (baseTexture) => {
+                if (!useCache) {
+                    PIXI.BaseTexture.removeFromCache(baseTexture);
+                }
+                resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
+            });
+            bt.on('error', (baseTexture, e) => {
+                PIXI.BaseTexture.removeFromCache(baseTexture);
+                resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), e));
+            });
+        });
+    }
+}
+
+class SpritesheetLoaderResource extends LoaderResource {
+    destroy() {
+        for (let i in this._data) {
+            TextureLoaderResource.removeCache(this._data[i]);
+        }
+        for (let i in this._data) {
+            this._data[i].destroy(true);
+        }
+    }
+}
+/**
+ * @ignore
+ */
+const KEY_SINGLE_SPRITESHEET = '--single-sprite-sheet';
+class SpritesheetLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        if (typeof target === 'string') {
+            return this._loadFromUrlsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
+                .then(resources => {
+                return resources[KEY_SINGLE_SPRITESHEET];
+            });
+        }
+        else {
+            return this._loadFromJsonsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
+                .then(resources => {
+                return resources[KEY_SINGLE_SPRITESHEET];
+            });
+        }
+    }
+    loadWithManifestAsync(manifest, options = {}) {
+        if (Object.keys(manifest).length === 0) {
+            return Promise.resolve({});
+        }
+        const urls = {};
+        const jsons = {};
+        for (let i in manifest) {
+            const target = manifest[i];
+            if (typeof target === 'string') {
+                urls[i] = target;
+            }
+            else {
+                jsons[i] = target;
+            }
+        }
+        return Promise.all([
+            this._loadFromUrlsAsync(urls, options),
+            this._loadFromJsonsAsync(jsons, options)
+        ])
+            .then(resolvers => {
+            return Object.assign({}, ...resolvers);
+        });
+    }
+    _loadFromUrlsAsync(manifest, options = {}) {
+        const res = {};
+        if (Object.keys(manifest).length === 0) {
+            return Promise.resolve(res);
+        }
+        const loader = new PIXI.Loader();
+        const version = this._resolveVersion(options.version);
+        if (version) {
+            loader.defaultQueryString = `_fv=${version}`;
+        }
+        const basepath = this._resolveBasepath(options.basepath);
+        for (let i in manifest) {
+            const target = manifest[i];
+            const uri = resolvePath$1(target, basepath);
+            loader.add(i, uri, {
+                crossOrigin: true
+            });
+        }
+        const useCache = this._resolveUseCache(options.useCache);
+        if (!useCache) {
+            loader.use((resource, next) => {
+                if (resource.textures) {
+                    for (let i in resource.textures) {
+                        const texture = resource.textures[i];
+                        if (!texture) {
+                            continue;
+                        }
+                        TextureLoaderResource.removeCache(texture);
+                    }
+                }
+                if (resource.texture) {
+                    TextureLoaderResource.removeCache(resource.texture);
+                }
+                next();
+            });
+        }
+        return new Promise(resolve => {
+            loader.load((loader, resources) => {
+                for (let i in resources) {
+                    if (!manifest[i]) {
+                        continue;
+                    }
+                    const resource = resources[i];
+                    if (!resource) {
+                        res[i] = new SpritesheetLoaderResource({}, 'invalid json');
+                        continue;
+                    }
+                    if (resource.error) {
+                        res[i] = new SpritesheetLoaderResource({}, resource.error);
+                        continue;
+                    }
+                    if (!resource.textures) {
+                        res[i] = new SpritesheetLoaderResource({}, 'invalid texture');
+                        continue;
+                    }
+                    res[i] = new SpritesheetLoaderResource(resource.textures, null);
+                }
+                resolve(res);
+            });
+        });
+    }
+    _loadFromJsonsAsync(manifest, options = {}) {
+        const res = {};
+        if (Object.keys(manifest).length === 0) {
+            return Promise.resolve(res);
+        }
+        const promises = [];
+        const loader = new TextureLoader(options);
+        for (let i in manifest) {
+            const target = manifest[i];
+            promises.push(loader.loadAsync(target.meta.image, options)
+                .then(resource => {
+                if (resource.error) {
+                    res[i] = new SpritesheetLoaderResource({}, resource.error);
+                    return Promise.resolve();
+                }
+                const ss = new PIXI.Spritesheet(resource.data, target);
+                return new Promise(resolve => {
+                    ss.parse(e => {
+                        console.log(e);
+                        res[i] = new SpritesheetLoaderResource(ss.textures, null);
+                        resolve();
+                    });
+                });
+            })
+                .catch(e => {
+                res[i] = new SpritesheetLoaderResource({}, e);
+                return Promise.resolve();
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            console.log(res);
+            return res;
+        });
+    }
+}
+
+
+
+var index$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    LoaderResource: LoaderResource,
+    LoaderBase: LoaderBase,
+    TextureLoaderResource: TextureLoaderResource,
+    TextureLoader: TextureLoader,
+    SpritesheetLoaderResource: SpritesheetLoaderResource,
+    SpritesheetLoader: SpritesheetLoader
+});
+
+class ResourceManagerBase {
+    constructor() {
+        this._data = {};
+    }
+    //private _resources:
+    /**
+     * Register manifests.
+     */
+    add(manifest, options = {}) {
+        const unrequired = options.unrequired || false;
+        for (let i in manifest) {
+            this._data[i] = {
+                target: manifest[i],
+                unrequired
+            };
+        }
+    }
+    /**
+     * Get resources.
+     */
+    getAsync(options) {
+        if (Object.keys(this._data).length === 0) {
+            return Promise.resolve({});
+        }
+        const manifest = {};
+        for (let i in this._data) {
+            manifest[i] = this._data[i].target;
+        }
+        return this._loadAsync(manifest, options)
+            .then(resources => {
+            const res = {};
+            for (let i in resources) {
+                const resource = resources[i];
+                if (resource.error && !this._data[i].unrequired) {
+                    throw resource.error;
+                }
+                res[i] = resource.data;
+            }
+            return res;
+        });
+    }
+    destoryResources() {
+    }
+}
+
+class ImageResourceManager extends ResourceManagerBase {
+    _loadAsync(manifest, options = {}) {
+        const loader = new TextureLoader(options);
+        return loader.loadWithManifestAsync(manifest);
+    }
+}
+
+
+
+var index$2 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    ResourceManagerBase: ResourceManagerBase,
+    ImageResourceManager: ImageResourceManager
+});
+
 exports.Application = Application;
 exports.Container = Container;
 exports.Content = Content;
@@ -1546,6 +1914,9 @@ exports.Layer = Layer;
 exports.Task = Task$1;
 exports.loadImageAsync = loadImageAsync;
 exports.loadImageFromElementAsync = loadImageFromElementAsync;
+exports.loaders = index$1;
 exports.resolvePath = resolvePath;
 exports.resolveQuery = resolveQuery;
+exports.resources = index$2;
+exports.utils = index;
 //# sourceMappingURL=Pixim.cjs.js.map

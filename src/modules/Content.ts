@@ -109,7 +109,7 @@ export class Content {
 	protected _piximData: IContentData;
 	
 	constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
-		const basepath: string = (options.basepath || '').replace(/([^/])$/, '$1/');
+		const basepath: string = (options.basepath || '');
 		
 		if (typeof(options.version) !== 'object') {
 			const version: IContentAssetVersion = {};

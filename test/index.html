@@ -61,10 +61,109 @@ Test.defineLibraries({
 			this.addChild(new $.lib.main($))
 			this.task.reset();
 			})
+			//*
+			
+			const a = new Pixim.loaders.SpritesheetLoader(/*{basepath: "img/", aversion: "222"}*/);
+			/*a.loadAsync("invalid.json", {basepath:"https://localhost/Pixim.js/test/img"})
+			.then(r => {
+			console.log(r)
+			})
+			.catch(e => {
+			console.log(e)
+			})*/
+			a.loadAsync(
+			
+			{"frames":{"ss_1_1":{"frame":{"x":4,"y":110,"w":102,"h":102},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":102,"h":102},"sourceSize":{"w":102,"h":102}},"ss_1_2":{"frame":{"x":4,"y":4,"w":102,"h":102},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":102,"h":102},"sourceSize":{"w":102,"h":102}}},"meta":{"app":"Adobe Animate","version":"19.2.1.408","image":"data:image/png;base64,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","format":"RGBA8888","size":{"w":256,"h":256},"scale":"1"}}
+			
+			
+			, {basepath:"https://localhost/Pixim.js/test/img"})
+			.then(r => {
+			console.log(r.data)
+			this.addChild(new PIXI.Sprite(r.data.ss_1_1)).scale.set(2)
+			console.log(r)
+			})
+			.catch(e => {
+			console.log(e)
+			})
+			//*/
+		//	this.addChild(new PIXI.Sprite(PIXI.Texture.from("https://localhost/Pixim.js/test/img/image_1.pn"))).scale.set(2)
+			/*
+			new PIXI.Loader()
+			.add("a","https://localhost/Pixim.js/test/img/image_1.png", {crossOrigin: false})
+			.load((l,r) => {
+			console.log(r.a)
+		/	this.addChild(new PIXI.Sprite(r.a.texture))
+			})
+			//*/
+			/*
+			console.log((PIXI.BaseTexture.from("https://localhost/Pixim.js/test/img/image_1.png")).resource.source.crossOrigin)
+			return
+			//*/
+			/*
+			const ll = new PIXI.Loader()
+			ll.add("a", "img/image_1.png", {crossOrigin: true})
+			ll.load((r,l) => {
+			console.log(l.a.texture.baseTexture.resource.source.crossOrigin)
+			})
+			*/
+			/*
+			const a = new Pixim.loaders.TextureLoader({basepath: "imag/", aversion: "222"});
+			a.loadAsync("http://localhost/Pixim.js/test/img/image_1.png",{basepath: "./", version: 111,useCache: true})
+			.then(r => {
+			console.log(r)
+			this.addChild(new PIXI.Sprite(r.data)).scale.set(2)
+			
+			console.log(PIXI.utils.BaseTextureCache["img/image_1.png?_fv=111"])
+			setTimeout(() => {
+			console.log(PIXI.utils.BaseTextureCache["img/image_1.png?_fv=111"])
+			},1000)
+			})
+			.catch(e => {
+			console.log(e)
+			})
+			//*/
+			/*
+			{
+			setTimeout(() => {
+			
+			const g = new Pixim.resources.ImageResourceManager();
+			g.add({hoge : "img/image_1.png", moge:"image_2.png" }, {unrequired: true})
+			g.getAsync().then(r=> {
+			console.log(1)
+				console.log(r.hoge.width)
+			})
+			.catch(e => {
+			console.log(e)
+			})
+			},1000)
+			}
+			
+			{
+			const g = new Pixim.resources.ImageResourceManager();
+			
+			g.add({hoge : "img/image_1.png", moge:"image_2.png" }, {unrequired: true})
+			g.getAsync({version: 2}).then(r=> {
+				//PIXI.BaseTexture.removeFromCache("img/image_1.png");
+				console.log(PIXI.utils.BaseTextureCache["img/image_1.png"])
+				PIXI.Texture.from("img/image_2.png")
+				setTimeout(()=>{
+				console.log(PIXI.utils.TextureCache["img/image_2.png"])
+				},1000)
+			})
+			.catch(e => {
+			console.log(e)
+			})
+			}
+			//*/
+			
 		}
+		
 	},
 	
 	main: class Main extends Pixim.Container {
+		destroy(){
+		console.log(3)
+		}
 		constructor($) {
 			super();
 			
@@ -173,7 +272,7 @@ let app = o = new Pixim.Application({width: 450, height: 800}, {autoAdjust:app =
 app.attachAsync(test)
 	.then(() => {
 		app.play();
-		//app.app.destroy(true, {children: true})
+		//app.destroy(false, {children: true})
 		//app = null
 	});
 	

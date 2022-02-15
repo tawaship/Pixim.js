@@ -8,3 +8,8 @@ export * from './modules/ContentSpritesheetManifest';
 export * from './modules/ContentSoundManifest';
 export * from './modules/Emitter';
 export * from './modules/Task';
+
+import * as utils from './modules/utils/index';
+import * as loaders from './modules/loaders/index';
+import * as resources from './modules/resources/index';
+export { utils, loaders, resources };

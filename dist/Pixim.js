@@ -812,7 +812,7 @@
     }
     var _manifests = {}, Content = function Content(options, piximData) {
         void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
-        var basepath = (options.basepath || "").replace(/([^/])$/, "$1/");
+        var basepath = options.basepath || "";
         if ("object" != typeof options.version) {
             var version = {}, v = options.version || "";
             for (var i in _manifests) {
@@ -851,6 +851,24 @@
             configurable: !0
         }
     };
+    function resolvePath$1(path, basepath) {
+        return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, "$1/"), path);
+    }
+    function resolveQuery$1(uri, queries) {
+        if (0 === uri.indexOf("data:")) {
+            return uri;
+        }
+        var q = [], t = uri.split("?");
+        if (t[1]) {
+            for (var search = t[1].split("&"), i = 0; i < search.length; i++) {
+                search[i].split("=")[0] in queries || q.push(search[i]);
+            }
+        }
+        for (var i$1 in queries) {
+            q.push(i$1 + "=" + queries[i$1]);
+        }
+        return t[0] + "?" + q.join("&");
+    }
     Content.registerManifest = function(key, Manifest) {
         _manifests[key] = Manifest;
     }, Content.create = function(key) {
@@ -959,14 +977,258 @@
             }
         }));
     }, Object.defineProperties(Content.prototype, prototypeAccessors$2), Content.registerManifest("images", ContentImageManifest), 
-    Content.registerManifest("spritesheets", ContentSpritesheetManifest), Content.registerManifest("sounds", ContentSoundManifest), 
+    Content.registerManifest("spritesheets", ContentSpritesheetManifest), Content.registerManifest("sounds", ContentSoundManifest);
+    var index = Object.freeze({
+        __proto__: null,
+        resolvePath: resolvePath$1,
+        resolveQuery: resolveQuery$1
+    }), LoaderResource = function(data, error) {
+        this._data = data, this._error = error;
+    }, prototypeAccessors$3 = {
+        data: {
+            configurable: !0
+        },
+        error: {
+            configurable: !0
+        }
+    };
+    prototypeAccessors$3.data.get = function() {
+        return this._data;
+    }, prototypeAccessors$3.error.get = function() {
+        return this._error;
+    }, Object.defineProperties(LoaderResource.prototype, prototypeAccessors$3);
+    var LoaderBase = function(options) {
+        void 0 === options && (options = {}), this._options = options;
+    };
+    LoaderBase.prototype._resolveBasepath = function(basepath) {
+        return "string" == typeof basepath ? basepath : this._options.basepath || "";
+    }, LoaderBase.prototype._resolveVersion = function(version) {
+        return "string" == typeof version || "number" == typeof version ? version : this._options.version || "";
+    }, LoaderBase.prototype._resolveUseCache = function(useCache) {
+        return "boolean" == typeof useCache ? useCache : this._options.useCache || !1;
+    }, LoaderBase.prototype._resolveUrl = function(url, options) {
+        void 0 === options && (options = {});
+        var preUri = resolvePath$1(url, this._resolveBasepath(options.basepath)), version = this._resolveVersion(options.version);
+        return version ? resolveQuery$1(preUri, {
+            _fv: version
+        }) : preUri;
+    };
+    var TextureLoaderResource = function(superclass) {
+        function TextureLoaderResource() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (TextureLoaderResource.__proto__ = superclass), TextureLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        TextureLoaderResource.prototype.constructor = TextureLoaderResource, TextureLoaderResource.prototype.destroy = function() {
+            TextureLoaderResource.removeCache(this._data), this._data.destroy(!0);
+        }, TextureLoaderResource.removeCache = function(texture) {
+            PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture);
+        }, TextureLoaderResource;
+    }(LoaderResource), TextureLoader = function(superclass) {
+        function TextureLoader() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
+        TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype.loadAsync = function(target, options) {
+            return void 0 === options && (options = {}), target instanceof HTMLImageElement || target instanceof HTMLVideoElement ? this._loadFromElementAsync(target, options) : 0 === target.indexOf("data:") ? this._loadFromDataUriAsync(target, options) : this._loadFromUrlAsync(target, options);
+        }, TextureLoader.prototype.loadWithManifestAsync = function(manifest, options) {
+            var this$1 = this;
+            if (void 0 === options && (options = {}), 0 === Object.keys(manifest).length) {
+                return Promise.resolve({});
+            }
+            var promises = [], res = {}, loop = function(i) {
+                promises.push(this$1.loadAsync(manifest[i], options).then((function(resource) {
+                    res[i] = resource;
+                })));
+            };
+            for (var i in manifest) {
+                loop(i);
+            }
+            return Promise.all(promises).then((function() {
+                return res;
+            }));
+        }, TextureLoader.prototype._loadFromUrlAsync = function(url, options) {
+            return void 0 === options && (options = {}), this._loadTextureAsync(this._resolveUrl(url, options), options);
+        }, TextureLoader.prototype._loadFromElementAsync = function(element, options) {
+            return void 0 === options && (options = {}), element.crossOrigin = "anonymous", 
+            element.src = this._resolveUrl(element.src, options), this._loadTextureAsync(element);
+        }, TextureLoader.prototype._loadFromDataUriAsync = function(dataUri, options) {
+            return void 0 === options && (options = {}), this._loadTextureAsync(dataUri, options);
+        }, TextureLoader.prototype._loadTextureAsync = function(target, options) {
+            void 0 === options && (options = {});
+            var useCache = this._resolveUseCache(options.useCache);
+            return new Promise((function(resolve) {
+                var bt = PIXI.BaseTexture.from(target);
+                bt.valid ? resolve(new TextureLoaderResource(new PIXI.Texture(bt), null)) : (bt.on("loaded", (function(baseTexture) {
+                    useCache || PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
+                })), bt.on("error", (function(baseTexture, e) {
+                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), e));
+                })));
+            }));
+        }, TextureLoader;
+    }(LoaderBase), SpritesheetLoaderResource = function(superclass) {
+        function SpritesheetLoaderResource() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (SpritesheetLoaderResource.__proto__ = superclass), SpritesheetLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        SpritesheetLoaderResource.prototype.constructor = SpritesheetLoaderResource, SpritesheetLoaderResource.prototype.destroy = function() {
+            for (var i in this._data) {
+                TextureLoaderResource.removeCache(this._data[i]);
+            }
+            for (var i$1 in this._data) {
+                this._data[i$1].destroy(!0);
+            }
+        }, SpritesheetLoaderResource;
+    }(LoaderResource), SpritesheetLoader = function(superclass) {
+        function SpritesheetLoader() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (SpritesheetLoader.__proto__ = superclass), SpritesheetLoader.prototype = Object.create(superclass && superclass.prototype), 
+        SpritesheetLoader.prototype.constructor = SpritesheetLoader, SpritesheetLoader.prototype.loadAsync = function(target, options) {
+            var obj, obj$1;
+            return void 0 === options && (options = {}), "string" == typeof target ? this._loadFromUrlsAsync((obj = {}, 
+            obj["--single-sprite-sheet"] = target, obj), options).then((function(resources) {
+                return resources["--single-sprite-sheet"];
+            })) : this._loadFromJsonsAsync((obj$1 = {}, obj$1["--single-sprite-sheet"] = target, 
+            obj$1), options).then((function(resources) {
+                return resources["--single-sprite-sheet"];
+            }));
+        }, SpritesheetLoader.prototype.loadWithManifestAsync = function(manifest, options) {
+            if (void 0 === options && (options = {}), 0 === Object.keys(manifest).length) {
+                return Promise.resolve({});
+            }
+            var urls = {}, jsons = {};
+            for (var i in manifest) {
+                var target = manifest[i];
+                "string" == typeof target ? urls[i] = target : jsons[i] = target;
+            }
+            return Promise.all([ this._loadFromUrlsAsync(urls, options), this._loadFromJsonsAsync(jsons, options) ]).then((function(resolvers) {
+                return Object.assign.apply(Object, [ {} ].concat(resolvers));
+            }));
+        }, SpritesheetLoader.prototype._loadFromUrlsAsync = function(manifest, options) {
+            void 0 === options && (options = {});
+            var res = {};
+            if (0 === Object.keys(manifest).length) {
+                return Promise.resolve(res);
+            }
+            var loader = new PIXI.Loader, version = this._resolveVersion(options.version);
+            version && (loader.defaultQueryString = "_fv=" + version);
+            var basepath = this._resolveBasepath(options.basepath);
+            for (var i in manifest) {
+                var uri = resolvePath$1(manifest[i], basepath);
+                loader.add(i, uri, {
+                    crossOrigin: !0
+                });
+            }
+            return this._resolveUseCache(options.useCache) || loader.use((function(resource, next) {
+                if (resource.textures) {
+                    for (var i in resource.textures) {
+                        var texture = resource.textures[i];
+                        texture && TextureLoaderResource.removeCache(texture);
+                    }
+                }
+                resource.texture && TextureLoaderResource.removeCache(resource.texture), next();
+            })), new Promise((function(resolve) {
+                loader.load((function(loader, resources) {
+                    for (var i in resources) {
+                        if (manifest[i]) {
+                            var resource = resources[i];
+                            resource ? resource.error ? res[i] = new SpritesheetLoaderResource({}, resource.error) : resource.textures ? res[i] = new SpritesheetLoaderResource(resource.textures, null) : res[i] = new SpritesheetLoaderResource({}, "invalid texture") : res[i] = new SpritesheetLoaderResource({}, "invalid json");
+                        }
+                    }
+                    resolve(res);
+                }));
+            }));
+        }, SpritesheetLoader.prototype._loadFromJsonsAsync = function(manifest, options) {
+            void 0 === options && (options = {});
+            var res = {};
+            if (0 === Object.keys(manifest).length) {
+                return Promise.resolve(res);
+            }
+            var promises = [], loader = new TextureLoader(options), loop = function(i) {
+                var target = manifest[i];
+                promises.push(loader.loadAsync(target.meta.image, options).then((function(resource) {
+                    if (resource.error) {
+                        return res[i] = new SpritesheetLoaderResource({}, resource.error), Promise.resolve();
+                    }
+                    var ss = new PIXI.Spritesheet(resource.data, target);
+                    return new Promise((function(resolve) {
+                        ss.parse((function(e) {
+                            console.log(e), res[i] = new SpritesheetLoaderResource(ss.textures, null), resolve();
+                        }));
+                    }));
+                })).catch((function(e) {
+                    return res[i] = new SpritesheetLoaderResource({}, e), Promise.resolve();
+                })));
+            };
+            for (var i in manifest) {
+                loop(i);
+            }
+            return Promise.all(promises).then((function() {
+                return console.log(res), res;
+            }));
+        }, SpritesheetLoader;
+    }(LoaderBase), index$1 = Object.freeze({
+        __proto__: null,
+        LoaderResource: LoaderResource,
+        LoaderBase: LoaderBase,
+        TextureLoaderResource: TextureLoaderResource,
+        TextureLoader: TextureLoader,
+        SpritesheetLoaderResource: SpritesheetLoaderResource,
+        SpritesheetLoader: SpritesheetLoader
+    }), ResourceManagerBase = function() {
+        this._data = {};
+    };
+    ResourceManagerBase.prototype.add = function(manifest, options) {
+        void 0 === options && (options = {});
+        var unrequired = options.unrequired || !1;
+        for (var i in manifest) {
+            this._data[i] = {
+                target: manifest[i],
+                unrequired: unrequired
+            };
+        }
+    }, ResourceManagerBase.prototype.getAsync = function(options) {
+        var this$1 = this;
+        if (0 === Object.keys(this._data).length) {
+            return Promise.resolve({});
+        }
+        var manifest = {};
+        for (var i in this._data) {
+            manifest[i] = this._data[i].target;
+        }
+        return this._loadAsync(manifest, options).then((function(resources) {
+            var res = {};
+            for (var i in resources) {
+                var resource = resources[i];
+                if (resource.error && !this$1._data[i].unrequired) {
+                    throw resource.error;
+                }
+                res[i] = resource.data;
+            }
+            return res;
+        }));
+    }, ResourceManagerBase.prototype.destoryResources = function() {};
+    var ImageResourceManager = function(superclass) {
+        function ImageResourceManager() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (ImageResourceManager.__proto__ = superclass), ImageResourceManager.prototype = Object.create(superclass && superclass.prototype), 
+        ImageResourceManager.prototype.constructor = ImageResourceManager, ImageResourceManager.prototype._loadAsync = function(manifest, options) {
+            return void 0 === options && (options = {}), new TextureLoader(options).loadWithManifestAsync(manifest);
+        }, ImageResourceManager;
+    }(ResourceManagerBase), index$2 = Object.freeze({
+        __proto__: null,
+        ResourceManagerBase: ResourceManagerBase,
+        ImageResourceManager: ImageResourceManager
+    });
     exports.Application = Application, exports.Container = Container, exports.Content = Content, 
     exports.ContentDeliver = ContentDeliver, exports.ContentImageManifest = ContentImageManifest, 
     exports.ContentManifestBase = ContentManifestBase, exports.ContentSoundManifest = ContentSoundManifest, 
     exports.ContentSpritesheetManifest = ContentSpritesheetManifest, exports.Emitter = Emitter$1, 
     exports.Layer = Layer, exports.Task = Task$1, exports.loadImageAsync = loadImageAsync, 
-    exports.loadImageFromElementAsync = loadImageFromElementAsync, exports.resolvePath = resolvePath, 
-    exports.resolveQuery = resolveQuery;
+    exports.loadImageFromElementAsync = loadImageFromElementAsync, exports.loaders = index$1, 
+    exports.resolvePath = resolvePath, exports.resolveQuery = resolveQuery, exports.resources = index$2, 
+    exports.utils = index;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });
