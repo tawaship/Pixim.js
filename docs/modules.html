@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@tawaship/pixim.js - v1.12.2</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.12.2">
+	<title>@tawaship/pixim.js - v1.13.0-a</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.13.0-a">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@tawaship/pixim.js - v1.12.2</a>
+					<a href="index.html" class="title">@tawaship/pixim.js - v1.13.0-a</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>@tawaship/pixim.js - v1.12.2</h1>
+			<h1>@tawaship/pixim.js - v1.13.0-a</h1>
 		</div>
 	</div>
 </header>
@@ -64,7 +64,7 @@
 						<section class="tsd-index-section ">
 							<h3>Namespaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-namespace"><a href="modules/hoge.html" class="tsd-kind-icon">hoge</a></li>
+								<li class="tsd-kind-namespace"><a href="modules/utils.html" class="tsd-kind-icon">utils</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -74,14 +74,24 @@
 								<li class="tsd-kind-class"><a href="classes/container.html" class="tsd-kind-icon">Container</a></li>
 								<li class="tsd-kind-class"><a href="classes/content.html" class="tsd-kind-icon">Content</a></li>
 								<li class="tsd-kind-class"><a href="classes/contentdeliver.html" class="tsd-kind-icon">Content<wbr>Deliver</a></li>
-								<li class="tsd-kind-class"><a href="classes/contentimagemanifest.html" class="tsd-kind-icon">Content<wbr>Image<wbr>Manifest</a></li>
-								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/contentmanifestbase.html" class="tsd-kind-icon">Content<wbr>Manifest<wbr>Base</a></li>
-								<li class="tsd-kind-class"><a href="classes/contentsoundmanifest.html" class="tsd-kind-icon">Content<wbr>Sound<wbr>Manifest</a></li>
-								<li class="tsd-kind-class"><a href="classes/contentspritesheetmanifest.html" class="tsd-kind-icon">Content<wbr>Spritesheet<wbr>Manifest</a></li>
 								<li class="tsd-kind-class"><a href="classes/emitter.html" class="tsd-kind-icon">Emitter</a></li>
-								<li class="tsd-kind-class"><a href="classes/imageloader.html" class="tsd-kind-icon">Image<wbr>Loader</a></li>
+								<li class="tsd-kind-class"><a href="classes/jsonloader.html" class="tsd-kind-icon">Json<wbr>Loader</a></li>
+								<li class="tsd-kind-class"><a href="classes/jsonloaderresource.html" class="tsd-kind-icon">Json<wbr>Loader<wbr>Resource</a></li>
+								<li class="tsd-kind-class"><a href="classes/jsonmanifest.html" class="tsd-kind-icon">Json<wbr>Manifest</a></li>
 								<li class="tsd-kind-class"><a href="classes/layer.html" class="tsd-kind-icon">Layer</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/loaderbase.html" class="tsd-kind-icon">Loader<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/loaderresource.html" class="tsd-kind-icon">Loader<wbr>Resource</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/manifestbase.html" class="tsd-kind-icon">Manifest<wbr>Base</a></li>
+								<li class="tsd-kind-class"><a href="classes/soundloader.html" class="tsd-kind-icon">Sound<wbr>Loader</a></li>
+								<li class="tsd-kind-class"><a href="classes/soundloaderresource.html" class="tsd-kind-icon">Sound<wbr>Loader<wbr>Resource</a></li>
+								<li class="tsd-kind-class"><a href="classes/soundmanifest.html" class="tsd-kind-icon">Sound<wbr>Manifest</a></li>
+								<li class="tsd-kind-class"><a href="classes/spritesheetloader.html" class="tsd-kind-icon">Spritesheet<wbr>Loader</a></li>
+								<li class="tsd-kind-class"><a href="classes/spritesheetloaderresource.html" class="tsd-kind-icon">Spritesheet<wbr>Loader<wbr>Resource</a></li>
+								<li class="tsd-kind-class"><a href="classes/spritesheetmanifest.html" class="tsd-kind-icon">Spritesheet<wbr>Manifest</a></li>
 								<li class="tsd-kind-class"><a href="classes/task.html" class="tsd-kind-icon">Task</a></li>
+								<li class="tsd-kind-class"><a href="classes/textureloader.html" class="tsd-kind-icon">Texture<wbr>Loader</a></li>
+								<li class="tsd-kind-class"><a href="classes/textureloaderresource.html" class="tsd-kind-icon">Texture<wbr>Loader<wbr>Resource</a></li>
+								<li class="tsd-kind-class"><a href="classes/texturemanifest.html" class="tsd-kind-icon">Texture<wbr>Manifest</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -99,41 +109,52 @@
 								<li class="tsd-kind-interface"><a href="interfaces/icontentdeliverdata.html" class="tsd-kind-icon">IContent<wbr>Deliver<wbr>Data</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentdictionary.html" class="tsd-kind-icon">IContent<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentlibrary.html" class="tsd-kind-icon">IContent<wbr>Library</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/icontentmanifestoption.html" class="tsd-kind-icon">IContent<wbr>Manifest<wbr>Option</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentmanifests.html" class="tsd-kind-icon">IContent<wbr>Manifests</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentoption.html" class="tsd-kind-icon">IContent<wbr>Option</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentresourcedictionary.html" class="tsd-kind-icon">IContent<wbr>Resource<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/icontentstaticdata.html" class="tsd-kind-icon">IContent<wbr>Static<wbr>Data</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/idestroyoptions.html" class="tsd-kind-icon">IDestroy<wbr>Options</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ihorizontal.html" class="tsd-kind-icon">IHorizontal</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageelementmanifest.html" class="tsd-kind-icon">IImage<wbr>Element<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageelementmanifestdictionary.html" class="tsd-kind-icon">IImage<wbr>Element<wbr>Manifest<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageloaderelementmanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Element<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageloadermanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageloaderresourcedictionary.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Resource<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageloaderurimanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Uri<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iimageurimanifestdictionary.html" class="tsd-kind-icon">IImage<wbr>Uri<wbr>Manifest<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsondata.html" class="tsd-kind-icon">IJson<wbr>Data</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsondictionary.html" class="tsd-kind-icon">IJson<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsonloaderoption.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Option</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsonloaderresourcedictionary.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsonloadertargetdictionary.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ijsonmanifesttargetdictionary.html" class="tsd-kind-icon">IJson<wbr>Manifest<wbr>Target<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ilayerdictionary.html" class="tsd-kind-icon">ILayer<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iloadedimageresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Image<wbr>Resource<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iloadedresource.html" class="tsd-kind-icon">ILoaded<wbr>Resource</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iloadedresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Resource<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iloadedsoundresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Sound<wbr>Resource<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/iloadedspritesheetresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Spritesheet<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iloaderoption.html" class="tsd-kind-icon">ILoader<wbr>Option</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iloaderresourcedictionary.html" class="tsd-kind-icon">ILoader<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iloadertargetdictionary.html" class="tsd-kind-icon">ILoader<wbr>Target<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/imanifestclass.html" class="tsd-kind-icon">IManifest<wbr>Class</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/imanifestdictionary.html" class="tsd-kind-icon">IManifest<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/imanifestoption.html" class="tsd-kind-icon">IManifest<wbr>Option</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/imanifesttargetdictionary.html" class="tsd-kind-icon">IManifest<wbr>Target<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/iposition.html" class="tsd-kind-icon">IPosition</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ipostmanifest.html" class="tsd-kind-icon">IPost<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ipostmanifestdictionary.html" class="tsd-kind-icon">IPost<wbr>Manifest<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ipremanifest.html" class="tsd-kind-icon">IPre<wbr>Manifest</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ipremanifestdictionary.html" class="tsd-kind-icon">IPre<wbr>Manifest<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/irawresourcedictionary.html" class="tsd-kind-icon">IRaw<wbr>Resource<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/irect.html" class="tsd-kind-icon">IRect</a></li>
-								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iresourcedictionary.html" class="tsd-kind-icon">IResource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iresourcemanagerdata.html" class="tsd-kind-icon">IResource<wbr>Manager<wbr>Data</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iresourcemanagermanifest.html" class="tsd-kind-icon">IResource<wbr>Manager<wbr>Manifest</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iresourcemanifest.html" class="tsd-kind-icon">IResource<wbr>Manifest</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/irootdictionary.html" class="tsd-kind-icon">IRoot<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/isize.html" class="tsd-kind-icon">ISize</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isounddictionary.html" class="tsd-kind-icon">ISound<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isoundloaderoption.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Option</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isoundloaderresourcedictionary.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isoundloadertargetdictionary.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isoundmanifesttargetdictionary.html" class="tsd-kind-icon">ISound<wbr>Manifest<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetjson.html" class="tsd-kind-icon">ISpritesheet<wbr>Json</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetjsonmanifestdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Json<wbr>Manifest<wbr>Dictionary</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/ispritesheeturimanifestdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Uri<wbr>Manifest<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetloaderjsontargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Json<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetloaderoption.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Option</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetloaderresourcedictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetloadertargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetloaderurltargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Url<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ispritesheetmanifesttargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Manifest<wbr>Target<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/itaskdata.html" class="tsd-kind-icon">ITask<wbr>Data</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itexturedictionary.html" class="tsd-kind-icon">ITexture<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itextureloaderoption.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Option</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itextureloaderresourcedictionary.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Resource<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itextureloadertargetdictionary.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Target<wbr>Dictionary</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itexturemanifesttargetdictionary.html" class="tsd-kind-icon">ITexture<wbr>Manifest<wbr>Target<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ivariabledictionary.html" class="tsd-kind-icon">IVariable<wbr>Dictionary</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ivertical.html" class="tsd-kind-icon">IVertical</a></li>
@@ -145,17 +166,16 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias"><a href="modules.html#tautoadjust" class="tsd-kind-icon">TAuto<wbr>Adjust</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#timageloaderelementtarget" class="tsd-kind-icon">TImage<wbr>Loader<wbr>Element<wbr>Target</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#timageloadertarget" class="tsd-kind-icon">TImage<wbr>Loader<wbr>Target</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Functions</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-function"><a href="modules.html#loadimageasync" class="tsd-kind-icon">load<wbr>Image<wbr>Async</a></li>
-								<li class="tsd-kind-function"><a href="modules.html#loadimagefromelementasync" class="tsd-kind-icon">load<wbr>Image<wbr>From<wbr>Element<wbr>Async</a></li>
-								<li class="tsd-kind-function"><a href="modules.html#resolvepath" class="tsd-kind-icon">resolve<wbr>Path</a></li>
-								<li class="tsd-kind-function"><a href="modules.html#resolvequery" class="tsd-kind-icon">resolve<wbr>Query</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tjsonloaderrawresource" class="tsd-kind-icon">TJson<wbr>Loader<wbr>Raw<wbr>Resource</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tjsonloadertarget" class="tsd-kind-icon">TJson<wbr>Loader<wbr>Target</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tloaderresourceversion" class="tsd-kind-icon">TLoader<wbr>Resource<wbr>Version</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tsoundloaderrawresource" class="tsd-kind-icon">TSound<wbr>Loader<wbr>Raw<wbr>Resource</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tsoundloadertarget" class="tsd-kind-icon">TSound<wbr>Loader<wbr>Target</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tspritesheetloaderrawresource" class="tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Raw<wbr>Resource</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tspritesheetloadertarget" class="tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Target</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#ttextureloaderelementtarget" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Element<wbr>Target</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#ttextureloaderrawresource" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Raw<wbr>Resource</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#ttextureloadertarget" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Target</a></li>
 							</ul>
 						</section>
 					</div>
@@ -184,133 +204,104 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="timageloaderelementtarget" class="tsd-anchor"></a>
-					<h3>TImage<wbr>Loader<wbr>Element<wbr>Target</h3>
-					<div class="tsd-signature tsd-kind-icon">TImage<wbr>Loader<wbr>Element<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLVideoElement</span></div>
+					<a name="tjsonloaderrawresource" class="tsd-anchor"></a>
+					<h3>TJson<wbr>Loader<wbr>Raw<wbr>Resource</h3>
+					<div class="tsd-signature tsd-kind-icon">TJson<wbr>Loader<wbr>Raw<wbr>Resource<span class="tsd-signature-symbol">:</span> <a href="interfaces/ijsondata.html" class="tsd-signature-type" data-tsd-kind="Interface">IJsonData</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/modules/ImageLoader.ts:4</li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/JsonLoader.ts#L10">src/modules/loader/JsonLoader.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="timageloadertarget" class="tsd-anchor"></a>
-					<h3>TImage<wbr>Loader<wbr>Target</h3>
-					<div class="tsd-signature tsd-kind-icon">TImage<wbr>Loader<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="modules.html#timageloaderelementtarget" class="tsd-signature-type" data-tsd-kind="Type alias">TImageLoaderElementTarget</a></div>
+					<a name="tjsonloadertarget" class="tsd-anchor"></a>
+					<h3>TJson<wbr>Loader<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">TJson<wbr>Loader<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/modules/ImageLoader.ts:6</li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/JsonLoader.ts#L18">src/modules/loader/JsonLoader.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="loadimageasync" class="tsd-anchor"></a>
-					<h3>load<wbr>Image<wbr>Async</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>Image<wbr>Async<span class="tsd-signature-symbol">(</span>manifest<span class="tsd-signature-symbol">: </span><a href="interfaces/ipremanifest.html" class="tsd-signature-type" data-tsd-kind="Interface">IPreManifest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/iloadedresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Texture</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentImageManifest.ts#L162">src/modules/ContentImageManifest.ts:162</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>manifest: <a href="interfaces/ipremanifest.html" class="tsd-signature-type" data-tsd-kind="Interface">IPreManifest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/iloadedresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Texture</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tloaderresourceversion" class="tsd-anchor"></a>
+					<h3>TLoader<wbr>Resource<wbr>Version</h3>
+					<div class="tsd-signature tsd-kind-icon">TLoader<wbr>Resource<wbr>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L24">src/modules/loader/LoaderBase.ts:24</a></li>
+						</ul>
+					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="loadimagefromelementasync" class="tsd-anchor"></a>
-					<h3>load<wbr>Image<wbr>From<wbr>Element<wbr>Async</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>Image<wbr>From<wbr>Element<wbr>Async<span class="tsd-signature-symbol">(</span>manifest<span class="tsd-signature-symbol">: </span><a href="interfaces/ipremanifest.html" class="tsd-signature-type" data-tsd-kind="Interface">IPreManifest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">&gt;</span>, version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/iloadedresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Texture</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentImageManifest.ts#L117">src/modules/ContentImageManifest.ts:117</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>manifest: <a href="interfaces/ipremanifest.html" class="tsd-signature-type" data-tsd-kind="Interface">IPreManifest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-								<li>
-									<h5>version: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/iloadedresource.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoadedResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Texture</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tsoundloaderrawresource" class="tsd-anchor"></a>
+					<h3>TSound<wbr>Loader<wbr>Raw<wbr>Resource</h3>
+					<div class="tsd-signature tsd-kind-icon">TSound<wbr>Loader<wbr>Raw<wbr>Resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Howl</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/SoundLoader.ts#L4">src/modules/loader/SoundLoader.ts:4</a></li>
+						</ul>
+					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="resolvepath" class="tsd-anchor"></a>
-					<h3>resolve<wbr>Path</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">resolve<wbr>Path<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, basepath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L45">src/modules/ContentManifestBase.ts:45</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>path: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>basepath: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tsoundloadertarget" class="tsd-anchor"></a>
+					<h3>TSound<wbr>Loader<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">TSound<wbr>Loader<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/SoundLoader.ts#L13">src/modules/loader/SoundLoader.ts:13</a></li>
+						</ul>
+					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="resolvequery" class="tsd-anchor"></a>
-					<h3>resolve<wbr>Query</h3>
-					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">resolve<wbr>Query<span class="tsd-signature-symbol">(</span>uri<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, queries<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/ContentManifestBase.ts#L53">src/modules/ContentManifestBase.ts:53</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>uri: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>queries: <span class="tsd-signature-symbol">{}</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-index-signature">
-											<h5><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tspritesheetloaderrawresource" class="tsd-anchor"></a>
+					<h3>TSpritesheet<wbr>Loader<wbr>Raw<wbr>Resource</h3>
+					<div class="tsd-signature tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Raw<wbr>Resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PIXI.ITextureDictionary</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/SpritesheetLoader.ts#L6">src/modules/loader/SpritesheetLoader.ts:6</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tspritesheetloadertarget" class="tsd-anchor"></a>
+					<h3>TSpritesheet<wbr>Loader<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/ispritesheetjson.html" class="tsd-signature-type" data-tsd-kind="Interface">ISpritesheetJson</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/SpritesheetLoader.ts#L31">src/modules/loader/SpritesheetLoader.ts:31</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="ttextureloaderelementtarget" class="tsd-anchor"></a>
+					<h3>TTexture<wbr>Loader<wbr>Element<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">TTexture<wbr>Loader<wbr>Element<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLVideoElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/TextureLoader.ts#L21">src/modules/loader/TextureLoader.ts:21</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="ttextureloaderrawresource" class="tsd-anchor"></a>
+					<h3>TTexture<wbr>Loader<wbr>Raw<wbr>Resource</h3>
+					<div class="tsd-signature tsd-kind-icon">TTexture<wbr>Loader<wbr>Raw<wbr>Resource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PIXI.Texture</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/TextureLoader.ts#L4">src/modules/loader/TextureLoader.ts:4</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="ttextureloadertarget" class="tsd-anchor"></a>
+					<h3>TTexture<wbr>Loader<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">TTexture<wbr>Loader<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="modules.html#ttextureloaderelementtarget" class="tsd-signature-type" data-tsd-kind="Type alias">TTextureLoaderElementTarget</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/TextureLoader.ts#L23">src/modules/loader/TextureLoader.ts:23</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -321,7 +312,7 @@
 						<a href="modules.html">Exports</a>
 					</li>
 					<li class=" tsd-kind-namespace">
-						<a href="modules/hoge.html">hoge</a>
+						<a href="modules/utils.html">utils</a>
 					</li>
 				</ul>
 			</nav>
@@ -340,28 +331,58 @@
 						<a href="classes/contentdeliver.html" class="tsd-kind-icon">Content<wbr>Deliver</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/contentimagemanifest.html" class="tsd-kind-icon">Content<wbr>Image<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="classes/contentmanifestbase.html" class="tsd-kind-icon">Content<wbr>Manifest<wbr>Base</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/contentsoundmanifest.html" class="tsd-kind-icon">Content<wbr>Sound<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/contentspritesheetmanifest.html" class="tsd-kind-icon">Content<wbr>Spritesheet<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/emitter.html" class="tsd-kind-icon">Emitter</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/imageloader.html" class="tsd-kind-icon">Image<wbr>Loader</a>
+						<a href="classes/jsonloader.html" class="tsd-kind-icon">Json<wbr>Loader</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/jsonloaderresource.html" class="tsd-kind-icon">Json<wbr>Loader<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/jsonmanifest.html" class="tsd-kind-icon">Json<wbr>Manifest</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/layer.html" class="tsd-kind-icon">Layer</a>
 					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/loaderbase.html" class="tsd-kind-icon">Loader<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/loaderresource.html" class="tsd-kind-icon">Loader<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/manifestbase.html" class="tsd-kind-icon">Manifest<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/soundloader.html" class="tsd-kind-icon">Sound<wbr>Loader</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/soundloaderresource.html" class="tsd-kind-icon">Sound<wbr>Loader<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/soundmanifest.html" class="tsd-kind-icon">Sound<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/spritesheetloader.html" class="tsd-kind-icon">Spritesheet<wbr>Loader</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/spritesheetloaderresource.html" class="tsd-kind-icon">Spritesheet<wbr>Loader<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/spritesheetmanifest.html" class="tsd-kind-icon">Spritesheet<wbr>Manifest</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/task.html" class="tsd-kind-icon">Task</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/textureloader.html" class="tsd-kind-icon">Texture<wbr>Loader</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/textureloaderresource.html" class="tsd-kind-icon">Texture<wbr>Loader<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/texturemanifest.html" class="tsd-kind-icon">Texture<wbr>Manifest</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/iadjustdelegate.html" class="tsd-kind-icon">IAdjust<wbr>Delegate</a>
@@ -400,9 +421,6 @@
 						<a href="interfaces/icontentlibrary.html" class="tsd-kind-icon">IContent<wbr>Library</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/icontentmanifestoption.html" class="tsd-kind-icon">IContent<wbr>Manifest<wbr>Option</a>
-					</li>
-					<li class=" tsd-kind-interface">
 						<a href="interfaces/icontentmanifests.html" class="tsd-kind-icon">IContent<wbr>Manifests</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -421,70 +439,61 @@
 						<a href="interfaces/ihorizontal.html" class="tsd-kind-icon">IHorizontal</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageelementmanifest.html" class="tsd-kind-icon">IImage<wbr>Element<wbr>Manifest</a>
+						<a href="interfaces/ijsondata.html" class="tsd-kind-icon">IJson<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageelementmanifestdictionary.html" class="tsd-kind-icon">IImage<wbr>Element<wbr>Manifest<wbr>Dictionary</a>
+						<a href="interfaces/ijsondictionary.html" class="tsd-kind-icon">IJson<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageloaderelementmanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Element<wbr>Manifest</a>
+						<a href="interfaces/ijsonloaderoption.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageloadermanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Manifest</a>
+						<a href="interfaces/ijsonloaderresourcedictionary.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Resource<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageloaderresourcedictionary.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Resource<wbr>Dictionary</a>
+						<a href="interfaces/ijsonloadertargetdictionary.html" class="tsd-kind-icon">IJson<wbr>Loader<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageloaderurimanifest.html" class="tsd-kind-icon">IImage<wbr>Loader<wbr>Uri<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/iimageurimanifestdictionary.html" class="tsd-kind-icon">IImage<wbr>Uri<wbr>Manifest<wbr>Dictionary</a>
+						<a href="interfaces/ijsonmanifesttargetdictionary.html" class="tsd-kind-icon">IJson<wbr>Manifest<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/ilayerdictionary.html" class="tsd-kind-icon">ILayer<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/iloadedimageresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Image<wbr>Resource<wbr>Dictionary</a>
+						<a href="interfaces/iloaderoption.html" class="tsd-kind-icon">ILoader<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/iloadedresource.html" class="tsd-kind-icon">ILoaded<wbr>Resource</a>
+						<a href="interfaces/iloaderresourcedictionary.html" class="tsd-kind-icon">ILoader<wbr>Resource<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/iloadedresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Resource<wbr>Dictionary</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/iloadedsoundresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Sound<wbr>Resource<wbr>Dictionary</a>
-					</li>
-					<li class=" tsd-kind-interface">
-						<a href="interfaces/iloadedspritesheetresourcedictionary.html" class="tsd-kind-icon">ILoaded<wbr>Spritesheet<wbr>Resource<wbr>Dictionary</a>
+						<a href="interfaces/iloadertargetdictionary.html" class="tsd-kind-icon">ILoader<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/imanifestclass.html" class="tsd-kind-icon">IManifest<wbr>Class</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/imanifestoption.html" class="tsd-kind-icon">IManifest<wbr>Option</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/imanifestdictionary.html" class="tsd-kind-icon">IManifest<wbr>Dictionary</a>
+						<a href="interfaces/imanifesttargetdictionary.html" class="tsd-kind-icon">IManifest<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/iposition.html" class="tsd-kind-icon">IPosition</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/ipostmanifest.html" class="tsd-kind-icon">IPost<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/ipostmanifestdictionary.html" class="tsd-kind-icon">IPost<wbr>Manifest<wbr>Dictionary</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/ipremanifest.html" class="tsd-kind-icon">IPre<wbr>Manifest</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/ipremanifestdictionary.html" class="tsd-kind-icon">IPre<wbr>Manifest<wbr>Dictionary</a>
+						<a href="interfaces/irawresourcedictionary.html" class="tsd-kind-icon">IRaw<wbr>Resource<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/irect.html" class="tsd-kind-icon">IRect</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
-						<a href="interfaces/iresourcedictionary.html" class="tsd-kind-icon">IResource<wbr>Dictionary</a>
+						<a href="interfaces/iresourcemanagerdata.html" class="tsd-kind-icon">IResource<wbr>Manager<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/iresourcemanagermanifest.html" class="tsd-kind-icon">IResource<wbr>Manager<wbr>Manifest</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/iresourcemanifest.html" class="tsd-kind-icon">IResource<wbr>Manifest</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/irootdictionary.html" class="tsd-kind-icon">IRoot<wbr>Dictionary</a>
@@ -493,16 +502,61 @@
 						<a href="interfaces/isize.html" class="tsd-kind-icon">ISize</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/isounddictionary.html" class="tsd-kind-icon">ISound<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isoundloaderoption.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isoundloaderresourcedictionary.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Resource<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isoundloadertargetdictionary.html" class="tsd-kind-icon">ISound<wbr>Loader<wbr>Target<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isoundmanifesttargetdictionary.html" class="tsd-kind-icon">ISound<wbr>Manifest<wbr>Target<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ispritesheetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/ispritesheetjson.html" class="tsd-kind-icon">ISpritesheet<wbr>Json</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/ispritesheetjsonmanifestdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Json<wbr>Manifest<wbr>Dictionary</a>
+						<a href="interfaces/ispritesheetloaderjsontargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Json<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/ispritesheeturimanifestdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Uri<wbr>Manifest<wbr>Dictionary</a>
+						<a href="interfaces/ispritesheetloaderoption.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ispritesheetloaderresourcedictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Resource<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ispritesheetloadertargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Target<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ispritesheetloaderurltargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Loader<wbr>Url<wbr>Target<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ispritesheetmanifesttargetdictionary.html" class="tsd-kind-icon">ISpritesheet<wbr>Manifest<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/itaskdata.html" class="tsd-kind-icon">ITask<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itexturedictionary.html" class="tsd-kind-icon">ITexture<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itextureloaderoption.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itextureloaderresourcedictionary.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Resource<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itextureloadertargetdictionary.html" class="tsd-kind-icon">ITexture<wbr>Loader<wbr>Target<wbr>Dictionary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itexturemanifesttargetdictionary.html" class="tsd-kind-icon">ITexture<wbr>Manifest<wbr>Target<wbr>Dictionary</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/itickerdata.html" class="tsd-kind-icon">ITicker<wbr>Data</a>
@@ -523,22 +577,34 @@
 						<a href="modules.html#tautoadjuster" class="tsd-kind-icon">TAuto<wbr>Adjuster</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#timageloaderelementtarget" class="tsd-kind-icon">TImage<wbr>Loader<wbr>Element<wbr>Target</a>
+						<a href="modules.html#tjsonloaderrawresource" class="tsd-kind-icon">TJson<wbr>Loader<wbr>Raw<wbr>Resource</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#timageloadertarget" class="tsd-kind-icon">TImage<wbr>Loader<wbr>Target</a>
+						<a href="modules.html#tjsonloadertarget" class="tsd-kind-icon">TJson<wbr>Loader<wbr>Target</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#loadimageasync" class="tsd-kind-icon">load<wbr>Image<wbr>Async</a>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tloaderresourceversion" class="tsd-kind-icon">TLoader<wbr>Resource<wbr>Version</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#loadimagefromelementasync" class="tsd-kind-icon">load<wbr>Image<wbr>From<wbr>Element<wbr>Async</a>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tsoundloaderrawresource" class="tsd-kind-icon">TSound<wbr>Loader<wbr>Raw<wbr>Resource</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#resolvepath" class="tsd-kind-icon">resolve<wbr>Path</a>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tsoundloadertarget" class="tsd-kind-icon">TSound<wbr>Loader<wbr>Target</a>
 					</li>
-					<li class=" tsd-kind-function">
-						<a href="modules.html#resolvequery" class="tsd-kind-icon">resolve<wbr>Query</a>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tspritesheetloaderrawresource" class="tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Raw<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tspritesheetloadertarget" class="tsd-kind-icon">TSpritesheet<wbr>Loader<wbr>Target</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ttextureloaderelementtarget" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Element<wbr>Target</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ttextureloaderrawresource" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Raw<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ttextureloadertarget" class="tsd-kind-icon">TTexture<wbr>Loader<wbr>Target</a>
 					</li>
 				</ul>
 			</nav>

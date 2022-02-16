@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Content } from './Content';
+import { Content } from './content/Content';
 import { Container } from './Container';
 import { Emitter } from './Emitter';
 //import { TaskManager } from './TaskManager';

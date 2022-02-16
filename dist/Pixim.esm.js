@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.12.2
+ * @tawaship/pixim.js - v1.13.0-a
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import { Container as Container$1, Application as Application$1, utils, BaseTexture, Texture, Loader, Spritesheet } from 'pixi.js';
+import { Container as Container$1, Application as Application$1, utils, Texture, BaseTexture, Loader, Spritesheet } from 'pixi.js';
 import { Emitter as Emitter$1 } from '@tawaship/emitter';
 import { Howl } from 'howler';
 
@@ -644,12 +644,64 @@ class Application extends Emitter {
     }
 }
 
+class ManifestBase {
+    constructor() {
+        this._data = {};
+        this._resources = {};
+    }
+    /**
+     * Register targetss.
+     */
+    add(targets, options = {}) {
+        const unrequired = options.unrequired || false;
+        for (let i in targets) {
+            this._data[i] = {
+                target: targets[i],
+                unrequired
+            };
+        }
+    }
+    /**
+     * Get resources.
+     */
+    getAsync(options) {
+        if (Object.keys(this._data).length === 0) {
+            return Promise.resolve({});
+        }
+        const res = {};
+        const targets = {};
+        for (let i in this._data) {
+            targets[i] = this._data[i].target;
+        }
+        return this._loadAsync(targets, options)
+            .then(resources => {
+            for (let i in resources) {
+                const resource = resources[i];
+                if (resource.error && !this._data[i].unrequired) {
+                    throw resource.error;
+                }
+            }
+            for (let i in resources) {
+                const resource = resources[i];
+                this._resources[i] = resource;
+                res[i] = resource.data;
+            }
+            return res;
+        });
+    }
+    destroyResources() {
+        for (let i in this._resources) {
+            this._resources[i].destroy();
+        }
+    }
+}
+
 function resolvePath(path, basepath) {
     if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
         return path;
     }
     else {
-        return utils.url.resolve(basepath, path);
+        return utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
     }
 }
 function resolveQuery(uri, queries) {
@@ -674,499 +726,375 @@ function resolveQuery(uri, queries) {
         return `${t[0]}?${q.join('&')}`;
     }
 }
-class ContentManifestBase {
-    constructor() {
-        this._manifests = {};
+
+var index = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    resolvePath: resolvePath,
+    resolveQuery: resolveQuery
+});
+
+class LoaderResource {
+    constructor(data, error) {
+        this._data = data;
+        this._error = error;
     }
-    /**
-     * Register manifests.
-     *
-     * @param manifests Defined manifests.
-     * @param option Manifest option data.
-     */
-    add(manifests, options = {}) {
-        const unrequired = options.unrequired || false;
-        for (let i in manifests) {
-            this._manifests[i] = {
-                data: manifests[i],
-                unrequired
-            };
-        }
+    get data() {
+        return this._data;
     }
-    /**
-     * Get resources.
-     *
-     * @param basepath Basement directory path of assets.
-     */
-    getAsync(basepath, version, useCache) {
-        const resources = {};
-        if (Object.keys(this._manifests).length === 0) {
-            return Promise.resolve(resources);
-        }
-        return this._loadAsync(basepath, version, useCache)
-            .then((res) => {
-            for (let i in res) {
-                resources[i] = res[i].resource;
-            }
-            return resources;
-        });
+    get error() {
+        return this._error;
     }
-    /**
-     * Normalize asset path.
-     */
-    _resolvePath(path, basepath) {
-        return resolvePath(path, basepath);
+}
+class LoaderBase {
+    constructor(options = {}) {
+        this._options = options;
     }
-    /**
-     * Normalize uri query.
-     */
-    _resolveQuery(uri, queries) {
-        return resolveQuery(uri, queries);
+    _resolveBasepath(basepath) {
+        return typeof basepath === 'string' ? basepath : (this._options.basepath || '');
+    }
+    _resolveVersion(version) {
+        return (typeof version === 'string' || typeof version === 'number') ? version : (this._options.version || '');
+    }
+    _resolveUseCache(useCache) {
+        return typeof useCache === 'boolean' ? useCache : (this._options.useCache || false);
+    }
+    _resolveUrl(url, options = {}) {
+        const preUri = resolvePath(url, this._resolveBasepath(options.basepath));
+        const version = this._resolveVersion(options.version);
+        const uri = version
+            ? resolveQuery(preUri, { _fv: version })
+            : preUri;
+        return uri;
     }
 }
 
-/**
- * @ignore
- */
-function loadImagesFromUrisAsync(manifests, basepath, version, useCache) {
-    if (Object.keys(manifests).length === 0) {
-        return Promise.resolve({});
+class TextureLoaderResource extends LoaderResource {
+    destroy() {
+        TextureLoaderResource.removeCache(this._data);
+        this._data.destroy(true);
     }
-    const loader = new Loader();
-    if (version) {
-        loader.defaultQueryString = `_fv=${version}`;
-    }
-    const res = {};
-    for (let i in manifests) {
-        const manifest = manifests[i];
-        const uri = resolvePath(manifest.data, basepath);
-        /*
-        const uri =
-            version
-            ? resolveQuery(preUrl, { _fv: version })
-            : preUrl;
-        */
-        loader.add(i, uri, {
-            crossOrigin: true
-        });
-    }
-    if (!useCache) {
-        loader.use((resource, next) => {
-            if (resource.texture) {
-                Texture.removeFromCache(resource.texture);
-                if (resource.texture.baseTexture) {
-                    BaseTexture.removeFromCache(resource.texture.baseTexture);
-                }
-            }
-            next();
-        });
-    }
-    return new Promise((resolve, reject) => {
-        loader.load((loader, resources) => {
-            for (let i in resources) {
-                const resource = resources[i];
-                if (!resource) {
-                    reject(i);
-                    return;
-                }
-                if (resource.error) {
-                    if (!manifests[i].unrequired) {
-                        reject(i);
-                        return;
-                    }
-                }
-                res[i] = {
-                    resource: resource.texture,
-                    error: !!resource.error
-                };
-            }
-            resolve(res);
-        });
-    });
-}
-/**
- * @ignore
- */
-function loadImagesFromElementsAsync(manifests, version) {
-    if (Object.keys(manifests).length === 0) {
-        return Promise.resolve({});
-    }
-    const res = {};
-    const promises = [];
-    for (let i in manifests) {
-        promises.push(loadImageFromElementAsync(manifests[i], version)
-            .then(resource => {
-            res[i] = resource;
-        })
-            .catch(() => {
-            throw i;
-        }));
-    }
-    return Promise.all(promises)
-        .then(() => {
-        return res;
-    });
-}
-function loadImageFromElementAsync(manifest, version) {
-    const element = manifest.data;
-    manifest.data.crossOrigin = 'anonymous';
-    //const preUrl = resolvePath(manifest.data.src, basepath);
-    const preUri = manifest.data.src;
-    const uri = version
-        ? resolveQuery(preUri, { _fv: version })
-        : preUri;
-    manifest.data.src = uri;
-    return loadImageAsync(manifest);
-}
-/**
- * @ognore
- */
-function loadImagesFromDataUrisAsync(manifests) {
-    if (Object.keys(manifests).length === 0) {
-        return Promise.resolve({});
-    }
-    const res = {};
-    const promises = [];
-    for (let i in manifests) {
-        promises.push(loadImageAsync(manifests[i])
-            .then(resource => {
-            res[i] = resource;
-        })
-            .catch(() => {
-            throw i;
-        }));
-    }
-    return Promise.all(promises)
-        .then(() => {
-        return res;
-    });
-}
-function loadImageAsync(manifest) {
-    return new Promise((resolve, reject) => {
-        const bt = BaseTexture.from(manifest.data);
-        if (bt.valid) {
-            resolve({
-                resource: new Texture(bt),
-                error: false
-            });
-            return;
+    static removeCache(texture) {
+        Texture.removeFromCache(texture);
+        if (texture.baseTexture) {
+            BaseTexture.removeFromCache(texture.baseTexture);
         }
-        bt.on('loaded', (baseTexture) => {
-            resolve({
-                resource: new Texture(baseTexture),
-                error: false
-            });
+    }
+}
+class TextureLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
+            return this._loadFromElementAsync(target, options);
+        }
+        else if (target.indexOf('data:') === 0) {
+            return this._loadFromDataUriAsync(target, options);
+        }
+        else {
+            return this._loadFromUrlAsync(target, options);
+        }
+    }
+    loadAllAsync(targets, options = {}) {
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve({});
+        }
+        const promises = [];
+        const res = {};
+        for (let i in targets) {
+            promises.push(this.loadAsync(targets[i], options)
+                .then(resource => {
+                res[i] = resource;
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            return res;
         });
-        bt.on('error', (baseTexture, e) => {
-            if (manifest.unrequired) {
-                resolve({
-                    resource: new Texture(baseTexture),
-                    error: true
-                });
+    }
+    _loadFromUrlAsync(url, options = {}) {
+        return this._loadAsync(this._resolveUrl(url, options), options);
+    }
+    _loadFromElementAsync(element, options = {}) {
+        element.crossOrigin = 'anonymous';
+        element.src = this._resolveUrl(element.src, options);
+        return this._loadAsync(element);
+    }
+    _loadFromDataUriAsync(dataUri, options = {}) {
+        return this._loadAsync(dataUri, options);
+    }
+    _loadAsync(target, options = {}) {
+        const useCache = this._resolveUseCache(options.useCache);
+        return new Promise(resolve => {
+            const bt = BaseTexture.from(target);
+            if (bt.valid) {
+                if (!useCache) {
+                    BaseTexture.removeFromCache(bt);
+                }
+                resolve(new TextureLoaderResource(new Texture(bt), null));
                 return;
             }
-            reject();
+            bt.on('loaded', (baseTexture) => {
+                if (!useCache) {
+                    BaseTexture.removeFromCache(baseTexture);
+                }
+                resolve(new TextureLoaderResource(new Texture(baseTexture), null));
+            });
+            bt.on('error', (baseTexture, e) => {
+                BaseTexture.removeFromCache(baseTexture);
+                resolve(new TextureLoaderResource(new Texture(baseTexture), e));
+            });
         });
-    });
+    }
 }
-class ContentImageManifest extends ContentManifestBase {
-    /**
-     * Load image resources.
-     *
-     * @override
-     */
-    _loadAsync(basepath, version, useCache) {
-        const manifests = this._manifests;
-        /*
+
+class TextureManifest extends ManifestBase {
+    _loadAsync(targets, options = {}) {
+        const loader = new TextureLoader(options);
+        return loader.loadAllAsync(targets);
+    }
+}
+
+class SpritesheetLoaderResource extends LoaderResource {
+    destroy() {
+        for (let i in this._data) {
+            TextureLoaderResource.removeCache(this._data[i]);
+        }
+        for (let i in this._data) {
+            this._data[i].destroy(true);
+        }
+    }
+}
+/**
+ * @ignore
+ */
+const KEY_SINGLE_SPRITESHEET = '--single-spritesheet';
+class SpritesheetLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        if (typeof target === 'string') {
+            return this._loadFromUrlsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
+                .then(resources => {
+                return resources[KEY_SINGLE_SPRITESHEET];
+            });
+        }
+        else {
+            return this._loadFromJsonsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
+                .then(resources => {
+                return resources[KEY_SINGLE_SPRITESHEET];
+            });
+        }
+    }
+    loadAllAsync(targets, options = {}) {
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve({});
+        }
+        const urls = {};
+        const jsons = {};
+        for (let i in targets) {
+            const target = targets[i];
+            if (typeof target === 'string') {
+                urls[i] = target;
+            }
+            else {
+                jsons[i] = target;
+            }
+        }
+        return Promise.all([
+            this._loadFromUrlsAsync(urls, options),
+            this._loadFromJsonsAsync(jsons, options)
+        ])
+            .then(resolvers => {
+            return Object.assign({}, ...resolvers);
+        });
+    }
+    _loadFromUrlsAsync(targets, options = {}) {
+        const res = {};
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve(res);
+        }
+        const loader = new Loader();
+        const version = this._resolveVersion(options.version);
         if (version) {
             loader.defaultQueryString = `_fv=${version}`;
         }
-        */
-        const elements = {};
-        const dataUris = {};
-        const uris = {};
-        for (let i in manifests) {
-            const manifest = manifests[i];
-            if (manifest.data instanceof HTMLImageElement) {
-                elements[i] = {
-                    data: manifest.data,
-                    unrequired: manifest.unrequired
-                };
-            }
-            else if (typeof manifest.data === 'string') {
-                if (manifest.data.indexOf('data:') === 0) {
-                    dataUris[i] = {
-                        data: manifest.data,
-                        unrequired: manifest.unrequired
-                    };
-                }
-                else {
-                    uris[i] = {
-                        data: manifest.data,
-                        unrequired: manifest.unrequired
-                    };
-                }
-            }
+        const basepath = this._resolveBasepath(options.basepath);
+        for (let i in targets) {
+            const target = targets[i];
+            const uri = resolvePath(target, basepath);
+            loader.add(i, uri, {
+                crossOrigin: true
+            });
         }
-        return Promise.all([
-            loadImagesFromElementsAsync(elements, version),
-            loadImagesFromDataUrisAsync(dataUris),
-            loadImagesFromUrisAsync(uris, basepath, version, useCache)
-        ])
-            .then((resolvers) => {
-            return Object.assign({}, ...resolvers);
-        })
-            .catch((key) => {
-            throw new Error(`Image: '${key}' cannot load.`);
-        });
-    }
-    /**
-     * Destroy resources.
-     *
-     * @override
-     */
-    destroyResources(resources) {
-    }
-}
-
-/**
- * @ignore
- */
-function loadSpritesheetsFromUrisAsync(manifests, basepath, version, useCache) {
-    if (Object.keys(manifests).length === 0) {
-        return Promise.resolve({});
-    }
-    const loader = new Loader();
-    if (version) {
-        loader.defaultQueryString = `_fv=${version}`;
-    }
-    const res = {};
-    for (let i in manifests) {
-        const manifest = manifests[i];
-        const uri = resolvePath(manifest.data, basepath);
-        /*
-        const uri =
-            version
-            ? resolveQuery(preUrl, { _fv: version })
-            : preUrl;
-        */
-        loader.add(i, uri, {
-            crossOrigin: true
-        });
-    }
-    if (!useCache) {
-        loader.use((resource, next) => {
-            if (resource.textures) {
-                for (let i in resource.textures) {
-                    const texture = resource.textures[i];
-                    if (!texture) {
+        const useCache = this._resolveUseCache(options.useCache);
+        if (!useCache) {
+            loader.use((resource, next) => {
+                if (resource.textures) {
+                    for (let i in resource.textures) {
+                        const texture = resource.textures[i];
+                        if (!texture) {
+                            continue;
+                        }
+                        TextureLoaderResource.removeCache(texture);
+                    }
+                }
+                if (resource.texture) {
+                    TextureLoaderResource.removeCache(resource.texture);
+                }
+                next();
+            });
+        }
+        return new Promise(resolve => {
+            loader.load((loader, resources) => {
+                for (let i in resources) {
+                    if (!targets[i]) {
                         continue;
                     }
-                    Texture.removeFromCache(texture);
-                    if (texture.baseTexture) {
-                        BaseTexture.removeFromCache(texture.baseTexture);
+                    const resource = resources[i];
+                    if (!resource) {
+                        res[i] = new SpritesheetLoaderResource({}, 'invalid json');
+                        continue;
                     }
+                    if (resource.error) {
+                        res[i] = new SpritesheetLoaderResource({}, resource.error);
+                        continue;
+                    }
+                    if (!resource.textures) {
+                        res[i] = new SpritesheetLoaderResource({}, 'invalid texture');
+                        continue;
+                    }
+                    res[i] = new SpritesheetLoaderResource(resource.textures, null);
                 }
-            }
-            if (resource.texture) {
-                Texture.removeFromCache(resource.texture);
-                if (resource.texture.baseTexture) {
-                    BaseTexture.removeFromCache(resource.texture.baseTexture);
-                }
-            }
-            next();
-        });
-    }
-    return new Promise((resolve, reject) => {
-        loader.load((loader, resources) => {
-            for (let i in resources) {
-                if (!manifests[i]) {
-                    continue;
-                }
-                const resource = resources[i];
-                if (!resource) {
-                    reject(i);
-                    return;
-                }
-                const textures = resource.textures || {};
-                if (resource.error && !manifests[i].unrequired) {
-                    reject(i);
-                    return;
-                }
-                res[i] = {
-                    resource: textures,
-                    error: !!resource.error
-                };
-            }
-            resolve(res);
-        });
-    });
-}
-/**
- * @ignore
- */
-function loadSpritesheetsFromJsonsAsync(manifests, basepath, version) {
-    if (Object.keys(manifests).length === 0) {
-        return Promise.resolve({});
-    }
-    const res = {};
-    const promises = [];
-    for (let i in manifests) {
-        const manifest = manifests[i];
-        const data = manifest.data.meta.image;
-        const unrequired = manifest.unrequired;
-        promises.push((() => {
-            if (data instanceof HTMLImageElement) {
-                return loadImageFromElementAsync({
-                    data,
-                    unrequired
-                }, version);
-            }
-            if (typeof data === 'string') {
-                if (data.indexOf('data:') === 0) {
-                    return loadImageAsync({
-                        data,
-                        unrequired
-                    });
-                }
-                const preUri = resolvePath(data, basepath);
-                const uri = version
-                    ? resolveQuery(preUri, { _fv: version })
-                    : preUri;
-                return loadImageAsync({
-                    data: uri,
-                    unrequired
-                });
-            }
-            return Promise.reject();
-        })()
-            .then(resource => {
-            const ss = new Spritesheet(resource.resource, manifest.data);
-            return new Promise(resolve => {
-                ss.parse(() => {
-                    res[i] = {
-                        resource: ss.textures,
-                        error: false
-                    };
-                    resolve();
-                });
+                resolve(res);
             });
-        })
-            .catch(() => {
-            throw i;
-        }));
-    }
-    return Promise.all(promises)
-        .then(() => {
-        return res;
-    });
-}
-class ContentSpritesheetManifest extends ContentManifestBase {
-    /**
-     * Load image resources.
-     *
-     * @override
-     */
-    _loadAsync(basepath, version, useCache) {
-        const manifests = this._manifests;
-        const jsons = {};
-        const uris = {};
-        for (let i in manifests) {
-            const manifest = manifests[i];
-            if (typeof manifest.data === 'object') {
-                jsons[i] = {
-                    data: manifest.data,
-                    unrequired: manifest.unrequired
-                };
-            }
-            else if (typeof manifest.data === 'string') {
-                uris[i] = {
-                    data: manifest.data,
-                    unrequired: manifest.unrequired
-                };
-            }
-        }
-        return Promise.all([
-            loadSpritesheetsFromJsonsAsync(jsons, basepath, version),
-            loadSpritesheetsFromUrisAsync(uris, basepath, version, useCache)
-        ])
-            .then((resolvers) => {
-            return Object.assign({}, ...resolvers);
-        })
-            .catch((key) => {
-            throw new Error(`Spritesheet: '${key}' cannot load.`);
         });
     }
-    /**
-     * Destroy resources.
-     *
-     * @override
-     */
-    destroyResources(resources) {
+    _loadFromJsonsAsync(targets, options = {}) {
+        const res = {};
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve(res);
+        }
+        const useCache = this._resolveUseCache(options.useCache);
+        const promises = [];
+        const loader = new TextureLoader(options);
+        for (let i in targets) {
+            const target = targets[i];
+            promises.push(loader.loadAsync(target.meta.image, options)
+                .then(resource => {
+                if (resource.error) {
+                    res[i] = new SpritesheetLoaderResource({}, resource.error);
+                    return Promise.resolve();
+                }
+                const ss = new Spritesheet(resource.data, target);
+                return new Promise(resolve => {
+                    ss.parse(e => {
+                        res[i] = new SpritesheetLoaderResource(ss.textures, null);
+                        if (!useCache) {
+                            for (let i in ss.textures) {
+                                TextureLoaderResource.removeCache(ss.textures[i]);
+                            }
+                        }
+                        resolve();
+                    });
+                });
+            })
+                .catch(e => {
+                res[i] = new SpritesheetLoaderResource({}, e);
+                return Promise.resolve();
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            return res;
+        });
     }
 }
 
-class ContentSoundManifest extends ContentManifestBase {
-    /**
-     * Load image resources.
-     *
-     * @override
-     */
-    _loadAsync(basepath, version, useCache) {
-        const manifests = this._manifests;
-        if (!Howl) {
-            return Promise.reject('You need "howler.js" to load sound asset.');
-        }
-        return new Promise((resolve, reject) => {
-            const res = {};
-            function loadedHandler(key, howl, error) {
-                res[key] = {
-                    resource: howl,
-                    error
-                };
-                if (++loadedCount < loadCount) {
-                    return;
+class SpritesheetManifest extends ManifestBase {
+    _loadAsync(targets, options = {}) {
+        const loader = new SpritesheetLoader(options);
+        return loader.loadAllAsync(targets);
+    }
+}
+
+class SoundLoaderResource extends LoaderResource {
+    destroy() {
+        this._data.stop();
+        this._data.unload();
+    }
+}
+class SoundLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        const url = this._resolveUrl(target, options);
+        return new Promise(resolve => {
+            const howl = new Howl({
+                src: url,
+                onload: () => {
+                    resolve(new SoundLoaderResource(howl, null));
+                },
+                onloaderror: (e) => {
+                    resolve(new SoundLoaderResource(howl, e));
                 }
-                resolve(res);
-            }
-            let loadCount = 0;
-            let loadedCount = 0;
-            for (let i in manifests) {
-                ++loadCount;
-            }
-            for (let i in manifests) {
-                const _i = i;
-                const manifest = manifests[_i];
-                const preUrl = this._resolvePath(manifest.data, basepath);
-                const url = version
-                    ? this._resolveQuery(preUrl, { _fv: version })
-                    : preUrl;
-                const howl = new Howl({
-                    src: url,
-                    onload: () => {
-                        loadedHandler(_i, howl, false);
-                    },
-                    onloaderror: () => {
-                        if (!manifest.unrequired) {
-                            reject(`Sound: '${_i}' cannot load.`);
-                            return;
-                        }
-                        loadedHandler(_i, howl, true);
-                    }
-                });
-            }
+            });
         });
     }
-    /**
-     * Destroy resources.
-     *
-     * @override
-     */
-    destroyResources(resources) {
-        for (let i in resources) {
-            resources[i].stop();
-            resources[i].unload();
+    loadAllAsync(targets, options = {}) {
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve({});
         }
+        const promises = [];
+        const res = {};
+        for (let i in targets) {
+            promises.push(this.loadAsync(targets[i], options)
+                .then(resource => {
+                res[i] = resource;
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            return res;
+        });
+    }
+}
+
+class SoundManifest extends ManifestBase {
+    _loadAsync(targets, options = {}) {
+        const loader = new SoundLoader(options);
+        return loader.loadAllAsync(targets);
+    }
+}
+
+class JsonLoaderResource extends LoaderResource {
+    destroy() {
+    }
+}
+class JsonLoader extends LoaderBase {
+    loadAsync(target, options = {}) {
+        const url = this._resolveUrl(target, options);
+        return fetch(url)
+            .then(res => res.json())
+            .then(json => new JsonLoaderResource(json, null))
+            .catch((e) => new JsonLoaderResource({}, e));
+    }
+    loadAllAsync(targets, options = {}) {
+        if (Object.keys(targets).length === 0) {
+            return Promise.resolve({});
+        }
+        const promises = [];
+        const res = {};
+        for (let i in targets) {
+            promises.push(this.loadAsync(targets[i], options)
+                .then(resource => {
+                res[i] = resource;
+            }));
+        }
+        return Promise.all(promises)
+            .then(() => {
+            return res;
+        });
+    }
+}
+
+class JsonManifest extends ManifestBase {
+    _loadAsync(targets, options = {}) {
+        const loader = new JsonLoader(options);
+        return loader.loadAllAsync(targets);
     }
 }
 
@@ -1249,7 +1177,7 @@ function createContentStatic() {
 const _manifests = {};
 class Content {
     constructor(options = {}, piximData = Content._piximData) {
-        const basepath = (options.basepath || '');
+        const basepath = options.basepath || '';
         if (typeof (options.version) !== 'object') {
             const version = {};
             const v = options.version || '';
@@ -1331,31 +1259,37 @@ class Content {
     /**
      * Define assets for class.
      */
-    static defineManifests(key, data, options = {}) {
+    static defineTargets(key, targets, options = {}) {
         if (!this._piximData.manifests[key]) {
             console.warn(`Manifest '${key}' is not registered.`);
             return this;
         }
-        this._piximData.manifests[key].add(data, options);
+        this._piximData.manifests[key].add(targets, options);
         return this;
     }
     /**
      * Define image assets for class.
      */
-    static defineImages(data, options = {}) {
-        return this.defineManifests('images', data, options);
+    static defineImages(targets, options = {}) {
+        return this.defineTargets('images', targets, options);
     }
     /**
      * Define spritesheet assets for class.
      */
-    static defineSpritesheets(data, options = {}) {
-        return this.defineManifests('spritesheets', data, options);
+    static defineSpritesheets(targets, options = {}) {
+        return this.defineTargets('spritesheets', targets, options);
     }
     /**
      * Define sound assets for class.
      */
-    static defineSounds(data, options = {}) {
-        return this.defineManifests('sounds', data, options);
+    static defineSounds(targets, options = {}) {
+        return this.defineTargets('sounds', targets, options);
+    }
+    /**
+     * Define json assets for class.
+     */
+    static defineJsons(targets, options = {}) {
+        return this.defineTargets('jsons', targets, options);
     }
     /**
      * Set the content settings.
@@ -1392,12 +1326,12 @@ class Content {
      *
      * @return Returns itself for the method chaining.
      */
-    addManifests(key, data, options = {}) {
+    addTargets(key, targets, options = {}) {
         if (!this._piximData.additionalManifests[key]) {
             console.warn(`Manifest '${key}' is not registered.`);
             return this;
         }
-        this._piximData.additionalManifests[key].add(data, options);
+        this._piximData.additionalManifests[key].add(targets, options);
         return this;
     }
     /**
@@ -1406,23 +1340,31 @@ class Content {
      * @return Returns itself for the method chaining.
      */
     addImages(data, options = {}) {
-        return this.addManifests('images', data, options);
+        return this.addTargets('images', data, options);
     }
     /**
      * Define spritesheet assets for instance.
      *
      * @return Returns itself for the method chaining.
      */
-    addSpritesheets(data, options = {}) {
-        return this.addManifests('spritesheets', data, options);
+    addSpritesheets(targets, options = {}) {
+        return this.addTargets('spritesheets', targets, options);
     }
     /**
      * Define sound assets for instance.
      *
      * @return Returns itself for the method chaining.
      */
-    addSounds(data, options = {}) {
-        return this.addManifests('sounds', data, options);
+    addSounds(targets, options = {}) {
+        return this.addTargets('sounds', targets, options);
+    }
+    /**
+     * Define json assets for instance.
+     *
+     * @return Returns itself for the method chaining.
+     */
+    addJsons(targets, options = {}) {
+        return this.addTargets('jsons', targets, options);
     }
     /**
      * Define valriables for instance.
@@ -1489,19 +1431,23 @@ class Content {
         const contentDeliverData = this._piximData.contentDeliverData;
         contentDeliverData.lib = {};
         contentDeliverData.vars = {};
-        const resources = contentDeliverData.resources;
         const manifests = this._piximData.manifests;
+        const additionalManifests = this._piximData.additionalManifests;
+        for (let i in manifests) {
+            manifests[i].destroyResources();
+        }
+        for (let i in additionalManifests) {
+            additionalManifests[i].destroyResources();
+        }
+        const resources = contentDeliverData.resources;
         for (let i in resources) {
-            if (i in manifests) {
-                manifests[i].destroyResources(resources[i]);
-            }
             resources[i] = {};
         }
     }
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;
-        const version = this._piximData.version;
-        const useCache = this._piximData.useCache;
+        const versions = this._piximData.version;
+        const useCaches = this._piximData.useCache;
         const resources = this._piximData.$.resources;
         const loaderCount = Object.keys(manifests).length;
         if (loaderCount === 0) {
@@ -1512,7 +1458,9 @@ class Content {
         for (let i in manifests) {
             const type = i;
             keys.push(type);
-            promises.push(manifests[type].getAsync(basepath, version[type] || '', useCache[type] || false));
+            const version = versions[type] || '';
+            const useCache = useCaches[type] || false;
+            promises.push(manifests[type].getAsync({ basepath, version, useCache }));
         }
         return Promise.all(promises)
             .then(resolver => {
@@ -1525,377 +1473,10 @@ class Content {
         });
     }
 }
-Content.registerManifest('images', ContentImageManifest);
-Content.registerManifest('spritesheets', ContentSpritesheetManifest);
-Content.registerManifest('sounds', ContentSoundManifest);
+Content.registerManifest('images', TextureManifest);
+Content.registerManifest('spritesheets', SpritesheetManifest);
+Content.registerManifest('sounds', SoundManifest);
+Content.registerManifest('jsons', JsonManifest);
 
-function resolvePath$1(path, basepath) {
-    if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
-        return path;
-    }
-    else {
-        return utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
-    }
-}
-function resolveQuery$1(uri, queries) {
-    if (uri.indexOf('data:') === 0) {
-        return uri;
-    }
-    else {
-        const q = [];
-        const t = uri.split('?');
-        if (t[1]) {
-            const search = t[1].split('&');
-            for (let i = 0; i < search.length; i++) {
-                const p = search[i].split('=');
-                if (!(p[0] in queries)) {
-                    q.push(search[i]);
-                }
-            }
-        }
-        for (let i in queries) {
-            q.push(`${i}=${queries[i]}`);
-        }
-        return `${t[0]}?${q.join('&')}`;
-    }
-}
-
-var index = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    resolvePath: resolvePath$1,
-    resolveQuery: resolveQuery$1
-});
-
-class LoaderResource {
-    constructor(data, error) {
-        this._data = data;
-        this._error = error;
-    }
-    get data() {
-        return this._data;
-    }
-    get error() {
-        return this._error;
-    }
-}
-class LoaderBase {
-    constructor(options = {}) {
-        this._options = options;
-    }
-    _resolveBasepath(basepath) {
-        return typeof basepath === 'string' ? basepath : (this._options.basepath || '');
-    }
-    _resolveVersion(version) {
-        return (typeof version === 'string' || typeof version === 'number') ? version : (this._options.version || '');
-    }
-    _resolveUseCache(useCache) {
-        return typeof useCache === 'boolean' ? useCache : (this._options.useCache || false);
-    }
-    _resolveUrl(url, options = {}) {
-        const preUri = resolvePath$1(url, this._resolveBasepath(options.basepath));
-        const version = this._resolveVersion(options.version);
-        const uri = version
-            ? resolveQuery$1(preUri, { _fv: version })
-            : preUri;
-        return uri;
-    }
-}
-
-class TextureLoaderResource extends LoaderResource {
-    destroy() {
-        TextureLoaderResource.removeCache(this._data);
-        this._data.destroy(true);
-    }
-    static removeCache(texture) {
-        Texture.removeFromCache(texture);
-        if (texture.baseTexture) {
-            BaseTexture.removeFromCache(texture.baseTexture);
-        }
-    }
-}
-class TextureLoader extends LoaderBase {
-    loadAsync(target, options = {}) {
-        if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
-            return this._loadFromElementAsync(target, options);
-        }
-        else if (target.indexOf('data:') === 0) {
-            return this._loadFromDataUriAsync(target, options);
-        }
-        else {
-            return this._loadFromUrlAsync(target, options);
-        }
-    }
-    loadWithManifestAsync(manifest, options = {}) {
-        if (Object.keys(manifest).length === 0) {
-            return Promise.resolve({});
-        }
-        const promises = [];
-        const res = {};
-        for (let i in manifest) {
-            promises.push(this.loadAsync(manifest[i], options)
-                .then(resource => {
-                res[i] = resource;
-            }));
-        }
-        return Promise.all(promises)
-            .then(() => {
-            return res;
-        });
-    }
-    _loadFromUrlAsync(url, options = {}) {
-        return this._loadTextureAsync(this._resolveUrl(url, options), options);
-    }
-    _loadFromElementAsync(element, options = {}) {
-        element.crossOrigin = 'anonymous';
-        element.src = this._resolveUrl(element.src, options);
-        return this._loadTextureAsync(element);
-    }
-    _loadFromDataUriAsync(dataUri, options = {}) {
-        return this._loadTextureAsync(dataUri, options);
-    }
-    _loadTextureAsync(target, options = {}) {
-        const useCache = this._resolveUseCache(options.useCache);
-        return new Promise(resolve => {
-            const bt = BaseTexture.from(target);
-            if (bt.valid) {
-                resolve(new TextureLoaderResource(new Texture(bt), null));
-                return;
-            }
-            bt.on('loaded', (baseTexture) => {
-                if (!useCache) {
-                    BaseTexture.removeFromCache(baseTexture);
-                }
-                resolve(new TextureLoaderResource(new Texture(baseTexture), null));
-            });
-            bt.on('error', (baseTexture, e) => {
-                BaseTexture.removeFromCache(baseTexture);
-                resolve(new TextureLoaderResource(new Texture(baseTexture), e));
-            });
-        });
-    }
-}
-
-class SpritesheetLoaderResource extends LoaderResource {
-    destroy() {
-        for (let i in this._data) {
-            TextureLoaderResource.removeCache(this._data[i]);
-        }
-        for (let i in this._data) {
-            this._data[i].destroy(true);
-        }
-    }
-}
-/**
- * @ignore
- */
-const KEY_SINGLE_SPRITESHEET = '--single-sprite-sheet';
-class SpritesheetLoader extends LoaderBase {
-    loadAsync(target, options = {}) {
-        if (typeof target === 'string') {
-            return this._loadFromUrlsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
-                .then(resources => {
-                return resources[KEY_SINGLE_SPRITESHEET];
-            });
-        }
-        else {
-            return this._loadFromJsonsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
-                .then(resources => {
-                return resources[KEY_SINGLE_SPRITESHEET];
-            });
-        }
-    }
-    loadWithManifestAsync(manifest, options = {}) {
-        if (Object.keys(manifest).length === 0) {
-            return Promise.resolve({});
-        }
-        const urls = {};
-        const jsons = {};
-        for (let i in manifest) {
-            const target = manifest[i];
-            if (typeof target === 'string') {
-                urls[i] = target;
-            }
-            else {
-                jsons[i] = target;
-            }
-        }
-        return Promise.all([
-            this._loadFromUrlsAsync(urls, options),
-            this._loadFromJsonsAsync(jsons, options)
-        ])
-            .then(resolvers => {
-            return Object.assign({}, ...resolvers);
-        });
-    }
-    _loadFromUrlsAsync(manifest, options = {}) {
-        const res = {};
-        if (Object.keys(manifest).length === 0) {
-            return Promise.resolve(res);
-        }
-        const loader = new Loader();
-        const version = this._resolveVersion(options.version);
-        if (version) {
-            loader.defaultQueryString = `_fv=${version}`;
-        }
-        const basepath = this._resolveBasepath(options.basepath);
-        for (let i in manifest) {
-            const target = manifest[i];
-            const uri = resolvePath$1(target, basepath);
-            loader.add(i, uri, {
-                crossOrigin: true
-            });
-        }
-        const useCache = this._resolveUseCache(options.useCache);
-        if (!useCache) {
-            loader.use((resource, next) => {
-                if (resource.textures) {
-                    for (let i in resource.textures) {
-                        const texture = resource.textures[i];
-                        if (!texture) {
-                            continue;
-                        }
-                        TextureLoaderResource.removeCache(texture);
-                    }
-                }
-                if (resource.texture) {
-                    TextureLoaderResource.removeCache(resource.texture);
-                }
-                next();
-            });
-        }
-        return new Promise(resolve => {
-            loader.load((loader, resources) => {
-                for (let i in resources) {
-                    if (!manifest[i]) {
-                        continue;
-                    }
-                    const resource = resources[i];
-                    if (!resource) {
-                        res[i] = new SpritesheetLoaderResource({}, 'invalid json');
-                        continue;
-                    }
-                    if (resource.error) {
-                        res[i] = new SpritesheetLoaderResource({}, resource.error);
-                        continue;
-                    }
-                    if (!resource.textures) {
-                        res[i] = new SpritesheetLoaderResource({}, 'invalid texture');
-                        continue;
-                    }
-                    res[i] = new SpritesheetLoaderResource(resource.textures, null);
-                }
-                resolve(res);
-            });
-        });
-    }
-    _loadFromJsonsAsync(manifest, options = {}) {
-        const res = {};
-        if (Object.keys(manifest).length === 0) {
-            return Promise.resolve(res);
-        }
-        const promises = [];
-        const loader = new TextureLoader(options);
-        for (let i in manifest) {
-            const target = manifest[i];
-            promises.push(loader.loadAsync(target.meta.image, options)
-                .then(resource => {
-                if (resource.error) {
-                    res[i] = new SpritesheetLoaderResource({}, resource.error);
-                    return Promise.resolve();
-                }
-                const ss = new Spritesheet(resource.data, target);
-                return new Promise(resolve => {
-                    ss.parse(e => {
-                        console.log(e);
-                        res[i] = new SpritesheetLoaderResource(ss.textures, null);
-                        resolve();
-                    });
-                });
-            })
-                .catch(e => {
-                res[i] = new SpritesheetLoaderResource({}, e);
-                return Promise.resolve();
-            }));
-        }
-        return Promise.all(promises)
-            .then(() => {
-            console.log(res);
-            return res;
-        });
-    }
-}
-
-
-
-var index$1 = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    LoaderResource: LoaderResource,
-    LoaderBase: LoaderBase,
-    TextureLoaderResource: TextureLoaderResource,
-    TextureLoader: TextureLoader,
-    SpritesheetLoaderResource: SpritesheetLoaderResource,
-    SpritesheetLoader: SpritesheetLoader
-});
-
-class ResourceManagerBase {
-    constructor() {
-        this._data = {};
-    }
-    //private _resources:
-    /**
-     * Register manifests.
-     */
-    add(manifest, options = {}) {
-        const unrequired = options.unrequired || false;
-        for (let i in manifest) {
-            this._data[i] = {
-                target: manifest[i],
-                unrequired
-            };
-        }
-    }
-    /**
-     * Get resources.
-     */
-    getAsync(options) {
-        if (Object.keys(this._data).length === 0) {
-            return Promise.resolve({});
-        }
-        const manifest = {};
-        for (let i in this._data) {
-            manifest[i] = this._data[i].target;
-        }
-        return this._loadAsync(manifest, options)
-            .then(resources => {
-            const res = {};
-            for (let i in resources) {
-                const resource = resources[i];
-                if (resource.error && !this._data[i].unrequired) {
-                    throw resource.error;
-                }
-                res[i] = resource.data;
-            }
-            return res;
-        });
-    }
-    destoryResources() {
-    }
-}
-
-class ImageResourceManager extends ResourceManagerBase {
-    _loadAsync(manifest, options = {}) {
-        const loader = new TextureLoader(options);
-        return loader.loadWithManifestAsync(manifest);
-    }
-}
-
-
-
-var index$2 = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    ResourceManagerBase: ResourceManagerBase,
-    ImageResourceManager: ImageResourceManager
-});
-
-export { Application, Container, Content, ContentDeliver, ContentImageManifest, ContentManifestBase, ContentSoundManifest, ContentSpritesheetManifest, Emitter, Layer, Task$1 as Task, loadImageAsync, loadImageFromElementAsync, index$1 as loaders, resolvePath, resolveQuery, index$2 as resources, index as utils };
+export { Application, Container, Content, ContentDeliver, Emitter, JsonLoader, JsonLoaderResource, JsonManifest, Layer, LoaderBase, LoaderResource, ManifestBase, SoundLoader, SoundLoaderResource, SoundManifest, SpritesheetLoader, SpritesheetLoaderResource, SpritesheetManifest, Task$1 as Task, TextureLoader, TextureLoaderResource, TextureManifest, index as utils };
 //# sourceMappingURL=Pixim.esm.js.map

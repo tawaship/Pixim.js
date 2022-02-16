@@ -1,5 +1,5 @@
 <body style="margin: 0; overflow: hidden;">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.2/pixi.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"></script>
 <script src="../dist/Pixim.js"></script>
 <div id="a" style="position: absolute; top: 100px; width: 100px;">
@@ -52,7 +52,7 @@ Test.defineLibraries({
 			super();
 			
 			//this.taskEnabledChildren = false;
-			
+			console.log($.resources.jsons.hoge)
 			this.addChild(new PIXI.Graphics())
 				.beginFill(0xFFEEEE, 1)
 				.drawRect(0, 0, $.width, $.height);
@@ -63,7 +63,7 @@ Test.defineLibraries({
 			})
 			//*
 			
-			const a = new Pixim.loaders.SpritesheetLoader(/*{basepath: "img/", aversion: "222"}*/);
+			const a = new Pixim.SpritesheetLoader(/*{basepath: "img/", aversion: "222"}*/);
 			/*a.loadAsync("invalid.json", {basepath:"https://localhost/Pixim.js/test/img"})
 			.then(r => {
 			console.log(r)
@@ -180,6 +180,7 @@ Test.defineLibraries({
 				c.y = r * 105;
 				
 				c.on("pointerdown", () => {
+				console.log($.resources.sounds[t],t)
 					$.resources.sounds[t].play();
 				}).interactive = true;
 			};
@@ -261,9 +262,12 @@ const test = new Test({
 	version: {
 		images: 2,
 		spritesheets: 3,
-		sounds: 54
+		sounds: 54,
+		jsons: 25
 	}
 });
+
+test.addJsons({hoge: "https://localhost/Pixim.js/test/data/1.json"})
 
 let app = o = new Pixim.Application({width: 450, height: 800}, {autoAdjust:app => {
 	app.fullScreen();
