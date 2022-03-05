@@ -34,7 +34,8 @@ export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoun
 				onload: () => {
 					resolve(new SoundLoaderResource(howl, null));
 				},
-				onloaderror: (e: any) => {
+				onloaderror: () => {
+					const e = new Error('invalid resource: ' + url);
 					resolve(new SoundLoaderResource(howl, e));
 				}
 			});

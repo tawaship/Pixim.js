@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.0
+ * @tawaship/pixim.js - v1.13.1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -1032,7 +1032,8 @@ class SoundLoader extends LoaderBase {
                 onload: () => {
                     resolve(new SoundLoaderResource(howl, null));
                 },
-                onloaderror: (e) => {
+                onloaderror: () => {
+                    const e = new Error('invalid resource: ' + url);
                     resolve(new SoundLoaderResource(howl, e));
                 }
             });

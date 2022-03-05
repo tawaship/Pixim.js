@@ -1,6 +1,6 @@
 {
   "name": "@tawaship/pixim.js",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "description": "Framework that wraps pixi.js.",
   "main": "dist/Pixim.cjs.js",
   "module": "dist/Pixim.esm.js",
