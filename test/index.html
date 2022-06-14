@@ -267,26 +267,38 @@ const test = new Test({
 	}
 });
 
-test.addJsons({hoge: "https://localhost/Pixim.js/test/data/1.json"})
+test.addJsons({hoge: "https://localhost/Pixim.js/test/data/1.jsona"})
 
 let app = o = new Pixim.Application({width: 450, height: 800}, {autoAdjust:app => {
 	app.fullScreen();
 } });
 
+test.on("loaderAssetLoaded", () => {
+	console.log(++_count, count)
+	if (_count === count) console.log("loaded all")
+});
 
-const count = test.manifestAssetCount
+let count = test.assetCount
 let _count = 0;
-test.on("loaderAssetLoaded", e => {
-console.log(++_count)
-if (_count === count) console.log("loaded all")
+function AA() {
+	count = test.assetCount, _count = 0;
+};
+
+AA()
+test.preloadClassAssetAsync()
+.catch(()=>{
+	test.preloadClassAssetAsync()
 })
+
+//*
 app.attachAsync(test)
 	.then(() => {
 		app.play();
+		app.attachAsync(test).then(() => app.attachAsync(test))
 		//app.destroy(false, {children: true})
 		//app = null
 	});
-	
+//	*/
 }
 </script>
 </body>

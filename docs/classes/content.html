@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Content | @tawaship/pixim.js - v1.13.2</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.13.2">
+	<title>Content | @tawaship/pixim.js - v1.13.3</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.13.3">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@tawaship/pixim.js - v1.13.2</a>
+					<a href="../index.html" class="title">@tawaship/pixim.js - v1.13.3</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">@tawaship/pixim.js - v1.13.2</a>
+					<a href="../modules.html">@tawaship/pixim.js - v1.13.3</a>
 				</li>
 				<li>
 					<a href="content.html">Content</a>
@@ -91,6 +91,7 @@
 						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="content.html#_loadedresourcehandler" class="tsd-kind-icon">_loaded<wbr>Resource<wbr>Handler</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="content.html#_piximdata" class="tsd-kind-icon">_pixim<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-static"><a href="content.html#_piximdata-1" class="tsd-kind-icon">_pixim<wbr>Data</a></li>
 							</ul>
@@ -98,8 +99,10 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="content.html#assetcount" class="tsd-kind-icon">asset<wbr>Count</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="content.html#classassetcount" class="tsd-kind-icon">class<wbr>Asset<wbr>Count</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="content.html#contentid" class="tsd-kind-icon">contentID</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="content.html#manifestassetcount" class="tsd-kind-icon">manifest<wbr>Asset<wbr>Count</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="content.html#instanceassetcount" class="tsd-kind-icon">instance<wbr>Asset<wbr>Count</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -154,7 +157,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Emitter.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L112">src/modules/content/Content.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L113">src/modules/content/Content.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -173,6 +176,45 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_loadedresourcehandler" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _loaded<wbr>Resource<wbr>Handler</h3>
+					<div class="tsd-signature tsd-kind-icon">_loaded<wbr>Resource<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>resource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L113">src/modules/content/Content.ts:113</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>resource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>data: <span class="tsd-signature-symbol">{ </span>resource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></h5>
+												<ul class="tsd-parameters">
+													<li class="tsd-parameter">
+														<h5>resource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+													</li>
+													<li class="tsd-parameter">
+														<h5>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+													</li>
+												</ul>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 					<a name="_piximdata" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _pixim<wbr>Data</h3>
@@ -197,6 +239,40 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="assetcount" class="tsd-anchor"></a>
+					<h3>asset<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> assetCount<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L467">src/modules/content/Content.ts:467</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="classassetcount" class="tsd-anchor"></a>
+					<h3>class<wbr>Asset<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> classAssetCount<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L445">src/modules/content/Content.ts:445</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="contentid" class="tsd-anchor"></a>
 					<h3>contentID</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
@@ -206,7 +282,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L282">src/modules/content/Content.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L295">src/modules/content/Content.ts:295</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -219,16 +295,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="manifestassetcount" class="tsd-anchor"></a>
-					<h3>manifest<wbr>Asset<wbr>Count</h3>
+					<a name="instanceassetcount" class="tsd-anchor"></a>
+					<h3>instance<wbr>Asset<wbr>Count</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> manifestAssetCount<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> instanceAssetCount<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L433">src/modules/content/Content.ts:433</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L456">src/modules/content/Content.ts:456</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -248,7 +324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L452">src/modules/content/Content.ts:452</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L474">src/modules/content/Content.ts:474</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -278,7 +354,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L307">src/modules/content/Content.ts:307</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L320">src/modules/content/Content.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L334">src/modules/content/Content.ts:334</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L347">src/modules/content/Content.ts:347</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -342,7 +418,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L325">src/modules/content/Content.ts:325</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L338">src/modules/content/Content.ts:338</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -374,7 +450,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L316">src/modules/content/Content.ts:316</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L329">src/modules/content/Content.ts:329</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -406,7 +482,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L291">src/modules/content/Content.ts:291</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L304">src/modules/content/Content.ts:304</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -447,7 +523,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L343">src/modules/content/Content.ts:343</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L356">src/modules/content/Content.ts:356</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -476,7 +552,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L364">src/modules/content/Content.ts:364</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L377">src/modules/content/Content.ts:377</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -612,7 +688,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L410">src/modules/content/Content.ts:410</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L420">src/modules/content/Content.ts:420</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -813,7 +889,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L378">src/modules/content/Content.ts:378</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L391">src/modules/content/Content.ts:391</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -835,7 +911,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L394">src/modules/content/Content.ts:394</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L407">src/modules/content/Content.ts:407</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -857,7 +933,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L354">src/modules/content/Content.ts:354</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L367">src/modules/content/Content.ts:367</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -879,7 +955,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L172">src/modules/content/Content.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L185">src/modules/content/Content.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -911,7 +987,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L226">src/modules/content/Content.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L239">src/modules/content/Content.ts:239</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -942,7 +1018,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L247">src/modules/content/Content.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L260">src/modules/content/Content.ts:260</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -973,7 +1049,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L271">src/modules/content/Content.ts:271</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L284">src/modules/content/Content.ts:284</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1006,7 +1082,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L240">src/modules/content/Content.ts:240</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L253">src/modules/content/Content.ts:253</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1037,7 +1113,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L233">src/modules/content/Content.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L246">src/modules/content/Content.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1068,7 +1144,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L212">src/modules/content/Content.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L225">src/modules/content/Content.ts:225</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1108,7 +1184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L195">src/modules/content/Content.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L208">src/modules/content/Content.ts:208</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1136,7 +1212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L162">src/modules/content/Content.ts:162</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L175">src/modules/content/Content.ts:175</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1167,7 +1243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L205">src/modules/content/Content.ts:205</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L218">src/modules/content/Content.ts:218</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1202,7 +1278,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L256">src/modules/content/Content.ts:256</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/Content.ts#L269">src/modules/content/Content.ts:269</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1243,6 +1319,9 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="content.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="content.html#_loadedresourcehandler" class="tsd-kind-icon">_loaded<wbr>Resource<wbr>Handler</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="content.html#_piximdata" class="tsd-kind-icon">_pixim<wbr>Data</a>
 							</li>
@@ -1250,10 +1329,16 @@
 								<a href="content.html#_piximdata-1" class="tsd-kind-icon">_pixim<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="content.html#assetcount" class="tsd-kind-icon">asset<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="content.html#classassetcount" class="tsd-kind-icon">class<wbr>Asset<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="content.html#contentid" class="tsd-kind-icon">contentID</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="content.html#manifestassetcount" class="tsd-kind-icon">manifest<wbr>Asset<wbr>Count</a>
+								<a href="content.html#instanceassetcount" class="tsd-kind-icon">instance<wbr>Asset<wbr>Count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="content.html#_loadassetasync" class="tsd-kind-icon">_load<wbr>Asset<wbr>Async</a>

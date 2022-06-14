@@ -110,9 +110,14 @@ const _manifests: { [key: string]: IManifestClass } = {};
 export class Content extends Emitter {
 	protected static _piximData: IContentStaticData;
 	protected _piximData: IContentData;
+	private _loadedResourceHandler: (data: { target: any, resource: any }) => void;
 	
 	constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 		super();
+		
+		this._loadedResourceHandler = (data: { target: any, resource: any }) => {
+			this.emit(EVENT_LOADER_ASSET_LOADED, data);
+		};
 		
 		const basepath: string = options.basepath || '';
 		
@@ -153,6 +158,14 @@ export class Content extends Emitter {
 			preloadPromise: null,
 			postloadPromise: null,
 			contentDeliverData
+		};
+		
+		for (let i in this._piximData.manifests) {
+			this._piximData.manifests[i].on(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
+		}
+		
+		for (let i in this._piximData.additionalManifests) {
+			this._piximData.additionalManifests[i].on(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 	}
 	
@@ -397,9 +410,6 @@ export class Content extends Emitter {
 		}
 		
 		return this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests)
-			.then(() => {
-				this._piximData.postloadPromise = null;
-			})
 			.catch(e => {
 				this._piximData.postloadPromise = null;
 				
@@ -418,10 +428,12 @@ export class Content extends Emitter {
 		
 		for (let i in manifests) {
 			manifests[i].destroyResources();
+			manifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		
 		for (let i in additionalManifests) {
 			additionalManifests[i].destroyResources();
+			additionalManifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		
 		const resources = contentDeliverData.resources;
@@ -430,7 +442,7 @@ export class Content extends Emitter {
 		}
 	}
 	
-	get manifestAssetCount() {
+	get classAssetCount() {
 		let total = 0;
 		
 		const manifests = this._piximData.manifests;
@@ -438,12 +450,22 @@ export class Content extends Emitter {
 			total += manifests[i].count;
 		}
 		
+		return total;
+	}
+	
+	get instanceAssetCount() {
+		let total = 0;
+		
 		const additionalManifests = this._piximData.additionalManifests;
 		for (let i in additionalManifests) {
 			total += additionalManifests[i].count;
 		}
 		
 		return total;
+	}
+	
+	get assetCount() {
+		return this.classAssetCount + this.instanceAssetCount;
 	}
 	
 	/**
@@ -471,9 +493,6 @@ export class Content extends Emitter {
 			const useCache = useCaches[type] || false;
 			
 			const manifest = manifests[type];
-			manifest.on(EVENT_LOADER_ASSET_LOADED, resource => {
-				this.emit(EVENT_LOADER_ASSET_LOADED, resource);
-			});
 			
 			promises.push(manifest.getAsync({ basepath, version, useCache }));
 		}

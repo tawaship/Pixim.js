@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.2
+ * @tawaship/pixim.js - v1.13.3
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.13.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.13.3 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -910,8 +910,11 @@
     }
     var _manifests = {}, Content = function(Emitter) {
         function Content(options, piximData) {
+            var this$1 = this;
             void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
-            Emitter.call(this);
+            Emitter.call(this), this._loadedResourceHandler = function(data) {
+                this$1.emit("loaderAssetLoaded", data);
+            };
             var basepath = options.basepath || "";
             if ("object" != typeof options.version) {
                 var version = {}, v = options.version || "";
@@ -934,7 +937,7 @@
                 resources: {},
                 vars: {}
             };
-            this._piximData = {
+            for (var i$2 in this._piximData = {
                 contentID: (++_contentID).toString(),
                 basepath: basepath,
                 version: options.version,
@@ -945,7 +948,12 @@
                 preloadPromise: null,
                 postloadPromise: null,
                 contentDeliverData: contentDeliverData
-            };
+            }, this._piximData.manifests) {
+                this._piximData.manifests[i$2].on("loaderAssetLoaded", this._loadedResourceHandler);
+            }
+            for (var i$3 in this._piximData.additionalManifests) {
+                this._piximData.additionalManifests[i$3].on("loaderAssetLoaded", this._loadedResourceHandler);
+            }
         }
         Emitter && (Content.__proto__ = Emitter), Content.prototype = Object.create(Emitter && Emitter.prototype), 
         Content.prototype.constructor = Content;
@@ -953,7 +961,13 @@
             contentID: {
                 configurable: !0
             },
-            manifestAssetCount: {
+            classAssetCount: {
+                configurable: !0
+            },
+            instanceAssetCount: {
+                configurable: !0
+            },
+            assetCount: {
                 configurable: !0
             }
         };
@@ -1039,9 +1053,7 @@
             }));
         }, Content.prototype.preloadInstanceAssetAsync = function() {
             var this$1 = this;
-            return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).then((function() {
-                this$1._piximData.postloadPromise = null;
-            })).catch((function(e) {
+            return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).catch((function(e) {
                 throw this$1._piximData.postloadPromise = null, e;
             }));
         }, Content.prototype.destroy = function() {
@@ -1049,27 +1061,31 @@
             contentDeliverData.lib = {}, contentDeliverData.vars = {};
             var manifests = this._piximData.manifests, additionalManifests = this._piximData.additionalManifests;
             for (var i in manifests) {
-                manifests[i].destroyResources();
+                manifests[i].destroyResources(), manifests[i].off("loaderAssetLoaded", this._loadedResourceHandler);
             }
             for (var i$1 in additionalManifests) {
-                additionalManifests[i$1].destroyResources();
+                additionalManifests[i$1].destroyResources(), additionalManifests[i$1].off("loaderAssetLoaded", this._loadedResourceHandler);
             }
             var resources = contentDeliverData.resources;
             for (var i$2 in resources) {
                 resources[i$2] = {};
             }
-        }, prototypeAccessors.manifestAssetCount.get = function() {
+        }, prototypeAccessors.classAssetCount.get = function() {
             var total = 0, manifests = this._piximData.manifests;
             for (var i in manifests) {
                 total += manifests[i].count;
             }
-            var additionalManifests = this._piximData.additionalManifests;
-            for (var i$1 in additionalManifests) {
-                total += additionalManifests[i$1].count;
+            return total;
+        }, prototypeAccessors.instanceAssetCount.get = function() {
+            var total = 0, additionalManifests = this._piximData.additionalManifests;
+            for (var i in additionalManifests) {
+                total += additionalManifests[i].count;
             }
             return total;
+        }, prototypeAccessors.assetCount.get = function() {
+            return this.classAssetCount + this.instanceAssetCount;
         }, Content.prototype._loadAssetAsync = function(manifests) {
-            var this$1 = this, basepath = this._piximData.basepath, versions = this._piximData.version, useCaches = this._piximData.useCache, resources = this._piximData.$.resources;
+            var basepath = this._piximData.basepath, versions = this._piximData.version, useCaches = this._piximData.useCache, resources = this._piximData.$.resources;
             if (0 === Object.keys(manifests).length) {
                 return Promise.resolve();
             }
@@ -1078,9 +1094,7 @@
                 var type = i;
                 keys.push(type);
                 var version = versions[type] || "", useCache = useCaches[type] || !1, manifest = manifests[type];
-                manifest.on("loaderAssetLoaded", (function(resource) {
-                    this$1.emit("loaderAssetLoaded", resource);
-                })), promises.push(manifest.getAsync({
+                promises.push(manifest.getAsync({
                     basepath: basepath,
                     version: version,
                     useCache: useCache
