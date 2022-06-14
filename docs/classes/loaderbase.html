@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LoaderBase | @tawaship/pixim.js - v1.13.1</title>
-	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.13.1">
+	<title>LoaderBase | @tawaship/pixim.js - v1.13.2</title>
+	<meta name="description" content="Documentation for @tawaship/pixim.js - v1.13.2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@tawaship/pixim.js - v1.13.1</a>
+					<a href="../index.html" class="title">@tawaship/pixim.js - v1.13.2</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">@tawaship/pixim.js - v1.13.1</a>
+					<a href="../modules.html">@tawaship/pixim.js - v1.13.2</a>
 				</li>
 				<li>
 					<a href="loaderbase.html">LoaderBase</a>
@@ -80,19 +80,24 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">LoaderBase</span>
+						<span class="tsd-signature-type">Emitter</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="textureloader.html" class="tsd-signature-type" data-tsd-kind="Class">TextureLoader</a>
-							</li>
-							<li>
-								<a href="spritesheetloader.html" class="tsd-signature-type" data-tsd-kind="Class">SpritesheetLoader</a>
-							</li>
-							<li>
-								<a href="soundloader.html" class="tsd-signature-type" data-tsd-kind="Class">SoundLoader</a>
-							</li>
-							<li>
-								<a href="jsonloader.html" class="tsd-signature-type" data-tsd-kind="Class">JsonLoader</a>
+								<span class="target">LoaderBase</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="textureloader.html" class="tsd-signature-type" data-tsd-kind="Class">TextureLoader</a>
+									</li>
+									<li>
+										<a href="spritesheetloader.html" class="tsd-signature-type" data-tsd-kind="Class">SpritesheetLoader</a>
+									</li>
+									<li>
+										<a href="soundloader.html" class="tsd-signature-type" data-tsd-kind="Class">SoundLoader</a>
+									</li>
+									<li>
+										<a href="jsonloader.html" class="tsd-signature-type" data-tsd-kind="Class">JsonLoader</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -105,7 +110,13 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter"><a href="loaderbase.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite"><a href="loaderbase.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Events</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-event tsd-parent-kind-class"><a href="loaderbase.html#loaderassetloaded" class="tsd-kind-icon">loader<wbr>Asset<wbr>Loaded</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-private-protected">
@@ -121,8 +132,16 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_resolveurl" class="tsd-kind-icon">_resolve<wbr>Url</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_resolveusecache" class="tsd-kind-icon">_resolve<wbr>Use<wbr>Cache</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_resolveversion" class="tsd-kind-icon">_resolve<wbr>Version</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#cemit" class="tsd-kind-icon">cemit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#cemitall" class="tsd-kind-icon">cemit<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#clear" class="tsd-kind-icon">clear</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#emit" class="tsd-kind-icon">emit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#emitall" class="tsd-kind-icon">emit<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="loaderbase.html#loadallasync" class="tsd-kind-icon">load<wbr>All<wbr>Async</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="loaderbase.html#loadasync" class="tsd-kind-icon">load<wbr>Async</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#off" class="tsd-kind-icon">off</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#on" class="tsd-kind-icon">on</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="loaderbase.html#once" class="tsd-kind-icon">once</a></li>
 							</ul>
 						</section>
 					</div>
@@ -130,17 +149,18 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Loader<wbr>Base&lt;TTarget, TResource&gt;<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides Emitter.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L41">src/modules/loader/LoaderBase.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L44">src/modules/loader/LoaderBase.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -163,6 +183,45 @@
 					</ul>
 				</section>
 			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Events</h2>
+				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class">
+					<a name="loaderassetloaded" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> loader<wbr>Asset<wbr>Loaded</h3>
+					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">loader<wbr>Asset<wbr>Loaded<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>resource<span class="tsd-signature-symbol">: </span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L90">src/modules/loader/LoaderBase.ts:90</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Fired when one of the resources has succeeded loading.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <span class="tsd-signature-symbol">{ </span>resource<span class="tsd-signature-symbol">: </span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>resource<span class="tsd-signature-symbol">: </span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTarget</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
@@ -171,7 +230,7 @@
 					<div class="tsd-signature tsd-kind-icon">_options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L41">src/modules/loader/LoaderBase.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L44">src/modules/loader/LoaderBase.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -188,7 +247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L50">src/modules/loader/LoaderBase.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L61">src/modules/loader/LoaderBase.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -211,7 +270,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L62">src/modules/loader/LoaderBase.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L73">src/modules/loader/LoaderBase.ts:73</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -237,7 +296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L58">src/modules/loader/LoaderBase.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L69">src/modules/loader/LoaderBase.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -260,7 +319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L54">src/modules/loader/LoaderBase.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L65">src/modules/loader/LoaderBase.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -270,6 +329,190 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../modules.html#tloaderresourceversion" class="tsd-signature-type" data-tsd-kind="Type alias">TLoaderResourceVersion</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="cemit" class="tsd-anchor"></a>
+					<h3>cemit</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">cemit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.cemit</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:43</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit event with specifying a context.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type to emit.</p>
+									</div>
+								</li>
+								<li>
+									<h5>context: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Context to execute the callback.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="cemitall" class="tsd-anchor"></a>
+					<h3>cemit<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">cemit<wbr>All<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.cemitAll</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:57</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit all events with specifying a context.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>context: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Context to execute the callback.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="clear" class="tsd-anchor"></a>
+					<h3>clear</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.clear</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:63</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove events grouped event type.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type to remove. If it is empty, removes all events.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="emit" class="tsd-anchor"></a>
+					<h3>emit</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">emit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.emit</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:35</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit event.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type to emit.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="emitall" class="tsd-anchor"></a>
+					<h3>emit<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">emit<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.emitAll</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:50</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Emit all events.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Argument(s) in callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -283,9 +526,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L48">src/modules/loader/LoaderBase.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L59">src/modules/loader/LoaderBase.ts:59</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>fires</dt>
+									<dd><p>[[LoaderBase.loaded]]</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -309,9 +559,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L47">src/modules/loader/LoaderBase.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L54">src/modules/loader/LoaderBase.ts:54</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>fires</dt>
+									<dd><p>[[LoaderBase.loaded]]</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -322,6 +579,120 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="off" class="tsd-anchor"></a>
+					<h3>off</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.off</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:27</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unregister event.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type.</p>
+									</div>
+								</li>
+								<li>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Registered callback.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="on" class="tsd-anchor"></a>
+					<h3>on</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.on</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:13</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register event.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type.</p>
+									</div>
+								</li>
+								<li>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Callback when the event fires.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="once" class="tsd-anchor"></a>
+					<h3>once</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Emitter.once</p>
+								<ul>
+									<li>Defined in node_modules/@tawaship/emitter/types/modules/Emitter.d.ts:20</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register one-time event.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Event type.</p>
+									</div>
+								</li>
+								<li>
+									<h5>callback: <span class="tsd-signature-type">IEmitterDelegate</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Callback when the event fires.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -342,8 +713,11 @@
 					<li class="current tsd-kind-class tsd-has-type-parameter">
 						<a href="loaderbase.html" class="tsd-kind-icon">Loader<wbr>Base</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite">
 								<a href="loaderbase.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-event tsd-parent-kind-class">
+								<a href="loaderbase.html#loaderassetloaded" class="tsd-kind-icon">loader<wbr>Asset<wbr>Loaded</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="loaderbase.html#_options" class="tsd-kind-icon">_options</a>
@@ -360,11 +734,35 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="loaderbase.html#_resolveversion" class="tsd-kind-icon">_resolve<wbr>Version</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#cemit" class="tsd-kind-icon">cemit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#cemitall" class="tsd-kind-icon">cemit<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#clear" class="tsd-kind-icon">clear</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#emit" class="tsd-kind-icon">emit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#emitall" class="tsd-kind-icon">emit<wbr>All</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="loaderbase.html#loadallasync" class="tsd-kind-icon">load<wbr>All<wbr>Async</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="loaderbase.html#loadasync" class="tsd-kind-icon">load<wbr>Async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#off" class="tsd-kind-icon">off</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#on" class="tsd-kind-icon">on</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="loaderbase.html#once" class="tsd-kind-icon">once</a>
 							</li>
 						</ul>
 					</li>

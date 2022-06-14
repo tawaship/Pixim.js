@@ -5,6 +5,8 @@ import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './Spr
 import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
 import { JsonManifest, IJsonManifestTargetDictionary } from './JsonManifest';
 import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary, IContentResourceDictionary } from './ContentDeliver';
+import { Emitter } from '@tawaship/emitter';
+import { EVENT_LOADER_ASSET_LOADED } from '../loader/index';
 
 export interface IContentAssetVersion {
 	[key: string]: string;
@@ -105,11 +107,13 @@ function createContentStatic(): IContentStaticData {
  */
 const _manifests: { [key: string]: IManifestClass } = {};
 
-export class Content {
+export class Content extends Emitter {
 	protected static _piximData: IContentStaticData;
 	protected _piximData: IContentData;
 	
 	constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
+		super();
+		
 		const basepath: string = options.basepath || '';
 		
 		if (typeof(options.version) !== 'object') {
@@ -426,6 +430,25 @@ export class Content {
 		}
 	}
 	
+	get manifestAssetCount() {
+		let total = 0;
+		
+		const manifests = this._piximData.manifests;
+		for (let i in manifests) {
+			total += manifests[i].count;
+		}
+		
+		const additionalManifests = this._piximData.additionalManifests;
+		for (let i in additionalManifests) {
+			total += additionalManifests[i].count;
+		}
+		
+		return total;
+	}
+	
+	/**
+	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
+	 */
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 		const basepath: string = this._piximData.basepath;
 		const versions: IContentAssetVersion = this._piximData.version;
@@ -447,7 +470,12 @@ export class Content {
 			const version = versions[type] || '';
 			const useCache = useCaches[type] || false;
 			
-			promises.push(manifests[type].getAsync({ basepath, version, useCache }));
+			const manifest = manifests[type];
+			manifest.on(EVENT_LOADER_ASSET_LOADED, resource => {
+				this.emit(EVENT_LOADER_ASSET_LOADED, resource);
+			});
+			
+			promises.push(manifest.getAsync({ basepath, version, useCache }));
 		}
 		
 		return Promise.all(promises)

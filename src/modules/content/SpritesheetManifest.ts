@@ -13,6 +13,6 @@ export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLo
 	protected _loadAsync(targets: ISpritesheetManifestTargetDictionary, options: SpritesheetLoader.ISpritesheetLoaderOption = {}) {
 		const loader = new SpritesheetLoader.SpritesheetLoader(options);
 		
-		return loader.loadAllAsync(targets);
+		return this._doneLoaderAsync(loader, targets);
 	}
 }

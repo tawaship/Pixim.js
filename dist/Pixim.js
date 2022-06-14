@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.1
+ * @tawaship/pixim.js - v1.13.2
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.13.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.13.2 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -435,9 +435,7 @@
                 height: parseInt(view.style.height.replace("px", ""))
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), ManifestBase = function() {
-        this._data = {}, this._resources = {};
-    };
+    }(Emitter$1);
     function resolvePath(path, basepath) {
         return 0 === path.indexOf("http://") || 0 === path.indexOf("https://") ? path : PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, "$1/"), path);
     }
@@ -456,42 +454,6 @@
         }
         return t[0] + "?" + q.join("&");
     }
-    ManifestBase.prototype.add = function(targets, options) {
-        void 0 === options && (options = {});
-        var unrequired = options.unrequired || !1;
-        for (var i in targets) {
-            this._data[i] = {
-                target: targets[i],
-                unrequired: unrequired
-            };
-        }
-    }, ManifestBase.prototype.getAsync = function(options) {
-        var this$1 = this;
-        if (0 === Object.keys(this._data).length) {
-            return Promise.resolve({});
-        }
-        var res = {}, targets = {};
-        for (var i in this._data) {
-            targets[i] = this._data[i].target;
-        }
-        return this._loadAsync(targets, options).then((function(resources) {
-            for (var i in resources) {
-                var resource = resources[i];
-                if (resource.error && !this$1._data[i].unrequired) {
-                    throw resource.error;
-                }
-            }
-            for (var i$1 in resources) {
-                var resource$1 = resources[i$1];
-                this$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
-            }
-            return res;
-        }));
-    }, ManifestBase.prototype.destroyResources = function() {
-        for (var i in this._resources) {
-            this._resources[i].destroy();
-        }
-    };
     var index = Object.freeze({
         __proto__: null,
         resolvePath: resolvePath,
@@ -511,23 +473,81 @@
     }, prototypeAccessors$1.error.get = function() {
         return this._error;
     }, Object.defineProperties(LoaderResource.prototype, prototypeAccessors$1);
-    var LoaderBase = function(options) {
-        void 0 === options && (options = {}), this._options = options;
-    };
-    LoaderBase.prototype._resolveBasepath = function(basepath) {
-        return "string" == typeof basepath ? basepath : this._options.basepath || "";
-    }, LoaderBase.prototype._resolveVersion = function(version) {
-        return "string" == typeof version || "number" == typeof version ? version : this._options.version || "";
-    }, LoaderBase.prototype._resolveUseCache = function(useCache) {
-        return "boolean" == typeof useCache ? useCache : this._options.useCache || !1;
-    }, LoaderBase.prototype._resolveUrl = function(url, options) {
-        void 0 === options && (options = {});
-        var preUri = resolvePath(url, this._resolveBasepath(options.basepath)), version = this._resolveVersion(options.version);
-        return version ? resolveQuery(preUri, {
-            _fv: version
-        }) : preUri;
-    };
-    var TextureLoaderResource = function(superclass) {
+    var LoaderBase = function(Emitter) {
+        function LoaderBase(options) {
+            void 0 === options && (options = {}), Emitter.call(this), this._options = options;
+        }
+        return Emitter && (LoaderBase.__proto__ = Emitter), LoaderBase.prototype = Object.create(Emitter && Emitter.prototype), 
+        LoaderBase.prototype.constructor = LoaderBase, LoaderBase.prototype._resolveBasepath = function(basepath) {
+            return "string" == typeof basepath ? basepath : this._options.basepath || "";
+        }, LoaderBase.prototype._resolveVersion = function(version) {
+            return "string" == typeof version || "number" == typeof version ? version : this._options.version || "";
+        }, LoaderBase.prototype._resolveUseCache = function(useCache) {
+            return "boolean" == typeof useCache ? useCache : this._options.useCache || !1;
+        }, LoaderBase.prototype._resolveUrl = function(url, options) {
+            void 0 === options && (options = {});
+            var preUri = resolvePath(url, this._resolveBasepath(options.basepath)), version = this._resolveVersion(options.version);
+            return version ? resolveQuery(preUri, {
+                _fv: version
+            }) : preUri;
+        }, LoaderBase.prototype.loaderAssetLoaded = function(data) {}, LoaderBase;
+    }(Emitter);
+    delete LoaderBase.prototype.loaderAssetLoaded;
+    var ManifestBase = function(Emitter) {
+        function ManifestBase() {
+            Emitter.apply(this, arguments), this._data = {}, this._resources = {};
+        }
+        Emitter && (ManifestBase.__proto__ = Emitter), ManifestBase.prototype = Object.create(Emitter && Emitter.prototype), 
+        ManifestBase.prototype.constructor = ManifestBase;
+        var prototypeAccessors = {
+            count: {
+                configurable: !0
+            }
+        };
+        return ManifestBase.prototype.add = function(targets, options) {
+            void 0 === options && (options = {});
+            var unrequired = options.unrequired || !1;
+            for (var i in targets) {
+                this._data[i] = {
+                    target: targets[i],
+                    unrequired: unrequired
+                };
+            }
+        }, prototypeAccessors.count.get = function() {
+            return Object.keys(this._data).length;
+        }, ManifestBase.prototype.getAsync = function(options) {
+            var this$1 = this;
+            if (0 === Object.keys(this._data).length) {
+                return Promise.resolve({});
+            }
+            var res = {}, targets = {};
+            for (var i in this._data) {
+                targets[i] = this._data[i].target;
+            }
+            return this._loadAsync(targets, options).then((function(resources) {
+                for (var i in resources) {
+                    var resource = resources[i];
+                    if (resource.error && !this$1._data[i].unrequired) {
+                        throw resource.error;
+                    }
+                }
+                for (var i$1 in resources) {
+                    var resource$1 = resources[i$1];
+                    this$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
+                }
+                return res;
+            }));
+        }, ManifestBase.prototype._doneLoaderAsync = function(loader, targets) {
+            var this$1 = this;
+            return loader.on("loaderAssetLoaded", (function(resource) {
+                this$1.emit("loaderAssetLoaded", resource);
+            })), loader.loadAllAsync(targets, {});
+        }, ManifestBase.prototype.destroyResources = function() {
+            for (var i in this._resources) {
+                this._resources[i].destroy();
+            }
+        }, Object.defineProperties(ManifestBase.prototype, prototypeAccessors), ManifestBase;
+    }(Emitter), TextureLoaderResource = function(superclass) {
         function TextureLoaderResource() {
             superclass.apply(this, arguments);
         }
@@ -543,7 +563,13 @@
         }
         return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
         TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype.loadAsync = function(target, options) {
-            return void 0 === options && (options = {}), target instanceof HTMLImageElement || target instanceof HTMLVideoElement ? this._loadFromElementAsync(target, options) : 0 === target.indexOf("data:") ? this._loadFromDataUriAsync(target, options) : this._loadFromUrlAsync(target, options);
+            var this$1 = this;
+            return void 0 === options && (options = {}), (target instanceof HTMLImageElement || target instanceof HTMLVideoElement ? this$1._loadFromElementAsync(target, options) : 0 === target.indexOf("data:") ? this$1._loadFromDataUriAsync(target, options) : this$1._loadFromUrlAsync(target, options)).then((function(resource) {
+                return resource.error || this$1.emit("loaderAssetLoaded", {
+                    target: target,
+                    resource: resource
+                }), resource;
+            }));
         }, TextureLoader.prototype.loadAllAsync = function(targets, options) {
             var this$1 = this;
             if (void 0 === options && (options = {}), 0 === Object.keys(targets).length) {
@@ -588,7 +614,9 @@
         }
         return superclass && (TextureManifest.__proto__ = superclass), TextureManifest.prototype = Object.create(superclass && superclass.prototype), 
         TextureManifest.prototype.constructor = TextureManifest, TextureManifest.prototype._loadAsync = function(targets, options) {
-            return void 0 === options && (options = {}), new TextureLoader(options).loadAllAsync(targets);
+            void 0 === options && (options = {});
+            var loader = new TextureLoader(options);
+            return this._doneLoaderAsync(loader, targets);
         }, TextureManifest;
     }(ManifestBase), SpritesheetLoaderResource = function(superclass) {
         function SpritesheetLoaderResource() {
@@ -630,6 +658,7 @@
                 return Object.assign.apply(Object, [ {} ].concat(resolvers));
             }));
         }, SpritesheetLoader.prototype._loadFromUrlsAsync = function(targets, options) {
+            var this$1 = this;
             void 0 === options && (options = {});
             var res = {};
             if (0 === Object.keys(targets).length) {
@@ -653,7 +682,12 @@
                 }
                 resource.texture && TextureLoaderResource.removeCache(resource.texture), next();
             })), new Promise((function(resolve) {
-                loader.load((function(loader, resources) {
+                loader.use((function(resource, next) {
+                    resource && "json" === resource.extension && !resource.error && resource.textures && this$1.emit("loaderAssetLoaded", {
+                        target: resource.name,
+                        resource: new SpritesheetLoaderResource(resource.textures, null)
+                    }), next();
+                })), loader.load((function(loader, resources) {
                     for (var i in resources) {
                         if (targets[i]) {
                             var resource = resources[i];
@@ -664,6 +698,7 @@
                 }));
             }));
         }, SpritesheetLoader.prototype._loadFromJsonsAsync = function(targets, options) {
+            var this$1 = this;
             void 0 === options && (options = {});
             var res = {};
             if (0 === Object.keys(targets).length) {
@@ -673,21 +708,27 @@
                 var target = targets[i];
                 promises.push(loader.loadAsync(target.meta.image, options).then((function(resource) {
                     if (resource.error) {
-                        return res[i] = new SpritesheetLoaderResource({}, resource.error), Promise.resolve();
+                        return new SpritesheetLoaderResource({}, resource.error);
                     }
                     var ss = new PIXI.Spritesheet(resource.data, target);
                     return new Promise((function(resolve) {
                         ss.parse((function(e) {
-                            if (res[i] = new SpritesheetLoaderResource(ss.textures, null), !useCache) {
-                                for (var i$1 in ss.textures) {
-                                    TextureLoaderResource.removeCache(ss.textures[i$1]);
+                            var resource = new SpritesheetLoaderResource(ss.textures, null);
+                            if (!useCache) {
+                                for (var i in ss.textures) {
+                                    TextureLoaderResource.removeCache(ss.textures[i]);
                                 }
                             }
-                            resolve();
+                            resolve(resource);
                         }));
                     }));
                 })).catch((function(e) {
-                    return res[i] = new SpritesheetLoaderResource({}, e), Promise.resolve();
+                    return new SpritesheetLoaderResource({}, e);
+                })).then((function(resource) {
+                    resource.error || this$1.emit("loaderAssetLoaded", {
+                        target: target,
+                        resource: resource
+                    }), res[i] = resource;
                 })));
             };
             for (var i in targets) {
@@ -703,7 +744,9 @@
         }
         return superclass && (SpritesheetManifest.__proto__ = superclass), SpritesheetManifest.prototype = Object.create(superclass && superclass.prototype), 
         SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._loadAsync = function(targets, options) {
-            return void 0 === options && (options = {}), new SpritesheetLoader(options).loadAllAsync(targets);
+            void 0 === options && (options = {});
+            var loader = new SpritesheetLoader(options);
+            return this._doneLoaderAsync(loader, targets);
         }, SpritesheetManifest;
     }(ManifestBase), SoundLoaderResource = function(superclass) {
         function SoundLoaderResource() {
@@ -719,6 +762,7 @@
         }
         return superclass && (SoundLoader.__proto__ = superclass), SoundLoader.prototype = Object.create(superclass && superclass.prototype), 
         SoundLoader.prototype.constructor = SoundLoader, SoundLoader.prototype.loadAsync = function(target, options) {
+            var this$1 = this;
             void 0 === options && (options = {});
             var url = this._resolveUrl(target, options);
             return new Promise((function(resolve) {
@@ -732,6 +776,11 @@
                         resolve(new SoundLoaderResource(howl, e));
                     }
                 });
+            })).then((function(resource) {
+                return resource.error || this$1.emit("loaderAssetLoaded", {
+                    target: target,
+                    resource: resource
+                }), resource;
             }));
         }, SoundLoader.prototype.loadAllAsync = function(targets, options) {
             var this$1 = this;
@@ -756,7 +805,9 @@
         }
         return superclass && (SoundManifest.__proto__ = superclass), SoundManifest.prototype = Object.create(superclass && superclass.prototype), 
         SoundManifest.prototype.constructor = SoundManifest, SoundManifest.prototype._loadAsync = function(targets, options) {
-            return void 0 === options && (options = {}), new SoundLoader(options).loadAllAsync(targets);
+            void 0 === options && (options = {});
+            var loader = new SoundLoader(options);
+            return this._doneLoaderAsync(loader, targets);
         }, SoundManifest;
     }(ManifestBase), JsonLoaderResource = function(superclass) {
         function JsonLoaderResource() {
@@ -771,6 +822,7 @@
         }
         return superclass && (JsonLoader.__proto__ = superclass), JsonLoader.prototype = Object.create(superclass && superclass.prototype), 
         JsonLoader.prototype.constructor = JsonLoader, JsonLoader.prototype.loadAsync = function(target, options) {
+            var this$1 = this;
             void 0 === options && (options = {});
             var url = this._resolveUrl(target, options);
             return fetch(url).then((function(res) {
@@ -779,6 +831,11 @@
                 return new JsonLoaderResource(json, null);
             })).catch((function(e) {
                 return new JsonLoaderResource({}, e);
+            })).then((function(resource) {
+                return resource.error || this$1.emit("loaderAssetLoaded", {
+                    target: target,
+                    resource: resource
+                }), resource;
             }));
         }, JsonLoader.prototype.loadAllAsync = function(targets, options) {
             var this$1 = this;
@@ -803,7 +860,9 @@
         }
         return superclass && (JsonManifest.__proto__ = superclass), JsonManifest.prototype = Object.create(superclass && superclass.prototype), 
         JsonManifest.prototype.constructor = JsonManifest, JsonManifest.prototype._loadAsync = function(targets, options) {
-            return void 0 === options && (options = {}), new JsonLoader(options).loadAllAsync(targets);
+            void 0 === options && (options = {});
+            var loader = new JsonLoader(options);
+            return this._doneLoaderAsync(loader, targets);
         }, JsonManifest;
     }(ManifestBase), ContentDeliver = function(data) {
         this._piximData = {
@@ -849,175 +908,197 @@
         }
         return res;
     }
-    var _manifests = {}, Content = function Content(options, piximData) {
-        void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData);
-        var basepath = options.basepath || "";
-        if ("object" != typeof options.version) {
-            var version = {}, v = options.version || "";
-            for (var i in _manifests) {
-                version[i] = v;
-            }
-            options.version = version;
-        }
-        if ("object" != typeof options.useCache) {
-            var useCache = {}, v$1 = options.useCache || !1;
-            for (var i$1 in _manifests) {
-                useCache[i$1] = v$1;
-            }
-            options.useCache = useCache;
-        }
-        var contentDeliverData = {
-            width: piximData.config.width,
-            height: piximData.config.height,
-            lib: piximData.lib,
-            resources: {},
-            vars: {}
-        };
-        this._piximData = {
-            contentID: (++_contentID).toString(),
-            basepath: basepath,
-            version: options.version,
-            useCache: options.useCache || !1,
-            $: new ContentDeliver(contentDeliverData),
-            manifests: piximData.manifests,
-            additionalManifests: createManifests(),
-            preloadPromise: null,
-            postloadPromise: null,
-            contentDeliverData: contentDeliverData
-        };
-    }, prototypeAccessors$3 = {
-        contentID: {
-            configurable: !0
-        }
-    };
-    Content.registerManifest = function(key, Manifest) {
-        _manifests[key] = Manifest;
-    }, Content.create = function(key) {
-        if (void 0 === key && (key = ""), key && key in _contents) {
-            throw new Error("Content key '" + key + "' has already exists.");
-        }
-        var ContentClone = function(Content) {
-            function ContentClone(options) {
-                void 0 === options && (options = {}), Content.call(this, options, ContentClone._piximData);
-            }
-            return Content && (ContentClone.__proto__ = Content), ContentClone.prototype = Object.create(Content && Content.prototype), 
-            ContentClone.prototype.constructor = ContentClone, ContentClone;
-        }(Content);
-        return ContentClone._piximData = {
-            config: {
-                width: 450,
-                height: 800
-            },
-            manifests: createManifests(),
-            lib: {}
-        }, key ? _contents[key] = ContentClone : ContentClone;
-    }, Content.get = function(key) {
-        return _contents[key];
-    }, Content.remove = function(key) {
-        delete _contents[key];
-    }, Content.defineTargets = function(key, targets, options) {
-        return void 0 === options && (options = {}), this._piximData.manifests[key] ? (this._piximData.manifests[key].add(targets, options), 
-        this) : (console.warn("Manifest '" + key + "' is not registered."), this);
-    }, Content.defineImages = function(targets, options) {
-        return void 0 === options && (options = {}), this.defineTargets("images", targets, options);
-    }, Content.defineSpritesheets = function(targets, options) {
-        return void 0 === options && (options = {}), this.defineTargets("spritesheets", targets, options);
-    }, Content.defineSounds = function(targets, options) {
-        return void 0 === options && (options = {}), this.defineTargets("sounds", targets, options);
-    }, Content.defineJsons = function(targets, options) {
-        return void 0 === options && (options = {}), this.defineTargets("jsons", targets, options);
-    }, Content.setConfig = function(data) {
-        return this._piximData.config.width = data.width, this._piximData.config.height = data.height, 
-        this;
-    }, Content.defineLibraries = function(data) {
-        for (var i in data) {
-            this._piximData.lib[i] = data[i];
-        }
-        return this;
-    }, prototypeAccessors$3.contentID.get = function() {
-        return this._piximData.contentID;
-    }, Content.prototype.addTargets = function(key, targets, options) {
-        return void 0 === options && (options = {}), this._piximData.additionalManifests[key] ? (this._piximData.additionalManifests[key].add(targets, options), 
-        this) : (console.warn("Manifest '" + key + "' is not registered."), this);
-    }, Content.prototype.addImages = function(data, options) {
-        return void 0 === options && (options = {}), this.addTargets("images", data, options);
-    }, Content.prototype.addSpritesheets = function(targets, options) {
-        return void 0 === options && (options = {}), this.addTargets("spritesheets", targets, options);
-    }, Content.prototype.addSounds = function(targets, options) {
-        return void 0 === options && (options = {}), this.addTargets("sounds", targets, options);
-    }, Content.prototype.addJsons = function(targets, options) {
-        return void 0 === options && (options = {}), this.addTargets("jsons", targets, options);
-    }, Content.prototype.addVars = function(data) {
-        for (var i in data) {
-            this._piximData.$.vars[i] = data[i];
-        }
-        return this;
-    }, Content.prototype.prepareAsync = function() {
-        var this$1 = this;
-        return this.preloadClassAssetAsync().then((function() {
-            return this$1.preloadInstanceAssetAsync();
-        }));
-    }, Content.prototype.buildAsync = function() {
-        var this$1 = this;
-        if (!this._piximData.$.lib.root) {
-            throw new Error('There is no library named "root" in the content.');
-        }
-        return this.prepareAsync().then((function() {
-            return new this$1._piximData.$.lib.root(this$1._piximData.$);
-        }));
-    }, Content.prototype.preloadClassAssetAsync = function() {
-        var this$1 = this;
-        return this._piximData.preloadPromise ? this._piximData.preloadPromise : this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests).catch((function(e) {
-            throw this$1._piximData.preloadPromise = null, e;
-        }));
-    }, Content.prototype.preloadInstanceAssetAsync = function() {
-        var this$1 = this;
-        return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).then((function() {
-            this$1._piximData.postloadPromise = null;
-        })).catch((function(e) {
-            throw this$1._piximData.postloadPromise = null, e;
-        }));
-    }, Content.prototype.destroy = function() {
-        var contentDeliverData = this._piximData.contentDeliverData;
-        contentDeliverData.lib = {}, contentDeliverData.vars = {};
-        var manifests = this._piximData.manifests, additionalManifests = this._piximData.additionalManifests;
-        for (var i in manifests) {
-            manifests[i].destroyResources();
-        }
-        for (var i$1 in additionalManifests) {
-            additionalManifests[i$1].destroyResources();
-        }
-        var resources = contentDeliverData.resources;
-        for (var i$2 in resources) {
-            resources[i$2] = {};
-        }
-    }, Content.prototype._loadAssetAsync = function(manifests) {
-        var basepath = this._piximData.basepath, versions = this._piximData.version, useCaches = this._piximData.useCache, resources = this._piximData.$.resources;
-        if (0 === Object.keys(manifests).length) {
-            return Promise.resolve();
-        }
-        var promises = [], keys = [];
-        for (var i in manifests) {
-            var type = i;
-            keys.push(type);
-            var version = versions[type] || "", useCache = useCaches[type] || !1;
-            promises.push(manifests[type].getAsync({
-                basepath: basepath,
-                version: version,
-                useCache: useCache
-            }));
-        }
-        return Promise.all(promises).then((function(resolver) {
-            for (var i = 0; i < resolver.length; i++) {
-                for (var j in resources[keys[i]] = resources[keys[i]] || {}, resolver[i]) {
-                    resources[keys[i]][j] = resolver[i][j];
+    var _manifests = {}, Content = function(Emitter) {
+        function Content(options, piximData) {
+            void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
+            Emitter.call(this);
+            var basepath = options.basepath || "";
+            if ("object" != typeof options.version) {
+                var version = {}, v = options.version || "";
+                for (var i in _manifests) {
+                    version[i] = v;
                 }
+                options.version = version;
             }
-        }));
-    }, Object.defineProperties(Content.prototype, prototypeAccessors$3), Content.registerManifest("images", TextureManifest), 
-    Content.registerManifest("spritesheets", SpritesheetManifest), Content.registerManifest("sounds", SoundManifest), 
-    Content.registerManifest("jsons", JsonManifest), exports.Application = Application, 
-    exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
+            if ("object" != typeof options.useCache) {
+                var useCache = {}, v$1 = options.useCache || !1;
+                for (var i$1 in _manifests) {
+                    useCache[i$1] = v$1;
+                }
+                options.useCache = useCache;
+            }
+            var contentDeliverData = {
+                width: piximData.config.width,
+                height: piximData.config.height,
+                lib: piximData.lib,
+                resources: {},
+                vars: {}
+            };
+            this._piximData = {
+                contentID: (++_contentID).toString(),
+                basepath: basepath,
+                version: options.version,
+                useCache: options.useCache || !1,
+                $: new ContentDeliver(contentDeliverData),
+                manifests: piximData.manifests,
+                additionalManifests: createManifests(),
+                preloadPromise: null,
+                postloadPromise: null,
+                contentDeliverData: contentDeliverData
+            };
+        }
+        Emitter && (Content.__proto__ = Emitter), Content.prototype = Object.create(Emitter && Emitter.prototype), 
+        Content.prototype.constructor = Content;
+        var prototypeAccessors = {
+            contentID: {
+                configurable: !0
+            },
+            manifestAssetCount: {
+                configurable: !0
+            }
+        };
+        return Content.registerManifest = function(key, Manifest) {
+            _manifests[key] = Manifest;
+        }, Content.create = function(key) {
+            if (void 0 === key && (key = ""), key && key in _contents) {
+                throw new Error("Content key '" + key + "' has already exists.");
+            }
+            var ContentClone = function(Content) {
+                function ContentClone(options) {
+                    void 0 === options && (options = {}), Content.call(this, options, ContentClone._piximData);
+                }
+                return Content && (ContentClone.__proto__ = Content), ContentClone.prototype = Object.create(Content && Content.prototype), 
+                ContentClone.prototype.constructor = ContentClone, ContentClone;
+            }(Content);
+            return ContentClone._piximData = {
+                config: {
+                    width: 450,
+                    height: 800
+                },
+                manifests: createManifests(),
+                lib: {}
+            }, key ? _contents[key] = ContentClone : ContentClone;
+        }, Content.get = function(key) {
+            return _contents[key];
+        }, Content.remove = function(key) {
+            delete _contents[key];
+        }, Content.defineTargets = function(key, targets, options) {
+            return void 0 === options && (options = {}), this._piximData.manifests[key] ? (this._piximData.manifests[key].add(targets, options), 
+            this) : (console.warn("Manifest '" + key + "' is not registered."), this);
+        }, Content.defineImages = function(targets, options) {
+            return void 0 === options && (options = {}), this.defineTargets("images", targets, options);
+        }, Content.defineSpritesheets = function(targets, options) {
+            return void 0 === options && (options = {}), this.defineTargets("spritesheets", targets, options);
+        }, Content.defineSounds = function(targets, options) {
+            return void 0 === options && (options = {}), this.defineTargets("sounds", targets, options);
+        }, Content.defineJsons = function(targets, options) {
+            return void 0 === options && (options = {}), this.defineTargets("jsons", targets, options);
+        }, Content.setConfig = function(data) {
+            return this._piximData.config.width = data.width, this._piximData.config.height = data.height, 
+            this;
+        }, Content.defineLibraries = function(data) {
+            for (var i in data) {
+                this._piximData.lib[i] = data[i];
+            }
+            return this;
+        }, prototypeAccessors.contentID.get = function() {
+            return this._piximData.contentID;
+        }, Content.prototype.addTargets = function(key, targets, options) {
+            return void 0 === options && (options = {}), this._piximData.additionalManifests[key] ? (this._piximData.additionalManifests[key].add(targets, options), 
+            this) : (console.warn("Manifest '" + key + "' is not registered."), this);
+        }, Content.prototype.addImages = function(data, options) {
+            return void 0 === options && (options = {}), this.addTargets("images", data, options);
+        }, Content.prototype.addSpritesheets = function(targets, options) {
+            return void 0 === options && (options = {}), this.addTargets("spritesheets", targets, options);
+        }, Content.prototype.addSounds = function(targets, options) {
+            return void 0 === options && (options = {}), this.addTargets("sounds", targets, options);
+        }, Content.prototype.addJsons = function(targets, options) {
+            return void 0 === options && (options = {}), this.addTargets("jsons", targets, options);
+        }, Content.prototype.addVars = function(data) {
+            for (var i in data) {
+                this._piximData.$.vars[i] = data[i];
+            }
+            return this;
+        }, Content.prototype.prepareAsync = function() {
+            var this$1 = this;
+            return this.preloadClassAssetAsync().then((function() {
+                return this$1.preloadInstanceAssetAsync();
+            }));
+        }, Content.prototype.buildAsync = function() {
+            var this$1 = this;
+            if (!this._piximData.$.lib.root) {
+                throw new Error('There is no library named "root" in the content.');
+            }
+            return this.prepareAsync().then((function() {
+                return new this$1._piximData.$.lib.root(this$1._piximData.$);
+            }));
+        }, Content.prototype.preloadClassAssetAsync = function() {
+            var this$1 = this;
+            return this._piximData.preloadPromise ? this._piximData.preloadPromise : this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests).catch((function(e) {
+                throw this$1._piximData.preloadPromise = null, e;
+            }));
+        }, Content.prototype.preloadInstanceAssetAsync = function() {
+            var this$1 = this;
+            return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).then((function() {
+                this$1._piximData.postloadPromise = null;
+            })).catch((function(e) {
+                throw this$1._piximData.postloadPromise = null, e;
+            }));
+        }, Content.prototype.destroy = function() {
+            var contentDeliverData = this._piximData.contentDeliverData;
+            contentDeliverData.lib = {}, contentDeliverData.vars = {};
+            var manifests = this._piximData.manifests, additionalManifests = this._piximData.additionalManifests;
+            for (var i in manifests) {
+                manifests[i].destroyResources();
+            }
+            for (var i$1 in additionalManifests) {
+                additionalManifests[i$1].destroyResources();
+            }
+            var resources = contentDeliverData.resources;
+            for (var i$2 in resources) {
+                resources[i$2] = {};
+            }
+        }, prototypeAccessors.manifestAssetCount.get = function() {
+            var total = 0, manifests = this._piximData.manifests;
+            for (var i in manifests) {
+                total += manifests[i].count;
+            }
+            var additionalManifests = this._piximData.additionalManifests;
+            for (var i$1 in additionalManifests) {
+                total += additionalManifests[i$1].count;
+            }
+            return total;
+        }, Content.prototype._loadAssetAsync = function(manifests) {
+            var this$1 = this, basepath = this._piximData.basepath, versions = this._piximData.version, useCaches = this._piximData.useCache, resources = this._piximData.$.resources;
+            if (0 === Object.keys(manifests).length) {
+                return Promise.resolve();
+            }
+            var promises = [], keys = [];
+            for (var i in manifests) {
+                var type = i;
+                keys.push(type);
+                var version = versions[type] || "", useCache = useCaches[type] || !1, manifest = manifests[type];
+                manifest.on("loaderAssetLoaded", (function(resource) {
+                    this$1.emit("loaderAssetLoaded", resource);
+                })), promises.push(manifest.getAsync({
+                    basepath: basepath,
+                    version: version,
+                    useCache: useCache
+                }));
+            }
+            return Promise.all(promises).then((function(resolver) {
+                for (var i = 0; i < resolver.length; i++) {
+                    for (var j in resources[keys[i]] = resources[keys[i]] || {}, resolver[i]) {
+                        resources[keys[i]][j] = resolver[i][j];
+                    }
+                }
+            }));
+        }, Object.defineProperties(Content.prototype, prototypeAccessors), Content;
+    }(Emitter);
+    Content.registerManifest("images", TextureManifest), Content.registerManifest("spritesheets", SpritesheetManifest), 
+    Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest), 
+    exports.Application = Application, exports.Container = Container, exports.Content = Content, 
+    exports.ContentDeliver = ContentDeliver, exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", 
     exports.Emitter = Emitter$1, exports.JsonLoader = JsonLoader, exports.JsonLoaderResource = JsonLoaderResource, 
     exports.JsonManifest = JsonManifest, exports.Layer = Layer, exports.LoaderBase = LoaderBase, 
     exports.LoaderResource = LoaderResource, exports.ManifestBase = ManifestBase, exports.SoundLoader = SoundLoader, 

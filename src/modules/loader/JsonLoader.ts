@@ -36,7 +36,14 @@ export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLo
 		return fetch(url)
 			.then(res => res.json())
 			.then(json => new JsonLoaderResource(json, null))
-			.catch((e: any) => new JsonLoaderResource({}, e));
+			.catch((e: any) => new JsonLoaderResource({}, e))
+			.then((resource: JsonLoaderResource) => {
+				if (!resource.error) {
+					this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
+				}
+				
+				return resource;
+			});
 	}
 	
 	loadAllAsync(targets: IJsonLoaderTargetDictionary, options: IJsonLoaderOption = {}) {

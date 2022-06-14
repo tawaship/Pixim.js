@@ -13,6 +13,6 @@ export class JsonManifest extends ManifestBase.ManifestBase<JsonLoader.TJsonLoad
 	protected _loadAsync(targets: IJsonManifestTargetDictionary, options: JsonLoader.IJsonLoaderOption = {}) {
 		const loader = new JsonLoader.JsonLoader(options);
 		
-		return loader.loadAllAsync(targets);
+		return this._doneLoaderAsync(loader, targets);
 	}
 }

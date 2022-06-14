@@ -1,5 +1,8 @@
 import * as PIXI from 'pixi.js';
 import * as utils from '../utils/index';
+import { Emitter } from '@tawaship/emitter';
+
+export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 
 export abstract class LoaderResource<T> {
 	protected _data: T;
@@ -37,14 +40,22 @@ export interface ILoaderTargetDictionary<T> {
 	[ name: string ]: T;
 }
 
-export abstract class LoaderBase<TTarget, TResource> {
+export abstract class LoaderBase<TTarget, TResource> extends Emitter {
 	protected _options: ILoaderOption;
 	
 	constructor(options: ILoaderOption = {}) {
+		super();
 		this._options = options;
 	}
 	
+	/**
+	 * @fires [[LoaderBase.loaded]]
+	 */
 	abstract loadAsync(target: TTarget, options: ILoaderOption): Promise<LoaderResource<TResource>>;
+	
+	/**
+	 * @fires [[LoaderBase.loaded]]
+	 */
 	abstract loadAllAsync(targets: ILoaderTargetDictionary<TTarget>, options: ILoaderOption): Promise<ILoaderResourceDictionary<TResource>>;
 	
 	protected _resolveBasepath(basepath?: string) {
@@ -70,4 +81,13 @@ export abstract class LoaderBase<TTarget, TResource> {
 		
 		return uri;
 	}
+	
+	/**
+	 * Fired when one of the resources has succeeded loading.
+	 * 
+	 * @event
+	 */
+	loaderAssetLoaded?(data: { target: TTarget, resource: LoaderResource<TResource> }): void {}
 }
+
+delete(LoaderBase.prototype[EVENT_LOADER_ASSET_LOADED]);

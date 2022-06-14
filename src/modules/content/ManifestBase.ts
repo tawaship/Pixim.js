@@ -1,4 +1,5 @@
 import * as LoaderBase from '../loader/LoaderBase';
+import { Emitter } from '@tawaship/emitter';
 
 export interface IManifestClass {
 	new(): ManifestBase<any, any>;
@@ -29,7 +30,7 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 }
 
-export abstract class ManifestBase<TTarget, TResource> {
+export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
 	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
 	
@@ -45,6 +46,10 @@ export abstract class ManifestBase<TTarget, TResource> {
 				unrequired
 			};
 		}
+	}
+	
+	get count() {
+		return Object.keys(this._data).length;
 	}
 	
 	/**
@@ -87,6 +92,17 @@ export abstract class ManifestBase<TTarget, TResource> {
 	 * Load resources.
 	 */
 	protected abstract _loadAsync(targets: IManifestTargetDictionary<TTarget>, options: LoaderBase.ILoaderOption): Promise<LoaderBase.ILoaderResourceDictionary<TResource>>;
+	
+	/**
+	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
+	 */
+	protected _doneLoaderAsync(loader: LoaderBase.LoaderBase<TTarget, TResource>, targets: IManifestTargetDictionary<TTarget>) {
+		loader.on(LoaderBase.EVENT_LOADER_ASSET_LOADED, (resource: TResource) => {
+			this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, resource);
+		});
+		
+		return loader.loadAllAsync(targets, {});
+	}
 	
 	destroyResources() {
 		for (let i in this._resources) {

@@ -13,6 +13,6 @@ export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTe
 	protected _loadAsync(targets: ITextureManifestTargetDictionary, options: TextureLoader.ITextureLoaderOption = {}) {
 		const loader = new TextureLoader.TextureLoader(options);
 		
-		return loader.loadAllAsync(targets);
+		return this._doneLoaderAsync(loader, targets);
 	}
 }

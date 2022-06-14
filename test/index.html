@@ -79,7 +79,7 @@ Test.defineLibraries({
 			, {basepath:"https://localhost/Pixim.js/test/img"})
 			.then(r => {
 			console.log(r.data)
-			this.addChild(new PIXI.Sprite(r.data.ss_1_1)).scale.set(2)
+			//this.addChild(new PIXI.Sprite(r.data.ss_1_1)).scale.set(2)
 			console.log(r)
 			})
 			.catch(e => {
@@ -172,7 +172,7 @@ Test.defineLibraries({
 				.beginFill(0xFFFFFF, 1)
 				.drawRect(0, 0, 100, 100);
 			//*/
-			
+			console.log($.resources.spritesheets)
 			const f = (r, t, s) => {
 				const c = this.addChild(new PIXI.Container());
 				c.addChild(new PIXI.Sprite($.resources.images[t]));
@@ -273,6 +273,13 @@ let app = o = new Pixim.Application({width: 450, height: 800}, {autoAdjust:app =
 	app.fullScreen();
 } });
 
+
+const count = test.manifestAssetCount
+let _count = 0;
+test.on("loaderAssetLoaded", e => {
+console.log(++_count)
+if (_count === count) console.log("loaded all")
+})
 app.attachAsync(test)
 	.then(() => {
 		app.play();

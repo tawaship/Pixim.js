@@ -36,13 +36,22 @@ export interface ITextureLoaderOption extends LoaderBase.ILoaderOption {
 
 export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource> {
 	loadAsync(target: TTextureLoaderTarget, options: ITextureLoaderOption = {}) {
-		if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
-			return this._loadFromElementAsync(target, options);
-		} else if (target.indexOf('data:') === 0) {
-			return this._loadFromDataUriAsync(target, options);
-		} else {
-			return this._loadFromUrlAsync(target, options);
-		}
+		return (() => {
+			if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
+				return this._loadFromElementAsync(target, options);
+			} else if (target.indexOf('data:') === 0) {
+				return this._loadFromDataUriAsync(target, options);
+			} else {
+				return this._loadFromUrlAsync(target, options);
+			}
+		})()
+		.then((resource: TextureLoaderResource) => {
+			if (!resource.error) {
+				this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
+			}
+			
+			return resource;
+		});
 	}
 	
 	loadAllAsync(targets: ITextureLoaderTargetDictionary, options: ITextureLoaderOption = {}) {

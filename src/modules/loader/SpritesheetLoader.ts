@@ -145,6 +145,14 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 		}
 		
 		return new Promise<ISpritesheetLoaderResourceDictionary>(resolve => {
+			loader.use((resource: PIXI.LoaderResource, next: () => void) => {
+				if (resource && resource.extension === 'json' && !resource.error && resource.textures) {
+					this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target: resource.name, resource: new SpritesheetLoaderResource(resource.textures, null) });
+				}
+				
+				next();
+			});
+			
 			loader.load((loader, resources) => {
 				for (let i in resources) {
 					if (!targets[i]) {
@@ -192,18 +200,16 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 			const target = targets[i];
 			promises.push(
 				loader.loadAsync(target.meta.image, options)
-					.then(resource => {
+					.then((resource: TextureLoader.TextureLoaderResource) => {
 						if (resource.error) {
-							res[i] = new SpritesheetLoaderResource({}, resource.error);
-							
-							return Promise.resolve();
+							return new SpritesheetLoaderResource({}, resource.error);
 						}
 						
 						const ss = new PIXI.Spritesheet(resource.data, target);
 						
-						return new Promise<void>(resolve => {
+						return new Promise<SpritesheetLoaderResource>(resolve => {
 							ss.parse(e => {
-								res[i] = new SpritesheetLoaderResource(ss.textures, null);
+								const resource = new SpritesheetLoaderResource(ss.textures, null);
 								
 								if (!useCache) {
 									for (let i in ss.textures) {
@@ -211,14 +217,19 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 									}
 								}
 								
-								resolve();
+								resolve(resource);
 							});
 						});
 					})
 					.catch(e => {
-						res[i] = new SpritesheetLoaderResource({}, e);
+						return new SpritesheetLoaderResource({}, e);
+					})
+					.then((resource: SpritesheetLoaderResource) => {
+						if (!resource.error) {
+							this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
+						}
 						
-						return Promise.resolve();
+						res[i] = resource;
 					})
 			);
 		}

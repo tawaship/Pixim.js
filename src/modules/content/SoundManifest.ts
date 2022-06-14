@@ -13,6 +13,6 @@ export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundL
 	protected _loadAsync(targets: ISoundManifestTargetDictionary, options: SoundLoader.ISoundLoaderOption = {}) {
 		const loader = new SoundLoader.SoundLoader(options);
 		
-		return loader.loadAllAsync(targets);
+		return this._doneLoaderAsync(loader, targets);
 	}
 }

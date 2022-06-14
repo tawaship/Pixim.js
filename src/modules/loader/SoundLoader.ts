@@ -39,6 +39,13 @@ export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoun
 					resolve(new SoundLoaderResource(howl, e));
 				}
 			});
+		})
+		.then((resource: SoundLoaderResource) => {
+			if (!resource.error) {
+				this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
+			}
+			
+			return resource;
 		});
 	}
 	

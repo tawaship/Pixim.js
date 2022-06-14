@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.1
+ * @tawaship/pixim.js - v1.13.2
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -648,58 +648,6 @@ class Application extends Emitter {
     }
 }
 
-class ManifestBase {
-    constructor() {
-        this._data = {};
-        this._resources = {};
-    }
-    /**
-     * Register targetss.
-     */
-    add(targets, options = {}) {
-        const unrequired = options.unrequired || false;
-        for (let i in targets) {
-            this._data[i] = {
-                target: targets[i],
-                unrequired
-            };
-        }
-    }
-    /**
-     * Get resources.
-     */
-    getAsync(options) {
-        if (Object.keys(this._data).length === 0) {
-            return Promise.resolve({});
-        }
-        const res = {};
-        const targets = {};
-        for (let i in this._data) {
-            targets[i] = this._data[i].target;
-        }
-        return this._loadAsync(targets, options)
-            .then(resources => {
-            for (let i in resources) {
-                const resource = resources[i];
-                if (resource.error && !this._data[i].unrequired) {
-                    throw resource.error;
-                }
-            }
-            for (let i in resources) {
-                const resource = resources[i];
-                this._resources[i] = resource;
-                res[i] = resource.data;
-            }
-            return res;
-        });
-    }
-    destroyResources() {
-        for (let i in this._resources) {
-            this._resources[i].destroy();
-        }
-    }
-}
-
 function resolvePath(path, basepath) {
     if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
         return path;
@@ -737,6 +685,7 @@ var index = /*#__PURE__*/Object.freeze({
     resolveQuery: resolveQuery
 });
 
+const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 class LoaderResource {
     constructor(data, error) {
         this._data = data;
@@ -749,8 +698,9 @@ class LoaderResource {
         return this._error;
     }
 }
-class LoaderBase {
+class LoaderBase extends emitter.Emitter {
     constructor(options = {}) {
+        super();
         this._options = options;
     }
     _resolveBasepath(basepath) {
@@ -770,6 +720,78 @@ class LoaderBase {
             : preUri;
         return uri;
     }
+    /**
+     * Fired when one of the resources has succeeded loading.
+     *
+     * @event
+     */
+    loaderAssetLoaded(data) { }
+}
+delete (LoaderBase.prototype[EVENT_LOADER_ASSET_LOADED]);
+
+class ManifestBase extends emitter.Emitter {
+    constructor() {
+        super(...arguments);
+        this._data = {};
+        this._resources = {};
+    }
+    /**
+     * Register targetss.
+     */
+    add(targets, options = {}) {
+        const unrequired = options.unrequired || false;
+        for (let i in targets) {
+            this._data[i] = {
+                target: targets[i],
+                unrequired
+            };
+        }
+    }
+    get count() {
+        return Object.keys(this._data).length;
+    }
+    /**
+     * Get resources.
+     */
+    getAsync(options) {
+        if (Object.keys(this._data).length === 0) {
+            return Promise.resolve({});
+        }
+        const res = {};
+        const targets = {};
+        for (let i in this._data) {
+            targets[i] = this._data[i].target;
+        }
+        return this._loadAsync(targets, options)
+            .then(resources => {
+            for (let i in resources) {
+                const resource = resources[i];
+                if (resource.error && !this._data[i].unrequired) {
+                    throw resource.error;
+                }
+            }
+            for (let i in resources) {
+                const resource = resources[i];
+                this._resources[i] = resource;
+                res[i] = resource.data;
+            }
+            return res;
+        });
+    }
+    /**
+     * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
+     */
+    _doneLoaderAsync(loader, targets) {
+        loader.on(EVENT_LOADER_ASSET_LOADED, (resource) => {
+            this.emit(EVENT_LOADER_ASSET_LOADED, resource);
+        });
+        return loader.loadAllAsync(targets, {});
+    }
+    destroyResources() {
+        for (let i in this._resources) {
+            this._resources[i].destroy();
+        }
+    }
 }
 
 class TextureLoaderResource extends LoaderResource {
@@ -786,15 +808,23 @@ class TextureLoaderResource extends LoaderResource {
 }
 class TextureLoader extends LoaderBase {
     loadAsync(target, options = {}) {
-        if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
-            return this._loadFromElementAsync(target, options);
-        }
-        else if (target.indexOf('data:') === 0) {
-            return this._loadFromDataUriAsync(target, options);
-        }
-        else {
-            return this._loadFromUrlAsync(target, options);
-        }
+        return (() => {
+            if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
+                return this._loadFromElementAsync(target, options);
+            }
+            else if (target.indexOf('data:') === 0) {
+                return this._loadFromDataUriAsync(target, options);
+            }
+            else {
+                return this._loadFromUrlAsync(target, options);
+            }
+        })()
+            .then((resource) => {
+            if (!resource.error) {
+                this.emit(EVENT_LOADER_ASSET_LOADED, { target, resource });
+            }
+            return resource;
+        });
     }
     loadAllAsync(targets, options = {}) {
         if (Object.keys(targets).length === 0) {
@@ -852,7 +882,7 @@ class TextureLoader extends LoaderBase {
 class TextureManifest extends ManifestBase {
     _loadAsync(targets, options = {}) {
         const loader = new TextureLoader(options);
-        return loader.loadAllAsync(targets);
+        return this._doneLoaderAsync(loader, targets);
     }
 }
 
@@ -945,6 +975,12 @@ class SpritesheetLoader extends LoaderBase {
             });
         }
         return new Promise(resolve => {
+            loader.use((resource, next) => {
+                if (resource && resource.extension === 'json' && !resource.error && resource.textures) {
+                    this.emit(EVENT_LOADER_ASSET_LOADED, { target: resource.name, resource: new SpritesheetLoaderResource(resource.textures, null) });
+                }
+                next();
+            });
             loader.load((loader, resources) => {
                 for (let i in resources) {
                     if (!targets[i]) {
@@ -980,27 +1016,31 @@ class SpritesheetLoader extends LoaderBase {
         for (let i in targets) {
             const target = targets[i];
             promises.push(loader.loadAsync(target.meta.image, options)
-                .then(resource => {
+                .then((resource) => {
                 if (resource.error) {
-                    res[i] = new SpritesheetLoaderResource({}, resource.error);
-                    return Promise.resolve();
+                    return new SpritesheetLoaderResource({}, resource.error);
                 }
                 const ss = new PIXI.Spritesheet(resource.data, target);
                 return new Promise(resolve => {
                     ss.parse(e => {
-                        res[i] = new SpritesheetLoaderResource(ss.textures, null);
+                        const resource = new SpritesheetLoaderResource(ss.textures, null);
                         if (!useCache) {
                             for (let i in ss.textures) {
                                 TextureLoaderResource.removeCache(ss.textures[i]);
                             }
                         }
-                        resolve();
+                        resolve(resource);
                     });
                 });
             })
                 .catch(e => {
-                res[i] = new SpritesheetLoaderResource({}, e);
-                return Promise.resolve();
+                return new SpritesheetLoaderResource({}, e);
+            })
+                .then((resource) => {
+                if (!resource.error) {
+                    this.emit(EVENT_LOADER_ASSET_LOADED, { target, resource });
+                }
+                res[i] = resource;
             }));
         }
         return Promise.all(promises)
@@ -1013,7 +1053,7 @@ class SpritesheetLoader extends LoaderBase {
 class SpritesheetManifest extends ManifestBase {
     _loadAsync(targets, options = {}) {
         const loader = new SpritesheetLoader(options);
-        return loader.loadAllAsync(targets);
+        return this._doneLoaderAsync(loader, targets);
     }
 }
 
@@ -1037,6 +1077,12 @@ class SoundLoader extends LoaderBase {
                     resolve(new SoundLoaderResource(howl, e));
                 }
             });
+        })
+            .then((resource) => {
+            if (!resource.error) {
+                this.emit(EVENT_LOADER_ASSET_LOADED, { target, resource });
+            }
+            return resource;
         });
     }
     loadAllAsync(targets, options = {}) {
@@ -1061,7 +1107,7 @@ class SoundLoader extends LoaderBase {
 class SoundManifest extends ManifestBase {
     _loadAsync(targets, options = {}) {
         const loader = new SoundLoader(options);
-        return loader.loadAllAsync(targets);
+        return this._doneLoaderAsync(loader, targets);
     }
 }
 
@@ -1075,7 +1121,13 @@ class JsonLoader extends LoaderBase {
         return fetch(url)
             .then(res => res.json())
             .then(json => new JsonLoaderResource(json, null))
-            .catch((e) => new JsonLoaderResource({}, e));
+            .catch((e) => new JsonLoaderResource({}, e))
+            .then((resource) => {
+            if (!resource.error) {
+                this.emit(EVENT_LOADER_ASSET_LOADED, { target, resource });
+            }
+            return resource;
+        });
     }
     loadAllAsync(targets, options = {}) {
         if (Object.keys(targets).length === 0) {
@@ -1099,7 +1151,7 @@ class JsonLoader extends LoaderBase {
 class JsonManifest extends ManifestBase {
     _loadAsync(targets, options = {}) {
         const loader = new JsonLoader(options);
-        return loader.loadAllAsync(targets);
+        return this._doneLoaderAsync(loader, targets);
     }
 }
 
@@ -1180,8 +1232,9 @@ function createContentStatic() {
  * @ignore
  */
 const _manifests = {};
-class Content {
+class Content extends emitter.Emitter {
     constructor(options = {}, piximData = Content._piximData) {
+        super();
         const basepath = options.basepath || '';
         if (typeof (options.version) !== 'object') {
             const version = {};
@@ -1449,6 +1502,21 @@ class Content {
             resources[i] = {};
         }
     }
+    get manifestAssetCount() {
+        let total = 0;
+        const manifests = this._piximData.manifests;
+        for (let i in manifests) {
+            total += manifests[i].count;
+        }
+        const additionalManifests = this._piximData.additionalManifests;
+        for (let i in additionalManifests) {
+            total += additionalManifests[i].count;
+        }
+        return total;
+    }
+    /**
+     * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
+     */
     _loadAssetAsync(manifests) {
         const basepath = this._piximData.basepath;
         const versions = this._piximData.version;
@@ -1465,7 +1533,11 @@ class Content {
             keys.push(type);
             const version = versions[type] || '';
             const useCache = useCaches[type] || false;
-            promises.push(manifests[type].getAsync({ basepath, version, useCache }));
+            const manifest = manifests[type];
+            manifest.on(EVENT_LOADER_ASSET_LOADED, resource => {
+                this.emit(EVENT_LOADER_ASSET_LOADED, resource);
+            });
+            promises.push(manifest.getAsync({ basepath, version, useCache }));
         }
         return Promise.all(promises)
             .then(resolver => {
@@ -1487,6 +1559,7 @@ exports.Application = Application;
 exports.Container = Container;
 exports.Content = Content;
 exports.ContentDeliver = ContentDeliver;
+exports.EVENT_LOADER_ASSET_LOADED = EVENT_LOADER_ASSET_LOADED;
 exports.Emitter = Emitter;
 exports.JsonLoader = JsonLoader;
 exports.JsonLoaderResource = JsonLoaderResource;
