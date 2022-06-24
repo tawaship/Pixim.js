@@ -445,12 +445,10 @@ export class Content extends Emitter {
 		const additionalManifests = this._piximData.additionalManifests;
 		
 		for (let i in manifests) {
-			manifests[i].a();
 			manifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		
 		for (let i in additionalManifests) {
-			additionalManifests[i].a();
 			additionalManifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		

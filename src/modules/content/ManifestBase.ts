@@ -69,7 +69,7 @@ export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitte
 			};
 		}
 	}
-	a(){}
+	
 	get count() {
 		return Object.keys(this._data).length;
 	}
@@ -77,49 +77,54 @@ export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitte
 	/**
 	 * Get resources.
 	 */
-	getAsync(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<()=>void>>) {
+	getAsync(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>) {
 		if (Object.keys(this._data).length === 0) {
 			return Promise.resolve({});
 		}
 		
 		const res: IRawResourceDictionary<TResource> = {};
-		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption<():void>> = {};
+		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption<TResolver>> = {};
 		
 		const loader = this._createLoader();
 		loader.onLoaded = resource => {
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
+		const loaderOptions: LoaderBase.ILoaderOption<TResolver> = this._getAppendOption(options);
+		loaderOptions.xhr = false;
+		
 		return (() => {
 			const promises: Promise<void>[] = [];
 			
-			for (let i in this._data) {
-				const target = this._resolveTarget(this._data[i].target, options);
-				const loaderOptions = this._buildOption(options);
-				
-				data[i] = { target, options: loaderOptions };
-				
-				if (typeof(target) !== 'string') {
-					loaderOptions.xhr = false;
-					continue;
+			let f = false;
+			if (typeof(options.xhr) === 'boolean') {
+				loaderOptions.xhr = options.xhr;
+				for (let i in this._data) {
+					const target = this._resolveTarget(this._data[i].target, options);
+					data[i] = { target, options: loaderOptions };
 				}
-				
-				if (typeof(options.xhr) === 'boolean') {
-					loaderOptions.xhr = options.xhr;
-					continue;
+			} else if (typeof(options.xhr) !== 'function') {
+				loaderOptions.xhr = false;
+				for (let i in this._data) {
+					const target = this._resolveTarget(this._data[i].target, options);
+					data[i] = { target, options: loaderOptions };
 				}
-				
-				if (typeof(options.xhr) !== 'function') {
-					loaderOptions.xhr = false;
-					continue;
+			} else {
+				for (let i in this._data) {
+					const target = this._resolveTarget(this._data[i].target, options);
+					
+					if (typeof(target) !== 'string') {
+						data[i] = { target, options: Object.assign({}, loaderOptions, { xhr: false }) };
+						continue;
+					}
+					
+					promises.push(
+						options.xhr(this._type, target)
+							.then(xhr => {
+								data[i] = { target, options: Object.assign({}, loaderOptions, { xhr }) };
+							})
+					);
 				}
-				
-				promises.push(
-					options.xhr(this._type, target)
-						.then(xhr => {
-							loaderOptions.xhr = xhr;
-						})
-				);
 			}
 			
 			return Promise.all(promises).then(() => data);
@@ -147,17 +152,17 @@ export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitte
 		});
 	}
 	
-	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource, LoaderBase.ILoaderOption<():void>>;
+	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource, TResolver>;
 	
-	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>>): TTarget {
+	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>): TTarget {
 		return this._resolveTargetPath(target, options);
 	}
 	
-	protected _buildOption(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>>): IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>> {
-		return { xhr: options.xhr };
+	protected _getAppendOption(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>): LoaderBase.ILoaderOption<TResolver> {
+		return {};
 	}
 	
-	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>> = {}) {
+	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>> = {}) {
 		if (typeof(target) !== 'string') {
 			return target;
 		}

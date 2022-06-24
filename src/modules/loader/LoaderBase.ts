@@ -113,7 +113,7 @@ export abstract class LoaderBase<TTarget, TResource, TResolver> {
 	
 	protected _resolveXhrOptions(xhr: ILoaderXhrOption<TResolver> | boolean): ILoaderXhrOption<TResolver> {
 		const requestOptions: IFetchRequestOption = typeof(xhr) === 'boolean' ? {} : (xhr.requestOptions || {});
-		const dataResolver: TResolver = typeof(xhr) === 'boolean' ? undefined : xhr.dataResolver;
+		const dataResolver: TResolver | undefined = typeof(xhr) === 'boolean' ? undefined : xhr.dataResolver;
 		
 		return {
 			requestOptions,

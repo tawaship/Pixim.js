@@ -10,7 +10,7 @@ export interface ISoundDictionary extends ManifestBase.IRawResourceDictionary<So
 
 }
 
-export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundLoaderTarget, SoundLoader.TSoundLoaderRawResource, SoundLoader.ISoundLoaderFetchResolver> {
+export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundLoaderTarget, SoundLoader.TSoundLoaderRawResource, SoundLoader.TSoundLoaderFetchResolver> {
 	protected _createLoader() {
 		return new SoundLoader.SoundLoader();
 	}

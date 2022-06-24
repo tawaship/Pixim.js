@@ -50,7 +50,7 @@ export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoader
 export type TSpritesheetLoaderFetchResolver = [ JsonLoader.TJsonLoaderFetchResolver, TextureLoader.TTextureLoaderFetchResolver ];
 
 export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption<TSpritesheetLoaderFetchResolver> {
-	version: string | number;
+	version?: string | number;
 }
 
 /**
