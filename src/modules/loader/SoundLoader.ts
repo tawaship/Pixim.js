@@ -20,13 +20,30 @@ export interface ISoundLoaderResourceDictionary extends LoaderBase.ILoaderResour
 
 }
 
-export interface ISoundLoaderOption extends LoaderBase.ILoaderOption {
+export type TSoundLoaderFetchResolver = (res: Howl) => Promise<Howl>;
+
+export interface ISoundLoaderOption extends LoaderBase.ILoaderOption<TSoundLoaderFetchResolver> {
 
 }
 
-export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource> {
-	loadAsync(target: TSoundLoaderTarget, options: ISoundLoaderOption = {}) {
-		const url = this._resolveUrl(target, options);
+export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, TSoundLoaderFetchResolver> {
+	protected _loadAsync(target: TSoundLoaderTarget) {
+		return new Promise<SoundLoaderResource>(resolve => {
+			const howl = new Howl({
+				src: target,
+				onload: () => {
+					resolve(new SoundLoaderResource(howl, null));
+				},
+				onloaderror: () => {
+					const e = new Error('invalid resource: ' + target);
+					resolve(new SoundLoaderResource(howl, e));
+				}
+			});
+		});
+	}
+	
+	protected _loadXhrAsync(url: string) {
+		const xhrOptions = this._options.xhrOptions || {};
 		
 		return new Promise<SoundLoaderResource>(resolve => {
 			const howl = new Howl({
@@ -37,38 +54,9 @@ export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoun
 				onloaderror: () => {
 					const e = new Error('invalid resource: ' + url);
 					resolve(new SoundLoaderResource(howl, e));
-				}
+				},
+				xhr: xhrOptions.requestOptions || {}
 			});
-		})
-		.then((resource: SoundLoaderResource) => {
-			if (!resource.error) {
-				this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
-			}
-			
-			return resource;
 		});
-	}
-	
-	loadAllAsync(targets: ISoundLoaderTargetDictionary, options: ISoundLoaderOption = {}) {
-		if (Object.keys(targets).length === 0) {
-			return Promise.resolve({});
-		}
-		
-		const promises = [];
-		const res: ISoundLoaderResourceDictionary = {};
-		
-		for (let i in targets) {
-			promises.push(
-				this.loadAsync(targets[i], options)
-					.then(resource => {
-						res[i] = resource;
-					})
-			);
-		}
-		
-		return Promise.all(promises)
-			.then(() => {
-				return res;
-			});
 	}
 }

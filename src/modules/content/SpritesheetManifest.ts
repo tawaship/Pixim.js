@@ -9,7 +9,7 @@ export interface ISpritesheetDictionary extends ManifestBase.IRawResourceDiction
 
 }
 
-export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource> {
+export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource, SpritesheetLoader.TSpritesheetLoaderFetchResolver> {
 	protected _loadAsync(targets: ISpritesheetManifestTargetDictionary, options: SpritesheetLoader.ISpritesheetLoaderOption = {}) {
 		const loader = new SpritesheetLoader.SpritesheetLoader(options);
 		

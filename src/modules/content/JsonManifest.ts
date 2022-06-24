@@ -9,7 +9,7 @@ export interface IJsonDictionary extends ManifestBase.IRawResourceDictionary<Jso
 
 }
 
-export class JsonManifest extends ManifestBase.ManifestBase<JsonLoader.TJsonLoaderTarget, JsonLoader.TJsonLoaderRawResource> {
+export class JsonManifest extends ManifestBase.ManifestBase<JsonLoader.TJsonLoaderTarget, JsonLoader.TJsonLoaderRawResource, JsonLoader.TJsonLoaderFetchResolver> {
 	protected _loadAsync(targets: IJsonManifestTargetDictionary, options: JsonLoader.IJsonLoaderOption = {}) {
 		const loader = new JsonLoader.JsonLoader(options);
 		

@@ -1,15 +1,31 @@
 import * as PIXI from 'pixi.js';
 
-export function resolvePath(path: string, basepath: string) {
-	if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
+export function resolvePath(basepath: string, path: string) {
+	if (!isUrl(path)) {
 		return path;
-	} else {
-		return PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
 	}
+	
+	//if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
+	//	return path;
+	//} else {
+		return PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
+	//}
+}
+
+export function isUrl(uri: string) {
+	if (uri.indexOf('data:') === 0) {
+		return false;
+	}
+	
+	if (uri.indexOf('blob:') === 0) {
+		return false;
+	}
+	
+	return true;
 }
 
 export function resolveQuery(uri: string, queries: { [ name: string ]: any }): string {
-	if (uri.indexOf('data:') === 0) {
+	if (!isUrl(uri)) {
 		return uri;
 	} else {
 		const q = [];

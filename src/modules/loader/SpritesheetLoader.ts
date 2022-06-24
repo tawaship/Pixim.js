@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as LoaderBase from './LoaderBase';
+import * as JsonLoader from './JsonLoader';
 import * as TextureLoader from './TextureLoader';
 import * as utils from '../utils/index';
 
@@ -7,10 +8,6 @@ export type TSpritesheetLoaderRawResource = PIXI.ITextureDictionary;
 
 export class SpritesheetLoaderResource extends LoaderBase.LoaderResource<TSpritesheetLoaderRawResource> {
 	destroy() {
-		for (let i in this._data) {
-			TextureLoader.TextureLoaderResource.removeCache(this._data[i]);
-		}
-		
 		for (let i in this._data) {
 			this._data[i].destroy(true);
 		}
@@ -46,7 +43,13 @@ export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoader
 
 }
 
-export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
+/**
+ * - 0: for JsonLoader
+ * - 1: for TextureLoader
+ */
+export type TSpritesheetLoaderFetchResolver = [ JsonLoader.TJsonLoaderFetchResolver, TextureLoader.TTextureLoaderFetchResolver ];
+
+export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption<TSpritesheetLoaderFetchResolver> {
 
 }
 
@@ -55,188 +58,111 @@ export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
  */
 const KEY_SINGLE_SPRITESHEET = '--single-spritesheet';
 
-export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource> {
-	loadAsync(target: TSpritesheetLoaderTarget, options: ISpritesheetLoaderOption = {}) {
-		if (typeof target === 'string') {
-			return this._loadFromUrlsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
-				.then(resources => {
-					return resources[KEY_SINGLE_SPRITESHEET];
-				});
+export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, TSpritesheetLoaderFetchResolver> {
+	protected _loadAsync(target: TSpritesheetLoaderTarget, options: ISpritesheetLoaderOption = {}) {
+		if (typeof target !== 'string') {
+			return this._loadTextureFromJson(target);
 		} else {
-			return this._loadFromJsonsAsync({ [KEY_SINGLE_SPRITESHEET]: target }, options)
-				.then(resources => {
-					return resources[KEY_SINGLE_SPRITESHEET];
-				});
+			return this._loadFromUrlAsync(target);
 		}
 	}
 	
-	loadAllAsync(targets: ISpritesheetLoaderTargetDictionary, options: ISpritesheetLoaderOption = {}) {
-		if (Object.keys(targets).length === 0) {
-			return Promise.resolve({});
+	protected _loadXhrAsync(url: string) {
+		const options = this._options;
+		const jsonOptions: JsonLoader.IJsonLoaderOption = {
+			basepath: this._options.basepath,
+			version: this._options.version,
+			useCache: this._options.useCache,
+		};
+		const xhrOptions = this._options.xhrOptions || {};
+		jsonOptions.xhrOptions = {
+			requestOptions: xhrOptions.requestOptions,
+			dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[0] : xhrOptions.dataResolver
 		}
 		
-		const promises = [];
-		const urls: ISpritesheetLoaderUrlTargetDictionary = {};
-		const jsons: ISpritesheetLoaderJsonTargetDictionary = {};
+		return this._loadFromUrlAsync(url, jsonOptions);
+	}
+	
+	private _loadFromUrlAsync(url: string, options?: JsonLoader.IJsonLoaderOption) {
+		const loader = new JsonLoader.JsonLoader(options);
 		
-		for (let i in targets) {
-			const target = targets[i];
-			
-			if (typeof target === 'string') {
-				urls[i] = target;
-			} else {
-				jsons[i] = target;
+		return loader.loadAsync(url)
+			.then(resource => {
+				const json = resource.data;
+				
+				if (!json.meta || !json.meta.image || !json.frames) {
+					return new SpritesheetLoaderResource({}, 'invalid json');
+				}
+				
+				const basepath = url;
+				const version = this._options.version || '';
+				const preUri = utils.resolvePath(basepath, json.meta.image);
+				
+				json.meta.image = version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
+				
+				const data: ISpritesheetJson = {
+					frames: json.frames,
+					meta: json.meta
+				};
+				
+				return this._loadTextureFromJson(data);
+			});
+	}
+	
+	private _loadTextureFromJson(json: ISpritesheetJson) {
+		const options = (() => {
+			if (!this._options.xhrOptions) {
+				const textureOptions: TextureLoader.ITextureLoaderOption = {
+					basepath: this._options.basepath,
+					version: this._options.version,
+					useCache: this._options.useCache,
+				};
+				
+				return textureOptions;
 			}
-		}
-		
-		return Promise.all([
-			this._loadFromUrlsAsync(urls, options),
-			this._loadFromJsonsAsync(jsons, options)
-		])
-		.then(resolvers => {
-			return Object.assign({}, ...resolvers);
-		});
-	}
-	
-	private _loadFromUrlsAsync(targets: ISpritesheetLoaderUrlTargetDictionary, options: ISpritesheetLoaderOption = {}) {
-		const res: ISpritesheetLoaderResourceDictionary = {};
-		
-		if (Object.keys(targets).length === 0) {
-			return Promise.resolve(res);
-		}
-		
-		const loader = new PIXI.Loader();
-		
-		const version = this._resolveVersion(options.version);
-		if (version) {
-			loader.defaultQueryString = `_fv=${version}`;
-		}
-		
-		const basepath = this._resolveBasepath(options.basepath);
-		for (let i in targets) {
-			const target = targets[i];
-			const uri = utils.resolvePath(target, basepath);
-			loader.add(i, uri, {
-				crossOrigin: true
-			});
-		}
-		
-		const useCache = this._resolveUseCache(options.useCache);
-		if (!useCache) {
-			loader.use((resource: PIXI.LoaderResource, next: () => void) => {
-				if (resource.textures) {
-					for (let i in resource.textures) {
-						const texture = resource.textures[i];
-						
-						if (!texture) {
-							continue;
-						}
-						
-						TextureLoader.TextureLoaderResource.removeCache(texture);
-					}
-				}
-				
-				if (resource.texture) {
-					TextureLoader.TextureLoaderResource.removeCache(resource.texture);
-				}
-				
-				next();
-			});
-		}
-		
-		return new Promise<ISpritesheetLoaderResourceDictionary>(resolve => {
-			loader.use((resource: PIXI.LoaderResource, next: () => void) => {
-				if (resource && resource.extension === 'json' && !resource.error && resource.textures) {
-					this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target: resource.name, resource: new SpritesheetLoaderResource(resource.textures, null) });
-				}
-				
-				next();
-			});
 			
-			loader.load((loader, resources) => {
-				for (let i in resources) {
-					if (!targets[i]) {
-						continue;
-					}
-					
-					const resource: PIXI.LoaderResource | undefined = resources[i];
-					
-					if (!resource) {
-						res[i] = new SpritesheetLoaderResource({}, 'invalid json');
-						continue;
-					}
-					
-					if (resource.error) {
-						res[i] = new SpritesheetLoaderResource({}, resource.error);
-						continue;
-					}
-					
-					if (!resource.textures) {
-						res[i] = new SpritesheetLoaderResource({}, 'invalid texture');
-						continue;
-					}
-					
-					res[i] = new SpritesheetLoaderResource(resource.textures, null);
+			const options = this._options;
+			const textureOptions: TextureLoader.ITextureLoaderOption = {
+				basepath: this._options.basepath,
+				version: this._options.version,
+				useCache: this._options.useCache,
+			};
+			const xhrOptions = this._options.xhrOptions || {};
+			textureOptions.xhrOptions = {
+				requestOptions: xhrOptions.requestOptions,
+				dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[1] : xhrOptions.dataResolver
+			}
+			
+			return textureOptions;
+		})();
+		
+		const loader = new TextureLoader.TextureLoader(options);
+		const useCache = this._options.useCache;
+		
+		return loader.loadAsync(json.meta.image)
+			.then(resource => {
+				if (resource.error) {
+					return new SpritesheetLoaderResource({}, resource.error);
 				}
 				
-				resolve(res);
-			});
-		});
-	}
-	
-	private _loadFromJsonsAsync(targets: ISpritesheetLoaderJsonTargetDictionary, options: ISpritesheetLoaderOption = {}) {
-		const res: ISpritesheetLoaderResourceDictionary = {};
-		
-		if (Object.keys(targets).length === 0) {
-			return Promise.resolve(res);
-		}
-		
-		const useCache = this._resolveUseCache(options.useCache);
-		
-		const promises = [];
-		const loader = new TextureLoader.TextureLoader(options);
-		
-		for (let i in targets) {
-			const target = targets[i];
-			promises.push(
-				loader.loadAsync(target.meta.image, options)
-					.then((resource: TextureLoader.TextureLoaderResource) => {
-						if (resource.error) {
-							return new SpritesheetLoaderResource({}, resource.error);
+				const ss = new PIXI.Spritesheet(resource.data, json);
+				
+				return new Promise<SpritesheetLoaderResource>(resolve => {
+					ss.parse(e => {
+						const resource = new SpritesheetLoaderResource(ss.textures, null);
+						
+						if (!useCache) {
+							for (let i in ss.textures) {
+								TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
+							}
 						}
 						
-						const ss = new PIXI.Spritesheet(resource.data, target);
-						
-						return new Promise<SpritesheetLoaderResource>(resolve => {
-							ss.parse(e => {
-								const resource = new SpritesheetLoaderResource(ss.textures, null);
-								
-								if (!useCache) {
-									for (let i in ss.textures) {
-										TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
-									}
-								}
-								
-								resolve(resource);
-							});
-						});
-					})
-					.catch(e => {
-						return new SpritesheetLoaderResource({}, e);
-					})
-					.then((resource: SpritesheetLoaderResource) => {
-						if (!resource.error) {
-							this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
-						}
-						
-						res[i] = resource;
-					})
-			);
-		}
-		
-		return Promise.all(promises)
-			.then(() => {
-				return res;
+						resolve(resource);
+					});
+				});
+			})
+			.catch(e => {
+				return new SpritesheetLoaderResource({}, e);
 			});
 	}
 }

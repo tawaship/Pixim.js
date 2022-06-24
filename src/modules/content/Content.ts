@@ -1,23 +1,27 @@
 import * as PIXI from 'pixi.js';
-import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption } from './ManifestBase';
+import { ILoaderXhrOption, TLoaderResourceVersion } from '../loader/LoaderBase';
+import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
 import { TextureManifest, ITextureManifestTargetDictionary } from './TextureManifest';
 import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './SpritesheetManifest';
 import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
 import { JsonManifest, IJsonManifestTargetDictionary } from './JsonManifest';
 import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary, IContentResourceDictionary } from './ContentDeliver';
 import { Emitter } from '@tawaship/emitter';
-import { EVENT_LOADER_ASSET_LOADED } from '../loader/index';
 
 export interface IContentAssetVersion {
-	[key: string]: string;
+	[key: string]: TLoaderResourceVersion;
 }
 
 export interface IContentAssetCache {
 	[key: string]: boolean;
 }
 
+export interface IContentAssetXhrOption {
+	[key: string]: ILoaderXhrOption<any>;
+}
+
 export interface IContentManifests {
-	[key: string]: ManifestBase<any, any>;
+	[key: string]: ManifestBase<any, any, any>;
 }
 
 export interface IContentConfigData {
@@ -30,6 +34,7 @@ export interface IContentData {
 	basepath: string;
 	version: IContentAssetVersion;
 	useCache: IContentAssetCache;
+	xhrOptions: IContentAssetXhrOption;
 	$: ContentDeliver;
 	manifests: IContentManifests;
 	additionalManifests: IContentManifests;
@@ -51,12 +56,18 @@ export interface IContentOption {
 	/**
 	 * Asset version.
 	 */
-	version?: string | IContentAssetVersion;
+	version?: TLoaderResourceVersion | IContentAssetVersion;
 	
 	/**
 	 * Whether cache textures.
 	 */
 	useCache?: boolean | IContentAssetCache;
+	
+	/**
+	 * A header given when loading an asset, or a function that returns a header.
+	 * If non-null is specified, fetch API will be used instead of the default Loader when loading each asset.
+	 */
+	xhrOptions?: IContentAssetXhrOption;
 }
 
 /**
@@ -151,7 +162,8 @@ export class Content extends Emitter {
 			contentID: (++_contentID).toString(),
 			basepath,
 			version: options.version,
-			useCache: options.useCache || false,
+			useCache: options.useCache,
+			xhrOptions: options.xhrOptions || {},
 			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
 			additionalManifests: createManifests(),
@@ -494,7 +506,7 @@ export class Content extends Emitter {
 			
 			const manifest = manifests[type];
 			
-			promises.push(manifest.getAsync({ basepath, version, useCache }));
+			promises.push(manifest.getAsync({ basepath, version, useCache/*, xhrOptions */}));
 		}
 		
 		return Promise.all(promises)

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as LoaderBase from './LoaderBase';
+import * as utils from '../utils/index';
 
 export type TTextureLoaderRawResource = PIXI.Texture;
 
@@ -30,70 +31,20 @@ export interface ITextureLoaderResourceDictionary extends LoaderBase.ILoaderReso
 
 }
 
-export interface ITextureLoaderOption extends LoaderBase.ILoaderOption {
+export type TTextureLoaderFetchResolver = (res: Response) => Promise<string>;
+
+export interface ITextureLoaderOption extends LoaderBase.ILoaderOption<TTextureLoaderFetchResolver> {
 
 }
 
-export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource> {
-	loadAsync(target: TTextureLoaderTarget, options: ITextureLoaderOption = {}) {
-		return (() => {
-			if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
-				return this._loadFromElementAsync(target, options);
-			} else if (target.indexOf('data:') === 0) {
-				return this._loadFromDataUriAsync(target, options);
-			} else {
-				return this._loadFromUrlAsync(target, options);
-			}
-		})()
-		.then((resource: TextureLoaderResource) => {
-			if (!resource.error) {
-				this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, { target, resource });
-			}
-			
-			return resource;
-		});
-	}
-	
-	loadAllAsync(targets: ITextureLoaderTargetDictionary, options: ITextureLoaderOption = {}) {
-		if (Object.keys(targets).length === 0) {
-			return Promise.resolve({});
+export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource, TTextureLoaderFetchResolver> {
+	protected _loadAsync(target: TTextureLoaderTarget) {
+		if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
+			target.crossOrigin = 'anonymous';
+			target.src = this._resolveUri(target.src);
 		}
 		
-		const promises = [];
-		const res: ITextureLoaderResourceDictionary = {};
-		
-		for (let i in targets) {
-			promises.push(
-				this.loadAsync(targets[i], options)
-					.then(resource => {
-						res[i] = resource;
-					})
-			);
-		}
-		
-		return Promise.all(promises)
-			.then(() => {
-				return res;
-			});
-	}
-	
-	private _loadFromUrlAsync(url: string, options: ITextureLoaderOption = {}) {
-		return this._loadAsync(this._resolveUrl(url, options), options);
-	}
-	
-	private _loadFromElementAsync(element: TTextureLoaderElementTarget, options: LoaderBase.ILoaderOption = {}) {
-		element.crossOrigin = 'anonymous';
-		element.src = this._resolveUrl(element.src, options);
-		
-		return this._loadAsync(element);
-	}
-	
-	private _loadFromDataUriAsync(dataUri: string, options: LoaderBase.ILoaderOption = {}) {
-		return this._loadAsync(dataUri, options);
-	}
-	
-	private _loadAsync(target: TTextureLoaderTarget, options: LoaderBase.ILoaderOption = {}) {
-		const useCache = this._resolveUseCache(options.useCache);
+		const useCache = this._options.useCache;
 		
 		return new Promise<TextureLoaderResource>(resolve => {
 			const bt = PIXI.BaseTexture.from(target);
@@ -120,5 +71,17 @@ export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, T
 				resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), e));
 			});
 		});
+	}
+	
+	protected _loadXhrAsync(url: string) {
+		const xhrOptions = this._options.xhrOptions || {};
+		
+		return fetch(url, xhrOptions.requestOptions || {})
+			.then(res => {
+				return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.text();
+			})
+			.then((uri: string) => {
+				return this._loadAsync(uri);
+			});
 	}
 }

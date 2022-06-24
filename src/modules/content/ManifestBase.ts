@@ -2,7 +2,7 @@ import * as LoaderBase from '../loader/LoaderBase';
 import { Emitter } from '@tawaship/emitter';
 
 export interface IManifestClass {
-	new(): ManifestBase<any, any>;
+	new(): ManifestBase<any, any, any>;
 }
 
 export interface IResourceManagerData<T> {
@@ -30,7 +30,9 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 }
 
-export abstract class ManifestBase<TTarget, TResource> extends Emitter {
+export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
+
+export abstract class ManifestBase<TTarget, TResource, TFetchResolver> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
 	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
 	
@@ -55,7 +57,7 @@ export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 	/**
 	 * Get resources.
 	 */
-	getAsync(options: LoaderBase.ILoaderOption) {
+	getAsync(options: LoaderBase.ILoaderOption<TFetchResolver>) {
 		if (Object.keys(this._data).length === 0) {
 			return Promise.resolve({});
 		}
@@ -91,17 +93,17 @@ export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 	/**
 	 * Load resources.
 	 */
-	protected abstract _loadAsync(targets: IManifestTargetDictionary<TTarget>, options: LoaderBase.ILoaderOption): Promise<LoaderBase.ILoaderResourceDictionary<TResource>>;
+	protected abstract _loadAsync(targets: IManifestTargetDictionary<TTarget>, options: LoaderBase.ILoaderOption<TFetchResolver>): Promise<LoaderBase.ILoaderResourceDictionary<TResource>>;
 	
 	/**
 	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
 	 */
-	protected _doneLoaderAsync(loader: LoaderBase.LoaderBase<TTarget, TResource>, targets: IManifestTargetDictionary<TTarget>) {
-		loader.on(LoaderBase.EVENT_LOADER_ASSET_LOADED, (resource: TResource) => {
-			this.emit(LoaderBase.EVENT_LOADER_ASSET_LOADED, resource);
-		});
+	protected _doneLoaderAsync(loader: LoaderBase.LoaderBase<TTarget, TResource, TFetchResolver>, targets: IManifestTargetDictionary<TTarget>) {
+		loader.onLoaded = resource => {
+			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
+		};
 		
-		return loader.loadAllAsync(targets, {});
+		return loader.loadAllAsync(targets);
 	}
 	
 	destroyResources() {
