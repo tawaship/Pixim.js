@@ -9,10 +9,8 @@ export interface ITextureDictionary extends ManifestBase.IRawResourceDictionary<
 
 }
 
-export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTextureLoaderTarget, TextureLoader.TTextureLoaderRawResource, TextureLoader.TTextureLoaderFetchResolver> {
-	protected _loadAsync(targets: ITextureManifestTargetDictionary, options: TextureLoader.ITextureLoaderOption = {}) {
-		const loader = new TextureLoader.TextureLoader(options);
-		
-		return this._doneLoaderAsync(loader, targets);
+export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTextureLoaderTarget, TextureLoader.TTextureLoaderRawResource, TextureLoader.ITextureLoaderFetchResolver> {
+	protected _createLoader() {
+		return new TextureLoader.TextureLoader();
 	}
 }

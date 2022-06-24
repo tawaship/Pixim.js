@@ -1,5 +1,6 @@
 import * as ManifestBase from './ManifestBase';
 import * as SoundLoader from '../loader/SoundLoader';
+import * as utils from '../utils/index';
 
 export interface ISoundManifestTargetDictionary extends ManifestBase.IManifestTargetDictionary<SoundLoader.TSoundLoaderTarget> {
 
@@ -9,10 +10,8 @@ export interface ISoundDictionary extends ManifestBase.IRawResourceDictionary<So
 
 }
 
-export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundLoaderTarget, SoundLoader.TSoundLoaderRawResource, SoundLoader.TSoundLoaderFetchResolver> {
-	protected _loadAsync(targets: ISoundManifestTargetDictionary, options: SoundLoader.ISoundLoaderOption = {}) {
-		const loader = new SoundLoader.SoundLoader(options);
-		
-		return this._doneLoaderAsync(loader, targets);
+export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundLoaderTarget, SoundLoader.TSoundLoaderRawResource, SoundLoader.ISoundLoaderFetchResolver> {
+	protected _createLoader() {
+		return new SoundLoader.SoundLoader();
 	}
 }

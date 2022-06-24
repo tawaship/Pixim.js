@@ -703,6 +703,7 @@ class ManifestBase extends emitter.Emitter {
      */
     _doneLoaderAsync(loader, targets) {
         loader.onLoaded = resource => {
+            console.log(resource);
             this.emit(EVENT_LOADER_ASSET_LOADED, resource);
         };
         return loader.loadAllAsync(targets);
@@ -792,11 +793,11 @@ class LoaderBase {
      * @fires [[LoaderBase.loaded]]
      */
     loadAsync(target, xhrOptions) {
-        if (typeof (target) !== 'string') {
-            return this._loadAsync(target);
-        }
-        const uri = this._resolveUri(target);
         return (() => {
+            if (typeof (target) !== 'string') {
+                return this._loadAsync(target);
+            }
+            const uri = this._resolveUri(target);
             if (this._options.xhrOptions) {
                 return this._loadXhrAsync(uri);
             }
@@ -847,7 +848,6 @@ class TextureLoader extends LoaderBase {
     _loadAsync(target) {
         if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
             target.crossOrigin = 'anonymous';
-            target.src = this._resolveUri(target.src);
         }
         const useCache = this._options.useCache;
         return new Promise(resolve => {

@@ -50,7 +50,7 @@ export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoader
 export type TSpritesheetLoaderFetchResolver = [ JsonLoader.TJsonLoaderFetchResolver, TextureLoader.TTextureLoaderFetchResolver ];
 
 export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption<TSpritesheetLoaderFetchResolver> {
-
+	version: string | number;
 }
 
 /**
@@ -63,30 +63,30 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 		if (typeof target !== 'string') {
 			return this._loadTextureFromJson(target);
 		} else {
-			return this._loadFromUrlAsync(target);
+			return this._loadFromUrlAsync(target, options.version || '');
 		}
 	}
 	
-	protected _loadXhrAsync(url: string) {
-		const options = this._options;
-		const jsonOptions: JsonLoader.IJsonLoaderOption = {
-			basepath: this._options.basepath,
-			version: this._options.version,
-			useCache: this._options.useCache,
-		};
-		const xhrOptions = this._options.xhrOptions || {};
-		jsonOptions.xhrOptions = {
-			requestOptions: xhrOptions.requestOptions,
-			dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[0] : xhrOptions.dataResolver
+	protected _loadXhrAsync(url: string, options: ISpritesheetLoaderOption) {
+		const xhr = this._resolveXhrOptions(options.xhr);
+		
+		const jsonXhr = {
+			requestOptions: xhr.requestOptions,
+			dataResolver: xhr.dataResolver ? xhr.dataResolver[0] : xhr.dataResolver
 		}
 		
-		return this._loadFromUrlAsync(url, jsonOptions);
+		const textureXhr = {
+			requestOptions: xhr.requestOptions,
+			dataResolver: xhr.dataResolver ? xhr.dataResolver[1] : xhr.dataResolver
+		}
+		
+		return this._loadFromUrlAsync(url, options.version || '', { xhr: jsonXhr }, { xhr: textureXhr });
 	}
 	
-	private _loadFromUrlAsync(url: string, options?: JsonLoader.IJsonLoaderOption) {
-		const loader = new JsonLoader.JsonLoader(options);
+	private _loadFromUrlAsync(url: string, jsonVersion: string | number, jsonOptions?: JsonLoader.IJsonLoaderOption, textureOptions?: TextureLoader.ITextureLoaderOption) {
+		const loader = new JsonLoader.JsonLoader();
 		
-		return loader.loadAsync(url)
+		return loader.loadAsync(url, jsonOptions)
 			.then(resource => {
 				const json = resource.data;
 				
@@ -95,7 +95,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 				}
 				
 				const basepath = url;
-				const version = this._options.version || '';
+				const version = jsonVersion;
 				const preUri = utils.resolvePath(basepath, json.meta.image);
 				
 				json.meta.image = version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
@@ -105,41 +105,14 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					meta: json.meta
 				};
 				
-				return this._loadTextureFromJson(data);
+				return this._loadTextureFromJson(data, textureOptions);
 			});
 	}
 	
-	private _loadTextureFromJson(json: ISpritesheetJson) {
-		const options = (() => {
-			if (!this._options.xhrOptions) {
-				const textureOptions: TextureLoader.ITextureLoaderOption = {
-					basepath: this._options.basepath,
-					version: this._options.version,
-					useCache: this._options.useCache,
-				};
-				
-				return textureOptions;
-			}
-			
-			const options = this._options;
-			const textureOptions: TextureLoader.ITextureLoaderOption = {
-				basepath: this._options.basepath,
-				version: this._options.version,
-				useCache: this._options.useCache,
-			};
-			const xhrOptions = this._options.xhrOptions || {};
-			textureOptions.xhrOptions = {
-				requestOptions: xhrOptions.requestOptions,
-				dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[1] : xhrOptions.dataResolver
-			}
-			
-			return textureOptions;
-		})();
+	private _loadTextureFromJson(json: ISpritesheetJson, textureOptions?: TextureLoader.ITextureLoaderOption) {
+		const loader = new TextureLoader.TextureLoader();
 		
-		const loader = new TextureLoader.TextureLoader(options);
-		const useCache = this._options.useCache;
-		
-		return loader.loadAsync(json.meta.image)
+		return loader.loadAsync(json.meta.image, textureOptions)
 			.then(resource => {
 				if (resource.error) {
 					return new SpritesheetLoaderResource({}, resource.error);
@@ -151,10 +124,8 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					ss.parse(e => {
 						const resource = new SpritesheetLoaderResource(ss.textures, null);
 						
-						if (!useCache) {
-							for (let i in ss.textures) {
-								TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
-							}
+						for (let i in ss.textures) {
+							TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
 						}
 						
 						resolve(resource);

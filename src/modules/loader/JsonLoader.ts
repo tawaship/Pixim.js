@@ -29,19 +29,19 @@ export interface IJsonLoaderOption extends LoaderBase.ILoaderOption<TJsonLoaderF
 }
 
 export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, TJsonLoaderFetchResolver> {
-	protected _loadAsync(target: TJsonLoaderTarget) {
+	protected _loadAsync(target: TJsonLoaderTarget, options: IJsonLoaderOption = {}) {
 		return fetch(target)
 			.then(res => res.json())
 			.then(json => new JsonLoaderResource(json, null))
 			.catch((e: any) => new JsonLoaderResource({}, e));
 	}
 	
-	protected _loadXhrAsync(url: string) {
-		const xhrOptions = this._options.xhrOptions || {};
+	protected _loadXhrAsync(url: string, options: IJsonLoaderOption) {
+		const xhr = this._resolveXhrOptions(options.xhr);
 		
-		return fetch(url, xhrOptions.requestOptions || {})
+		return fetch(url, xhr.requestOptions)
 			.then(res => {
-				return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.json();
+				return xhr.dataResolver ? xhrOptions.dataResolver(res) : res.json();
 			})
 			.then(json => new JsonLoaderResource(json, null))
 			.catch((e: any) => new JsonLoaderResource({}, e));

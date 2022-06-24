@@ -482,7 +482,7 @@
         }, ManifestBase.prototype._doneLoaderAsync = function(loader, targets) {
             var this$1 = this;
             return loader.onLoaded = function(resource) {
-                this$1.emit("loaderAssetLoaded", resource);
+                console.log(resource), this$1.emit("loaderAssetLoaded", resource);
             }, loader.loadAllAsync(targets);
         }, ManifestBase.prototype.destroyResources = function() {
             for (var i in this._resources) {
@@ -544,11 +544,13 @@
         }) : preUri;
     }, LoaderBase.prototype.loadAsync = function(target, xhrOptions) {
         var this$1 = this;
-        if ("string" != typeof target) {
-            return this._loadAsync(target);
-        }
-        var uri = this._resolveUri(target);
-        return (this$1._options.xhrOptions ? this$1._loadXhrAsync(uri) : this$1._loadAsync(uri)).then((function(resource) {
+        return function() {
+            if ("string" != typeof target) {
+                return this$1._loadAsync(target);
+            }
+            var uri = this$1._resolveUri(target);
+            return this$1._options.xhrOptions ? this$1._loadXhrAsync(uri) : this$1._loadAsync(uri);
+        }().then((function(resource) {
             return resource.error || this$1.onLoaded && this$1.onLoaded(resource), resource;
         }));
     }, LoaderBase.prototype.loadAllAsync = function(targets) {
@@ -584,8 +586,7 @@
         }
         return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
         TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target) {
-            (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous", 
-            target.src = this._resolveUri(target.src));
+            (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous");
             var useCache = this._options.useCache;
             return new Promise((function(resolve) {
                 var bt = PIXI.BaseTexture.from(target);

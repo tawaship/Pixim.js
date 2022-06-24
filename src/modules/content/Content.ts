@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ILoaderXhrOption, TLoaderResourceVersion } from '../loader/LoaderBase';
-import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
+import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, ILoaderXhrOptionFacotryDelegate, TManifestResourceVersion, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
 import { TextureManifest, ITextureManifestTargetDictionary } from './TextureManifest';
 import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './SpritesheetManifest';
 import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
@@ -8,16 +7,16 @@ import { JsonManifest, IJsonManifestTargetDictionary } from './JsonManifest';
 import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary, IContentResourceDictionary } from './ContentDeliver';
 import { Emitter } from '@tawaship/emitter';
 
+export interface IContentAssetBasepath {
+	[key: string]: string;
+}
+
 export interface IContentAssetVersion {
-	[key: string]: TLoaderResourceVersion;
+	[key: string]: TManifestResourceVersion;
 }
 
 export interface IContentAssetCache {
 	[key: string]: boolean;
-}
-
-export interface IContentAssetXhrOption {
-	[key: string]: ILoaderXhrOption<any>;
 }
 
 export interface IContentManifests {
@@ -31,10 +30,10 @@ export interface IContentConfigData {
 
 export interface IContentData {
 	contentID: string;
-	basepath: string;
+	basepath: IContentAssetBasepath;
 	version: IContentAssetVersion;
 	useCache: IContentAssetCache;
-	xhrOptions: IContentAssetXhrOption;
+	xhr?: ILoaderXhrOptionFacotryDelegate<any>;
 	$: ContentDeliver;
 	manifests: IContentManifests;
 	additionalManifests: IContentManifests;
@@ -51,12 +50,12 @@ export interface IContentOption {
 	/**
 	 * Asset root path.
 	 */
-	basepath?: string;
+	basepath?: string | IContentAssetBasepath;
 	
 	/**
 	 * Asset version.
 	 */
-	version?: TLoaderResourceVersion | IContentAssetVersion;
+	version?: TManifestResourceVersion | IContentAssetVersion;
 	
 	/**
 	 * Whether cache textures.
@@ -67,7 +66,7 @@ export interface IContentOption {
 	 * A header given when loading an asset, or a function that returns a header.
 	 * If non-null is specified, fetch API will be used instead of the default Loader when loading each asset.
 	 */
-	xhrOptions?: IContentAssetXhrOption;
+	xhr?: ILoaderXhrOptionFacotryDelegate<any>;
 }
 
 /**
@@ -93,7 +92,7 @@ function createManifests(): IContentManifests {
 	const res: IContentManifests = {};
 	
 	for (let i in _manifests) {
-		res[i] = new _manifests[i]();
+		res[i] = new _manifests[i](i);
 	}
 	
 	return res;
@@ -130,7 +129,14 @@ export class Content extends Emitter {
 			this.emit(EVENT_LOADER_ASSET_LOADED, data);
 		};
 		
-		const basepath: string = options.basepath || '';
+		if (typeof(options.basepath) !== 'object') {
+			const basepath: IContentAssetBasepath = {};
+			const v = options.basepath || '';
+			for (let i in _manifests) {
+				basepath[i] = v;
+			}
+			options.basepath = basepath;
+		}
 		
 		if (typeof(options.version) !== 'object') {
 			const version: IContentAssetVersion = {};
@@ -160,10 +166,10 @@ export class Content extends Emitter {
 		
 		this._piximData = {
 			contentID: (++_contentID).toString(),
-			basepath,
+			basepath: options.basepath,
 			version: options.version,
 			useCache: options.useCache,
-			xhrOptions: options.xhrOptions || {},
+			xhr: options.xhr,
 			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
 			additionalManifests: createManifests(),
@@ -439,12 +445,12 @@ export class Content extends Emitter {
 		const additionalManifests = this._piximData.additionalManifests;
 		
 		for (let i in manifests) {
-			manifests[i].destroyResources();
+			manifests[i].a();
 			manifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		
 		for (let i in additionalManifests) {
-			additionalManifests[i].destroyResources();
+			additionalManifests[i].a();
 			additionalManifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
 		}
 		
@@ -484,7 +490,7 @@ export class Content extends Emitter {
 	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
 	 */
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
-		const basepath: string = this._piximData.basepath;
+		const basepaths: IContentAssetBasepath = this._piximData.basepath;
 		const versions: IContentAssetVersion = this._piximData.version;
 		const useCaches: IContentAssetCache = this._piximData.useCache;
 		const resources: IContentResourceDictionary = this._piximData.$.resources;
@@ -501,12 +507,12 @@ export class Content extends Emitter {
 			const type = i;
 			keys.push(type);
 			
-			const version = versions[type] || '';
-			const useCache = useCaches[type] || false;
-			
+			const basepath = basepaths[type];
+			const version = versions[type];
+			const useCache = useCaches[type];
 			const manifest = manifests[type];
 			
-			promises.push(manifest.getAsync({ basepath, version, useCache/*, xhrOptions */}));
+			promises.push(manifest.getAsync({ basepath, version, useCache, xhr: this._piximData.xhr }));
 		}
 		
 		return Promise.all(promises)

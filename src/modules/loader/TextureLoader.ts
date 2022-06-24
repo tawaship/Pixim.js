@@ -38,30 +38,23 @@ export interface ITextureLoaderOption extends LoaderBase.ILoaderOption<TTextureL
 }
 
 export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource, TTextureLoaderFetchResolver> {
-	protected _loadAsync(target: TTextureLoaderTarget) {
+	protected _loadAsync(target: TTextureLoaderTarget, options: ITextureLoaderOption = {}) {
 		if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
 			target.crossOrigin = 'anonymous';
-			target.src = this._resolveUri(target.src);
 		}
-		
-		const useCache = this._options.useCache;
 		
 		return new Promise<TextureLoaderResource>(resolve => {
 			const bt = PIXI.BaseTexture.from(target);
 			
 			if (bt.valid) {
-				if (!useCache) {
-					PIXI.BaseTexture.removeFromCache(bt);
-				}
+				PIXI.BaseTexture.removeFromCache(bt);
 				
 				resolve(new TextureLoaderResource(new PIXI.Texture(bt), null));
 				return;
 			}
 			
 			bt.on('loaded', (baseTexture: PIXI.BaseTexture) => {
-				if (!useCache) {
-					PIXI.BaseTexture.removeFromCache(baseTexture);
-				}
+				PIXI.BaseTexture.removeFromCache(baseTexture);
 				
 				resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
 			});
@@ -73,12 +66,12 @@ export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, T
 		});
 	}
 	
-	protected _loadXhrAsync(url: string) {
-		const xhrOptions = this._options.xhrOptions || {};
+	protected _loadXhrAsync(url: string, options: ITextureLoaderOption) {
+		const xhr = this._resolveXhrOptions(options.xhr);
 		
-		return fetch(url, xhrOptions.requestOptions || {})
+		return fetch(url, xhr.requestOptions)
 			.then(res => {
-				return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.text();
+				return xhr.dataResolver ? xhr.dataResolver(res) : res.text();
 			})
 			.then((uri: string) => {
 				return this._loadAsync(uri);

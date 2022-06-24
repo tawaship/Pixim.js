@@ -1,8 +1,9 @@
 import * as LoaderBase from '../loader/LoaderBase';
 import { Emitter } from '@tawaship/emitter';
+import * as utils from '../utils/index';
 
 export interface IManifestClass {
-	new(): ManifestBase<any, any, any>;
+	new(type: string): ManifestBase<any, any, any>;
 }
 
 export interface IResourceManagerData<T> {
@@ -30,11 +31,30 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 }
 
+export type TManifestResourceVersion = string | number;
+
+export interface ILoaderXhrOptionFacotryDelegate<TLoaderXhrOption> {
+	(type: string, url: string): Promise<TLoaderXhrOption>;
+}
+
+export interface IManifestLoaderOption<TLoaderXhrOption> {
+	basepath?: string;
+	version?: TManifestResourceVersion;
+	useCache?: boolean;
+	xhr?: ILoaderXhrOptionFacotryDelegate<TLoaderXhrOption> | boolean;
+}
+
 export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 
-export abstract class ManifestBase<TTarget, TResource, TFetchResolver> extends Emitter {
+export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
 	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
+	private _type: string;
+	
+	constructor(type: string) {
+		super();
+		this._type = type;
+	}
 	
 	/**
 	 * Register targetss.
@@ -49,7 +69,7 @@ export abstract class ManifestBase<TTarget, TResource, TFetchResolver> extends E
 			};
 		}
 	}
-	
+	a(){}
 	get count() {
 		return Object.keys(this._data).length;
 	}
@@ -57,53 +77,100 @@ export abstract class ManifestBase<TTarget, TResource, TFetchResolver> extends E
 	/**
 	 * Get resources.
 	 */
-	getAsync(options: LoaderBase.ILoaderOption<TFetchResolver>) {
+	getAsync(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<()=>void>>) {
 		if (Object.keys(this._data).length === 0) {
 			return Promise.resolve({});
 		}
 		
 		const res: IRawResourceDictionary<TResource> = {};
-		const targets: IManifestTargetDictionary<TTarget> = {};
+		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption<():void>> = {};
 		
-		for (let i in this._data) {
-			targets[i] = this._data[i].target;
-		}
-		
-		return this._loadAsync(targets, options)
-			.then(resources => {
-				for (let i in resources) {
-					const resource = resources[i];
-					
-					if (resource.error && !this._data[i].unrequired) {
-						throw resource.error;
-					}
-				}
-				
-				for (let i in resources) {
-					const resource = resources[i];
-					
-					this._resources[i] = resource;
-					res[i] = resource.data;
-				}
-				
-				return res;
-			});
-	}
-	
-	/**
-	 * Load resources.
-	 */
-	protected abstract _loadAsync(targets: IManifestTargetDictionary<TTarget>, options: LoaderBase.ILoaderOption<TFetchResolver>): Promise<LoaderBase.ILoaderResourceDictionary<TResource>>;
-	
-	/**
-	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
-	 */
-	protected _doneLoaderAsync(loader: LoaderBase.LoaderBase<TTarget, TResource, TFetchResolver>, targets: IManifestTargetDictionary<TTarget>) {
+		const loader = this._createLoader();
 		loader.onLoaded = resource => {
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
-		return loader.loadAllAsync(targets);
+		return (() => {
+			const promises: Promise<void>[] = [];
+			
+			for (let i in this._data) {
+				const target = this._resolveTarget(this._data[i].target, options);
+				const loaderOptions = this._buildOption(options);
+				
+				data[i] = { target, options: loaderOptions };
+				
+				if (typeof(target) !== 'string') {
+					loaderOptions.xhr = false;
+					continue;
+				}
+				
+				if (typeof(options.xhr) === 'boolean') {
+					loaderOptions.xhr = options.xhr;
+					continue;
+				}
+				
+				if (typeof(options.xhr) !== 'function') {
+					loaderOptions.xhr = false;
+					continue;
+				}
+				
+				promises.push(
+					options.xhr(this._type, target)
+						.then(xhr => {
+							loaderOptions.xhr = xhr;
+						})
+				);
+			}
+			
+			return Promise.all(promises).then(() => data);
+		})()
+		.then(data => {
+			return loader.loadAllAsync(data);
+		})
+		.then(resources => {
+			for (let i in resources) {
+				const resource = resources[i];
+				
+				if (resource.error && !this._data[i].unrequired) {
+					throw resource.error;
+				}
+			}
+			
+			for (let i in resources) {
+				const resource = resources[i];
+				
+				this._resources[i] = resource;
+				res[i] = resource.data;
+			}
+			
+			return res;
+		});
+	}
+	
+	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource, LoaderBase.ILoaderOption<():void>>;
+	
+	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>>): TTarget {
+		return this._resolveTargetPath(target, options);
+	}
+	
+	protected _buildOption(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>>): IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>> {
+		return { xhr: options.xhr };
+	}
+	
+	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<():void>> = {}) {
+		if (typeof(target) !== 'string') {
+			return target;
+		}
+		
+		if (!utils.isUrl(target)) {
+			return target;
+		}
+		
+		const basepath = options.basepath || '';
+		const version = options.version || '';
+		const preUri = utils.resolvePath(basepath, target);
+		
+		return version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
 	}
 	
 	destroyResources() {

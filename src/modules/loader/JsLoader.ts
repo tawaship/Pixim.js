@@ -28,7 +28,7 @@ export interface IJsLoaderOption extends LoaderBase.ILoaderOption<TJsLoaderFetch
 	
 }
 
-export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, TJsLoaderFetchResolver> {
+export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, IJsLoaderOption> {
 	protected _loadAsync(target: TJsLoaderTarget, options: IJsLoaderOption = {}) {
 		const uri = this._resolveUri(target, options);
 		
