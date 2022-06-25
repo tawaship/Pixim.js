@@ -31,13 +31,11 @@ export interface ITextureLoaderResourceDictionary extends LoaderBase.ILoaderReso
 
 }
 
-export type TTextureLoaderFetchResolver = (res: Response) => Promise<string>;
-
-export interface ITextureLoaderOption extends LoaderBase.ILoaderOption<TTextureLoaderFetchResolver> {
+export interface ITextureLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource, TTextureLoaderFetchResolver> {
+export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource> {
 	protected _loadAsync(target: TTextureLoaderTarget, options: ITextureLoaderOption = {}) {
 		if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
 			target.crossOrigin = 'anonymous';
@@ -70,8 +68,9 @@ export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, T
 		const xhr = this._resolveXhrOptions(options.xhr);
 		
 		return fetch(url, xhr.requestOptions)
-			.then(res => {
-				return xhr.dataResolver ? xhr.dataResolver(res) : res.text();
+			.then(res => res.blob())
+			.then(blob => {
+				return (window.URL || window.webkitURL).createObjectURL(blob);
 			})
 			.then((uri: string) => {
 				return this._loadAsync(uri);

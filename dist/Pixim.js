@@ -435,63 +435,9 @@
                 height: parseInt(view.style.height.replace("px", ""))
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), ManifestBase = function(Emitter) {
-        function ManifestBase() {
-            Emitter.apply(this, arguments), this._data = {}, this._resources = {};
-        }
-        Emitter && (ManifestBase.__proto__ = Emitter), ManifestBase.prototype = Object.create(Emitter && Emitter.prototype), 
-        ManifestBase.prototype.constructor = ManifestBase;
-        var prototypeAccessors = {
-            count: {
-                configurable: !0
-            }
-        };
-        return ManifestBase.prototype.add = function(targets, options) {
-            void 0 === options && (options = {});
-            var unrequired = options.unrequired || !1;
-            for (var i in targets) {
-                this._data[i] = {
-                    target: targets[i],
-                    unrequired: unrequired
-                };
-            }
-        }, prototypeAccessors.count.get = function() {
-            return Object.keys(this._data).length;
-        }, ManifestBase.prototype.getAsync = function(options) {
-            var this$1 = this;
-            if (0 === Object.keys(this._data).length) {
-                return Promise.resolve({});
-            }
-            var res = {}, targets = {};
-            for (var i in this._data) {
-                targets[i] = this._data[i].target;
-            }
-            return this._loadAsync(targets, options).then((function(resources) {
-                for (var i in resources) {
-                    var resource = resources[i];
-                    if (resource.error && !this$1._data[i].unrequired) {
-                        throw resource.error;
-                    }
-                }
-                for (var i$1 in resources) {
-                    var resource$1 = resources[i$1];
-                    this$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
-                }
-                return res;
-            }));
-        }, ManifestBase.prototype._doneLoaderAsync = function(loader, targets) {
-            var this$1 = this;
-            return loader.onLoaded = function(resource) {
-                console.log(resource), this$1.emit("loaderAssetLoaded", resource);
-            }, loader.loadAllAsync(targets);
-        }, ManifestBase.prototype.destroyResources = function() {
-            for (var i in this._resources) {
-                this._resources[i].destroy();
-            }
-        }, Object.defineProperties(ManifestBase.prototype, prototypeAccessors), ManifestBase;
-    }(Emitter);
+    }(Emitter$1);
     function resolvePath(basepath, path) {
-        return isUrl(path) ? PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, "$1/"), path) : path;
+        return isUrl(path) ? PIXI.utils.url.resolve(basepath, path) : path;
     }
     function isUrl(uri) {
         return 0 !== uri.indexOf("data:") && 0 !== uri.indexOf("blob:");
@@ -516,7 +462,110 @@
         resolvePath: resolvePath,
         isUrl: isUrl,
         resolveQuery: resolveQuery
-    }), LoaderResource = function(data, error) {
+    }), ManifestBase = function(Emitter) {
+        function ManifestBase(type) {
+            Emitter.call(this), this._data = {}, this._resources = {}, this._type = type;
+        }
+        Emitter && (ManifestBase.__proto__ = Emitter), ManifestBase.prototype = Object.create(Emitter && Emitter.prototype), 
+        ManifestBase.prototype.constructor = ManifestBase;
+        var prototypeAccessors = {
+            count: {
+                configurable: !0
+            }
+        };
+        return ManifestBase.prototype.add = function(targets, options) {
+            void 0 === options && (options = {});
+            var unrequired = options.unrequired || !1;
+            for (var i in targets) {
+                this._data[i] = {
+                    target: targets[i],
+                    unrequired: unrequired
+                };
+            }
+        }, prototypeAccessors.count.get = function() {
+            return Object.keys(this._data).length;
+        }, ManifestBase.prototype.getAsync = function(options) {
+            var this$1 = this;
+            if (0 === Object.keys(this._data).length) {
+                return Promise.resolve({});
+            }
+            var res = {}, loader = this._createLoader();
+            loader.onLoaded = function(resource) {
+                this$1.emit("loaderAssetLoaded", resource);
+            };
+            var loaderOptions = this._getAppendOption(options);
+            return loaderOptions.xhr = !1, function() {
+                var data = {}, promises = [], loop = function(i) {
+                    var src = this$1._resolveTarget(this$1._data[i].target, options);
+                    if ("boolean" != typeof options.xhr) {
+                        return "function" != typeof options.xhr ? (loaderOptions.xhr = !1, void (data[i] = {
+                            src: src,
+                            options: Object.assign({}, loaderOptions, {
+                                xhr: !1
+                            })
+                        })) : void ("string" == typeof src ? promises.push(options.xhr(this$1._type, src).then((function(xhr) {
+                            data[i] = {
+                                src: src,
+                                options: Object.assign({}, loaderOptions, {
+                                    xhr: xhr
+                                })
+                            };
+                        }))) : data[i] = {
+                            src: src,
+                            options: Object.assign({}, loaderOptions, {
+                                xhr: !1
+                            })
+                        });
+                    }
+                    data[i] = {
+                        src: src,
+                        options: Object.assign({}, loaderOptions, {
+                            xhr: options.xhr
+                        })
+                    };
+                };
+                for (var i in this$1._data) {
+                    loop(i);
+                }
+                return Promise.all(promises).then((function() {
+                    return data;
+                }));
+            }().then((function(data) {
+                return loader.loadAllAsync(data);
+            })).then((function(resources) {
+                for (var i in resources) {
+                    var resource = resources[i];
+                    if (resource.error && !this$1._data[i].unrequired) {
+                        throw resource.error;
+                    }
+                }
+                for (var i$1 in resources) {
+                    var resource$1 = resources[i$1];
+                    this$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
+                }
+                return res;
+            }));
+        }, ManifestBase.prototype._resolveTarget = function(target, options) {
+            return this._resolveTargetPath(target, options);
+        }, ManifestBase.prototype._getAppendOption = function(options) {
+            return {};
+        }, ManifestBase.prototype._resolveTargetPath = function(target, options) {
+            if (void 0 === options && (options = {}), "string" != typeof target) {
+                return target;
+            }
+            if (!isUrl(target)) {
+                return target;
+            }
+            var basepath = options.basepath || "", version = options.version || "", preUri = resolvePath(basepath, target);
+            return version ? resolveQuery(preUri, {
+                _fv: version
+            }) : preUri;
+        }, ManifestBase.prototype.destroyResources = function() {
+            for (var i in this._resources) {
+                this._resources[i].destroy();
+            }
+        }, Object.defineProperties(ManifestBase.prototype, prototypeAccessors), ManifestBase;
+    }(Emitter), LoaderResource = function(data, error) {
         this._data = data, this._error = error;
     }, prototypeAccessors$1 = {
         data: {
@@ -531,44 +580,32 @@
     }, prototypeAccessors$1.error.get = function() {
         return this._error;
     }, Object.defineProperties(LoaderResource.prototype, prototypeAccessors$1);
-    var LoaderBase = function(options) {
-        void 0 === options && (options = {}), this._options = options || {};
-    };
-    LoaderBase.prototype._resolveUri = function(uri) {
-        if (!isUrl(uri)) {
-            return uri;
-        }
-        var basepath = this._options.basepath || "", version = this._options.version || "", preUri = resolvePath(basepath, uri);
-        return version ? resolveQuery(preUri, {
-            _fv: version
-        }) : preUri;
-    }, LoaderBase.prototype.loadAsync = function(target, xhrOptions) {
+    var LoaderBase = function() {};
+    LoaderBase.prototype.loadAsync = function(target, options) {
         var this$1 = this;
-        return function() {
-            if ("string" != typeof target) {
-                return this$1._loadAsync(target);
-            }
-            var uri = this$1._resolveUri(target);
-            return this$1._options.xhrOptions ? this$1._loadXhrAsync(uri) : this$1._loadAsync(uri);
-        }().then((function(resource) {
+        return (options ? "string" != typeof target ? this$1._loadAsync(target, options) : isUrl(target) && options.xhr ? this$1._loadXhrAsync(target, options) : this$1._loadAsync(target, options) : this$1._loadAsync(target, options)).then((function(resource) {
             return resource.error || this$1.onLoaded && this$1.onLoaded(resource), resource;
         }));
-    }, LoaderBase.prototype.loadAllAsync = function(targets) {
-        var this$1 = this;
-        if (0 === Object.keys(targets).length) {
-            return Promise.resolve({});
+    }, LoaderBase.prototype.loadAllAsync = function(data) {
+        var this$1 = this, res = {};
+        if (0 === Object.keys(data).length) {
+            return Promise.resolve(res);
         }
-        var promises = [], res = {}, loop = function(i) {
-            promises.push(this$1.loadAsync(targets[i]).then((function(resource) {
+        var promises = [], loop = function(i) {
+            promises.push(this$1.loadAsync(data[i].src, data[i].options).then((function(resource) {
                 res[i] = resource;
             })));
         };
-        for (var i in targets) {
+        for (var i in data) {
             loop(i);
         }
         return Promise.all(promises).then((function() {
             return res;
         }));
+    }, LoaderBase.prototype._resolveXhrOptions = function(xhr) {
+        return xhr ? {
+            requestOptions: "boolean" == typeof xhr ? {} : xhr.requestOptions || {}
+        } : {};
     };
     var TextureLoaderResource = function(superclass) {
         function TextureLoaderResource() {
@@ -585,24 +622,25 @@
             superclass.apply(this, arguments);
         }
         return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
-        TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target) {
-            (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous");
-            var useCache = this._options.useCache;
-            return new Promise((function(resolve) {
+        TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target, options) {
+            return (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous"), 
+            new Promise((function(resolve) {
                 var bt = PIXI.BaseTexture.from(target);
                 if (bt.valid) {
-                    return useCache || PIXI.BaseTexture.removeFromCache(bt), void resolve(new TextureLoaderResource(new PIXI.Texture(bt), null));
+                    return PIXI.BaseTexture.removeFromCache(bt), void resolve(new TextureLoaderResource(new PIXI.Texture(bt), null));
                 }
                 bt.on("loaded", (function(baseTexture) {
-                    useCache || PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
+                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
                 })), bt.on("error", (function(baseTexture, e) {
                     PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), e));
                 }));
             }));
-        }, TextureLoader.prototype._loadXhrAsync = function(url) {
-            var this$1 = this, xhrOptions = this._options.xhrOptions || {};
-            return fetch(url, xhrOptions.requestOptions || {}).then((function(res) {
-                return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.text();
+        }, TextureLoader.prototype._loadXhrAsync = function(url, options) {
+            var this$1 = this, xhr = this._resolveXhrOptions(options.xhr);
+            return fetch(url, xhr.requestOptions).then((function(res) {
+                return res.blob();
+            })).then((function(blob) {
+                return (window.URL || window.webkitURL).createObjectURL(blob);
             })).then((function(uri) {
                 return this$1._loadAsync(uri);
             }));
@@ -612,10 +650,8 @@
             superclass.apply(this, arguments);
         }
         return superclass && (TextureManifest.__proto__ = superclass), TextureManifest.prototype = Object.create(superclass && superclass.prototype), 
-        TextureManifest.prototype.constructor = TextureManifest, TextureManifest.prototype._loadAsync = function(targets, options) {
-            void 0 === options && (options = {});
-            var loader = new TextureLoader(options);
-            return this._doneLoaderAsync(loader, targets);
+        TextureManifest.prototype.constructor = TextureManifest, TextureManifest.prototype._createLoader = function() {
+            return new TextureLoader;
         }, TextureManifest;
     }(ManifestBase), JsonLoaderResource = function(superclass) {
         function JsonLoaderResource() {
@@ -629,7 +665,7 @@
             superclass.apply(this, arguments);
         }
         return superclass && (JsonLoader.__proto__ = superclass), JsonLoader.prototype = Object.create(superclass && superclass.prototype), 
-        JsonLoader.prototype.constructor = JsonLoader, JsonLoader.prototype._loadAsync = function(target) {
+        JsonLoader.prototype.constructor = JsonLoader, JsonLoader.prototype._loadAsync = function(target, options) {
             return fetch(target).then((function(res) {
                 return res.json();
             })).then((function(json) {
@@ -637,10 +673,10 @@
             })).catch((function(e) {
                 return new JsonLoaderResource({}, e);
             }));
-        }, JsonLoader.prototype._loadXhrAsync = function(url) {
-            var xhrOptions = this._options.xhrOptions || {};
-            return fetch(url, xhrOptions.requestOptions || {}).then((function(res) {
-                return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.json();
+        }, JsonLoader.prototype._loadXhrAsync = function(url, options) {
+            var xhr = this._resolveXhrOptions(options.xhr);
+            return fetch(url, xhr.requestOptions).then((function(res) {
+                return res.json();
             })).then((function(json) {
                 return new JsonLoaderResource(json, null);
             })).catch((function(e) {
@@ -663,26 +699,17 @@
         }
         return superclass && (SpritesheetLoader.__proto__ = superclass), SpritesheetLoader.prototype = Object.create(superclass && superclass.prototype), 
         SpritesheetLoader.prototype.constructor = SpritesheetLoader, SpritesheetLoader.prototype._loadAsync = function(target, options) {
-            return "string" != typeof target ? this._loadTextureFromJson(target) : this._loadFromUrlAsync(target);
-        }, SpritesheetLoader.prototype._loadXhrAsync = function(url) {
-            this._options;
-            var jsonOptions = {
-                basepath: this._options.basepath,
-                version: this._options.version,
-                useCache: this._options.useCache
-            }, xhrOptions = this._options.xhrOptions || {};
-            return jsonOptions.xhrOptions = {
-                requestOptions: xhrOptions.requestOptions,
-                dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[0] : xhrOptions.dataResolver
-            }, this._loadFromUrlAsync(url, jsonOptions);
+            return void 0 === options && (options = {}), "string" != typeof target ? this._loadTextureFromJson(target, options) : this._loadFromUrlAsync(target, options);
+        }, SpritesheetLoader.prototype._loadXhrAsync = function(url, options) {
+            return this._loadFromUrlAsync(url, options);
         }, SpritesheetLoader.prototype._loadFromUrlAsync = function(url, options) {
             var this$1 = this;
-            return new JsonLoader(options).loadAsync(url).then((function(resource) {
+            return (new JsonLoader).loadAsync(url, options).then((function(resource) {
                 var json = resource.data;
                 if (!json.meta || !json.meta.image || !json.frames) {
                     return new SpritesheetLoaderResource({}, "invalid json");
                 }
-                var basepath = url, version = this$1._options.version || "", preUri = resolvePath(basepath, json.meta.image);
+                var version = options.version || "", preUri = resolvePath(url, json.meta.image);
                 json.meta.image = version ? resolveQuery(preUri, {
                     _fv: version
                 }) : preUri;
@@ -690,29 +717,10 @@
                     frames: json.frames,
                     meta: json.meta
                 };
-                return this$1._loadTextureFromJson(data);
+                return this$1._loadTextureFromJson(data, options);
             }));
-        }, SpritesheetLoader.prototype._loadTextureFromJson = function(json) {
-            var this$1 = this, options = function() {
-                if (!this$1._options.xhrOptions) {
-                    return {
-                        basepath: this$1._options.basepath,
-                        version: this$1._options.version,
-                        useCache: this$1._options.useCache
-                    };
-                }
-                this$1._options;
-                var textureOptions = {
-                    basepath: this$1._options.basepath,
-                    version: this$1._options.version,
-                    useCache: this$1._options.useCache
-                }, xhrOptions = this$1._options.xhrOptions || {};
-                return textureOptions.xhrOptions = {
-                    requestOptions: xhrOptions.requestOptions,
-                    dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[1] : xhrOptions.dataResolver
-                }, textureOptions;
-            }(), loader = new TextureLoader(options), useCache = this._options.useCache;
-            return loader.loadAsync(json.meta.image).then((function(resource) {
+        }, SpritesheetLoader.prototype._loadTextureFromJson = function(json, options) {
+            return (new TextureLoader).loadAsync(json.meta.image, options).then((function(resource) {
                 if (resource.error) {
                     return new SpritesheetLoaderResource({}, resource.error);
                 }
@@ -720,10 +728,8 @@
                 return new Promise((function(resolve) {
                     ss.parse((function(e) {
                         var resource = new SpritesheetLoaderResource(ss.textures, null);
-                        if (!useCache) {
-                            for (var i in ss.textures) {
-                                TextureLoaderResource.removeCache(ss.textures[i]);
-                            }
+                        for (var i in ss.textures) {
+                            TextureLoaderResource.removeCache(ss.textures[i]);
                         }
                         resolve(resource);
                     }));
@@ -737,10 +743,15 @@
             superclass.apply(this, arguments);
         }
         return superclass && (SpritesheetManifest.__proto__ = superclass), SpritesheetManifest.prototype = Object.create(superclass && superclass.prototype), 
-        SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._loadAsync = function(targets, options) {
-            void 0 === options && (options = {});
-            var loader = new SpritesheetLoader(options);
-            return this._doneLoaderAsync(loader, targets);
+        SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._createLoader = function() {
+            return new SpritesheetLoader;
+        }, SpritesheetManifest.prototype._resolveTarget = function(target, options) {
+            return void 0 === options && (options = {}), "string" == typeof target ? this._resolveTargetPath(target, options) : ("string" == typeof target.meta.image && (target.meta.image = this._resolveTargetPath(target.meta.image, options)), 
+            target);
+        }, SpritesheetManifest.prototype._getAppendOption = function(options) {
+            return void 0 === options && (options = {}), {
+                version: options.version
+            };
         }, SpritesheetManifest;
     }(ManifestBase), SoundLoaderResource = function(superclass) {
         function SoundLoaderResource() {
@@ -755,7 +766,7 @@
             superclass.apply(this, arguments);
         }
         return superclass && (SoundLoader.__proto__ = superclass), SoundLoader.prototype = Object.create(superclass && superclass.prototype), 
-        SoundLoader.prototype.constructor = SoundLoader, SoundLoader.prototype._loadAsync = function(target) {
+        SoundLoader.prototype.constructor = SoundLoader, SoundLoader.prototype._loadAsync = function(target, options) {
             return new Promise((function(resolve) {
                 var howl = new howler.Howl({
                     src: target,
@@ -768,8 +779,8 @@
                     }
                 });
             }));
-        }, SoundLoader.prototype._loadXhrAsync = function(url) {
-            var xhrOptions = this._options.xhrOptions || {};
+        }, SoundLoader.prototype._loadXhrAsync = function(url, options) {
+            var xhr = this._resolveXhrOptions(options.xhr);
             return new Promise((function(resolve) {
                 var howl = new howler.Howl({
                     src: url,
@@ -780,7 +791,7 @@
                         var e = new Error("invalid resource: " + url);
                         resolve(new SoundLoaderResource(howl, e));
                     },
-                    xhr: xhrOptions.requestOptions || {}
+                    xhr: xhr.requestOptions || {}
                 });
             }));
         }, SoundLoader;
@@ -789,20 +800,16 @@
             superclass.apply(this, arguments);
         }
         return superclass && (SoundManifest.__proto__ = superclass), SoundManifest.prototype = Object.create(superclass && superclass.prototype), 
-        SoundManifest.prototype.constructor = SoundManifest, SoundManifest.prototype._loadAsync = function(targets, options) {
-            void 0 === options && (options = {});
-            var loader = new SoundLoader(options);
-            return this._doneLoaderAsync(loader, targets);
+        SoundManifest.prototype.constructor = SoundManifest, SoundManifest.prototype._createLoader = function() {
+            return new SoundLoader;
         }, SoundManifest;
     }(ManifestBase), JsonManifest = function(superclass) {
         function JsonManifest() {
             superclass.apply(this, arguments);
         }
         return superclass && (JsonManifest.__proto__ = superclass), JsonManifest.prototype = Object.create(superclass && superclass.prototype), 
-        JsonManifest.prototype.constructor = JsonManifest, JsonManifest.prototype._loadAsync = function(targets, options) {
-            void 0 === options && (options = {});
-            var loader = new JsonLoader(options);
-            return this._doneLoaderAsync(loader, targets);
+        JsonManifest.prototype.constructor = JsonManifest, JsonManifest.prototype._createLoader = function() {
+            return new JsonLoader;
         }, JsonManifest;
     }(ManifestBase), ContentDeliver = function(data) {
         this._piximData = {
@@ -844,31 +851,29 @@
     function createManifests() {
         var res = {};
         for (var i in _manifests) {
-            res[i] = new _manifests[i];
+            res[i] = new _manifests[i](i);
         }
         return res;
     }
     var _manifests = {}, Content = function(Emitter) {
         function Content(options, piximData) {
             var this$1 = this;
-            void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
+            if (void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
             Emitter.call(this), this._loadedResourceHandler = function(data) {
                 this$1.emit("loaderAssetLoaded", data);
-            };
-            var basepath = options.basepath || "";
-            if ("object" != typeof options.version) {
-                var version = {}, v = options.version || "";
+            }, "object" != typeof options.basepath) {
+                var basepath = {}, v = options.basepath || "";
                 for (var i in _manifests) {
-                    version[i] = v;
+                    basepath[i] = v;
+                }
+                options.basepath = basepath;
+            }
+            if ("object" != typeof options.version) {
+                var version = {}, v$1 = options.version || "";
+                for (var i$1 in _manifests) {
+                    version[i$1] = v$1;
                 }
                 options.version = version;
-            }
-            if ("object" != typeof options.useCache) {
-                var useCache = {}, v$1 = options.useCache || !1;
-                for (var i$1 in _manifests) {
-                    useCache[i$1] = v$1;
-                }
-                options.useCache = useCache;
             }
             var contentDeliverData = {
                 width: piximData.config.width,
@@ -879,10 +884,9 @@
             };
             for (var i$2 in this._piximData = {
                 contentID: (++_contentID).toString(),
-                basepath: basepath,
+                basepath: options.basepath,
                 version: options.version,
-                useCache: options.useCache,
-                xhrOptions: options.xhrOptions || {},
+                xhr: options.xhr,
                 $: new ContentDeliver(contentDeliverData),
                 manifests: piximData.manifests,
                 additionalManifests: createManifests(),
@@ -1002,10 +1006,10 @@
             contentDeliverData.lib = {}, contentDeliverData.vars = {};
             var manifests = this._piximData.manifests, additionalManifests = this._piximData.additionalManifests;
             for (var i in manifests) {
-                manifests[i].destroyResources(), manifests[i].off("loaderAssetLoaded", this._loadedResourceHandler);
+                manifests[i].off("loaderAssetLoaded", this._loadedResourceHandler);
             }
             for (var i$1 in additionalManifests) {
-                additionalManifests[i$1].destroyResources(), additionalManifests[i$1].off("loaderAssetLoaded", this._loadedResourceHandler);
+                additionalManifests[i$1].off("loaderAssetLoaded", this._loadedResourceHandler);
             }
             var resources = contentDeliverData.resources;
             for (var i$2 in resources) {
@@ -1026,7 +1030,7 @@
         }, prototypeAccessors.assetCount.get = function() {
             return this.classAssetCount + this.instanceAssetCount;
         }, Content.prototype._loadAssetAsync = function(manifests) {
-            var basepath = this._piximData.basepath, versions = this._piximData.version, useCaches = this._piximData.useCache, resources = this._piximData.$.resources;
+            var basepaths = this._piximData.basepath, versions = this._piximData.version, resources = this._piximData.$.resources;
             if (0 === Object.keys(manifests).length) {
                 return Promise.resolve();
             }
@@ -1034,11 +1038,11 @@
             for (var i in manifests) {
                 var type = i;
                 keys.push(type);
-                var version = versions[type] || "", useCache = useCaches[type] || !1, manifest = manifests[type];
+                var basepath = (basepaths[type] || "").replace(/(.+[^\/])$/, "$1/"), version = versions[type] || "", manifest = manifests[type];
                 promises.push(manifest.getAsync({
                     basepath: basepath,
                     version: version,
-                    useCache: useCache
+                    xhr: this._piximData.xhr
                 }));
             }
             return Promise.all(promises).then((function(resolver) {

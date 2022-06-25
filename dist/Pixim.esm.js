@@ -644,73 +644,6 @@ class Application extends Emitter {
     }
 }
 
-const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
-class ManifestBase extends Emitter$1 {
-    constructor() {
-        super(...arguments);
-        this._data = {};
-        this._resources = {};
-    }
-    /**
-     * Register targetss.
-     */
-    add(targets, options = {}) {
-        const unrequired = options.unrequired || false;
-        for (let i in targets) {
-            this._data[i] = {
-                target: targets[i],
-                unrequired
-            };
-        }
-    }
-    get count() {
-        return Object.keys(this._data).length;
-    }
-    /**
-     * Get resources.
-     */
-    getAsync(options) {
-        if (Object.keys(this._data).length === 0) {
-            return Promise.resolve({});
-        }
-        const res = {};
-        const targets = {};
-        for (let i in this._data) {
-            targets[i] = this._data[i].target;
-        }
-        return this._loadAsync(targets, options)
-            .then(resources => {
-            for (let i in resources) {
-                const resource = resources[i];
-                if (resource.error && !this._data[i].unrequired) {
-                    throw resource.error;
-                }
-            }
-            for (let i in resources) {
-                const resource = resources[i];
-                this._resources[i] = resource;
-                res[i] = resource.data;
-            }
-            return res;
-        });
-    }
-    /**
-     * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
-     */
-    _doneLoaderAsync(loader, targets) {
-        loader.onLoaded = resource => {
-            console.log(resource);
-            this.emit(EVENT_LOADER_ASSET_LOADED, resource);
-        };
-        return loader.loadAllAsync(targets);
-    }
-    destroyResources() {
-        for (let i in this._resources) {
-            this._resources[i].destroy();
-        }
-    }
-}
-
 function resolvePath(basepath, path) {
     if (!isUrl(path)) {
         return path;
@@ -718,7 +651,7 @@ function resolvePath(basepath, path) {
     //if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
     //	return path;
     //} else {
-    return utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
+    return utils.url.resolve(basepath, path);
     //}
 }
 function isUrl(uri) {
@@ -760,6 +693,111 @@ var index = /*#__PURE__*/Object.freeze({
     resolveQuery: resolveQuery
 });
 
+const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
+class ManifestBase extends Emitter$1 {
+    constructor(type) {
+        super();
+        this._data = {};
+        this._resources = {};
+        this._type = type;
+    }
+    /**
+     * Register targetss.
+     */
+    add(targets, options = {}) {
+        const unrequired = options.unrequired || false;
+        for (let i in targets) {
+            this._data[i] = {
+                target: targets[i],
+                unrequired
+            };
+        }
+    }
+    get count() {
+        return Object.keys(this._data).length;
+    }
+    /**
+     * Get resources.
+     */
+    getAsync(options) {
+        if (Object.keys(this._data).length === 0) {
+            return Promise.resolve({});
+        }
+        const res = {};
+        const loader = this._createLoader();
+        loader.onLoaded = resource => {
+            this.emit(EVENT_LOADER_ASSET_LOADED, resource);
+        };
+        const loaderOptions = this._getAppendOption(options);
+        loaderOptions.xhr = false;
+        return (() => {
+            const data = {};
+            const promises = [];
+            for (let i in this._data) {
+                const src = this._resolveTarget(this._data[i].target, options);
+                if (typeof (options.xhr) === 'boolean') {
+                    data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: options.xhr }) };
+                    continue;
+                }
+                if (typeof (options.xhr) !== 'function') {
+                    loaderOptions.xhr = false;
+                    data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
+                    continue;
+                }
+                if (typeof (src) !== 'string') {
+                    data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
+                    continue;
+                }
+                promises.push(options.xhr(this._type, src)
+                    .then(xhr => {
+                    data[i] = { src, options: Object.assign({}, loaderOptions, { xhr }) };
+                }));
+            }
+            return Promise.all(promises).then(() => data);
+        })()
+            .then(data => {
+            return loader.loadAllAsync(data);
+        })
+            .then(resources => {
+            for (let i in resources) {
+                const resource = resources[i];
+                if (resource.error && !this._data[i].unrequired) {
+                    throw resource.error;
+                }
+            }
+            for (let i in resources) {
+                const resource = resources[i];
+                this._resources[i] = resource;
+                res[i] = resource.data;
+            }
+            return res;
+        });
+    }
+    _resolveTarget(target, options) {
+        return this._resolveTargetPath(target, options);
+    }
+    _getAppendOption(options) {
+        return {};
+    }
+    _resolveTargetPath(target, options = {}) {
+        if (typeof (target) !== 'string') {
+            return target;
+        }
+        if (!isUrl(target)) {
+            return target;
+        }
+        const basepath = options.basepath || '';
+        const version = options.version || '';
+        const preUri = resolvePath(basepath, target);
+        return version ? resolveQuery(preUri, { _fv: version }) : preUri;
+    }
+    destroyResources() {
+        for (let i in this._resources) {
+            this._resources[i].destroy();
+        }
+    }
+}
+
 class LoaderResource {
     constructor(data, error) {
         this._data = data;
@@ -773,31 +811,24 @@ class LoaderResource {
     }
 }
 class LoaderBase {
-    constructor(options = {}) {
-        this._options = options || {};
-    }
-    _resolveUri(uri) {
-        if (!isUrl(uri)) {
-            return uri;
-        }
-        const basepath = this._options.basepath || '';
-        const version = this._options.version || '';
-        const preUri = resolvePath(basepath, uri);
-        return version ? resolveQuery(preUri, { _fv: version }) : preUri;
-    }
     /**
      * @fires [[LoaderBase.loaded]]
      */
-    loadAsync(target, xhrOptions) {
+    loadAsync(target, options) {
         return (() => {
+            if (!options) {
+                return this._loadAsync(target, options);
+            }
             if (typeof (target) !== 'string') {
-                return this._loadAsync(target);
+                return this._loadAsync(target, options);
             }
-            const uri = this._resolveUri(target);
-            if (this._options.xhrOptions) {
-                return this._loadXhrAsync(uri);
+            if (!isUrl(target)) {
+                return this._loadAsync(target, options);
             }
-            return this._loadAsync(uri);
+            if (!options.xhr) {
+                return this._loadAsync(target, options);
+            }
+            return this._loadXhrAsync(target, options);
         })()
             .then(resource => {
             if (!resource.error) {
@@ -809,14 +840,14 @@ class LoaderBase {
     /**
      * @fires [[LoaderBase.loaded]]
      */
-    loadAllAsync(targets) {
-        if (Object.keys(targets).length === 0) {
-            return Promise.resolve({});
+    loadAllAsync(data) {
+        const res = {};
+        if (Object.keys(data).length === 0) {
+            return Promise.resolve(res);
         }
         const promises = [];
-        const res = {};
-        for (let i in targets) {
-            promises.push(this.loadAsync(targets[i])
+        for (let i in data) {
+            promises.push(this.loadAsync(data[i].src, data[i].options)
                 .then(resource => {
                 res[i] = resource;
             }));
@@ -825,6 +856,15 @@ class LoaderBase {
             .then(() => {
             return res;
         });
+    }
+    _resolveXhrOptions(xhr) {
+        if (!xhr) {
+            return {};
+        }
+        const requestOptions = typeof (xhr) === 'boolean' ? {} : (xhr.requestOptions || {});
+        return {
+            requestOptions
+        };
     }
 }
 
@@ -841,24 +881,19 @@ class TextureLoaderResource extends LoaderResource {
     }
 }
 class TextureLoader extends LoaderBase {
-    _loadAsync(target) {
+    _loadAsync(target, options = {}) {
         if (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) {
             target.crossOrigin = 'anonymous';
         }
-        const useCache = this._options.useCache;
         return new Promise(resolve => {
             const bt = BaseTexture.from(target);
             if (bt.valid) {
-                if (!useCache) {
-                    BaseTexture.removeFromCache(bt);
-                }
+                BaseTexture.removeFromCache(bt);
                 resolve(new TextureLoaderResource(new Texture(bt), null));
                 return;
             }
             bt.on('loaded', (baseTexture) => {
-                if (!useCache) {
-                    BaseTexture.removeFromCache(baseTexture);
-                }
+                BaseTexture.removeFromCache(baseTexture);
                 resolve(new TextureLoaderResource(new Texture(baseTexture), null));
             });
             bt.on('error', (baseTexture, e) => {
@@ -867,11 +902,12 @@ class TextureLoader extends LoaderBase {
             });
         });
     }
-    _loadXhrAsync(url) {
-        const xhrOptions = this._options.xhrOptions || {};
-        return fetch(url, xhrOptions.requestOptions || {})
-            .then(res => {
-            return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.text();
+    _loadXhrAsync(url, options) {
+        const xhr = this._resolveXhrOptions(options.xhr);
+        return fetch(url, xhr.requestOptions)
+            .then(res => res.blob())
+            .then(blob => {
+            return (window.URL || window.webkitURL).createObjectURL(blob);
         })
             .then((uri) => {
             return this._loadAsync(uri);
@@ -880,9 +916,8 @@ class TextureLoader extends LoaderBase {
 }
 
 class TextureManifest extends ManifestBase {
-    _loadAsync(targets, options = {}) {
-        const loader = new TextureLoader(options);
-        return this._doneLoaderAsync(loader, targets);
+    _createLoader() {
+        return new TextureLoader();
     }
 }
 
@@ -891,18 +926,16 @@ class JsonLoaderResource extends LoaderResource {
     }
 }
 class JsonLoader extends LoaderBase {
-    _loadAsync(target) {
+    _loadAsync(target, options = {}) {
         return fetch(target)
             .then(res => res.json())
             .then(json => new JsonLoaderResource(json, null))
             .catch((e) => new JsonLoaderResource({}, e));
     }
-    _loadXhrAsync(url) {
-        const xhrOptions = this._options.xhrOptions || {};
-        return fetch(url, xhrOptions.requestOptions || {})
-            .then(res => {
-            return xhrOptions.dataResolver ? xhrOptions.dataResolver(res) : res.json();
-        })
+    _loadXhrAsync(url, options) {
+        const xhr = this._resolveXhrOptions(options.xhr);
+        return fetch(url, xhr.requestOptions)
+            .then(res => res.json())
             .then(json => new JsonLoaderResource(json, null))
             .catch((e) => new JsonLoaderResource({}, e));
     }
@@ -918,71 +951,36 @@ class SpritesheetLoaderResource extends LoaderResource {
 class SpritesheetLoader extends LoaderBase {
     _loadAsync(target, options = {}) {
         if (typeof target !== 'string') {
-            return this._loadTextureFromJson(target);
+            return this._loadTextureFromJson(target, options);
         }
         else {
-            return this._loadFromUrlAsync(target);
+            return this._loadFromUrlAsync(target, options);
         }
     }
-    _loadXhrAsync(url) {
-        const options = this._options;
-        const jsonOptions = {
-            basepath: this._options.basepath,
-            version: this._options.version,
-            useCache: this._options.useCache,
-        };
-        const xhrOptions = this._options.xhrOptions || {};
-        jsonOptions.xhrOptions = {
-            requestOptions: xhrOptions.requestOptions,
-            dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[0] : xhrOptions.dataResolver
-        };
-        return this._loadFromUrlAsync(url, jsonOptions);
+    _loadXhrAsync(url, options) {
+        return this._loadFromUrlAsync(url, options);
     }
     _loadFromUrlAsync(url, options) {
-        const loader = new JsonLoader(options);
-        return loader.loadAsync(url)
+        const loader = new JsonLoader();
+        return loader.loadAsync(url, options)
             .then(resource => {
             const json = resource.data;
             if (!json.meta || !json.meta.image || !json.frames) {
                 return new SpritesheetLoaderResource({}, 'invalid json');
             }
-            const basepath = url;
-            const version = this._options.version || '';
-            const preUri = resolvePath(basepath, json.meta.image);
+            const version = options.version || '';
+            const preUri = resolvePath(url, json.meta.image);
             json.meta.image = version ? resolveQuery(preUri, { _fv: version }) : preUri;
             const data = {
                 frames: json.frames,
                 meta: json.meta
             };
-            return this._loadTextureFromJson(data);
+            return this._loadTextureFromJson(data, options);
         });
     }
-    _loadTextureFromJson(json) {
-        const options = (() => {
-            if (!this._options.xhrOptions) {
-                const textureOptions = {
-                    basepath: this._options.basepath,
-                    version: this._options.version,
-                    useCache: this._options.useCache,
-                };
-                return textureOptions;
-            }
-            const options = this._options;
-            const textureOptions = {
-                basepath: this._options.basepath,
-                version: this._options.version,
-                useCache: this._options.useCache,
-            };
-            const xhrOptions = this._options.xhrOptions || {};
-            textureOptions.xhrOptions = {
-                requestOptions: xhrOptions.requestOptions,
-                dataResolver: xhrOptions.dataResolver ? xhrOptions.dataResolver[1] : xhrOptions.dataResolver
-            };
-            return textureOptions;
-        })();
-        const loader = new TextureLoader(options);
-        const useCache = this._options.useCache;
-        return loader.loadAsync(json.meta.image)
+    _loadTextureFromJson(json, options) {
+        const loader = new TextureLoader();
+        return loader.loadAsync(json.meta.image, options)
             .then(resource => {
             if (resource.error) {
                 return new SpritesheetLoaderResource({}, resource.error);
@@ -991,10 +989,8 @@ class SpritesheetLoader extends LoaderBase {
             return new Promise(resolve => {
                 ss.parse(e => {
                     const resource = new SpritesheetLoaderResource(ss.textures, null);
-                    if (!useCache) {
-                        for (let i in ss.textures) {
-                            TextureLoaderResource.removeCache(ss.textures[i]);
-                        }
+                    for (let i in ss.textures) {
+                        TextureLoaderResource.removeCache(ss.textures[i]);
                     }
                     resolve(resource);
                 });
@@ -1007,9 +1003,22 @@ class SpritesheetLoader extends LoaderBase {
 }
 
 class SpritesheetManifest extends ManifestBase {
-    _loadAsync(targets, options = {}) {
-        const loader = new SpritesheetLoader(options);
-        return this._doneLoaderAsync(loader, targets);
+    _createLoader() {
+        return new SpritesheetLoader();
+    }
+    _resolveTarget(target, options = {}) {
+        if (typeof (target) === 'string') {
+            return this._resolveTargetPath(target, options);
+        }
+        if (typeof (target.meta.image) === 'string') {
+            target.meta.image = this._resolveTargetPath(target.meta.image, options);
+        }
+        return target;
+    }
+    _getAppendOption(options = {}) {
+        return {
+            version: options.version
+        };
     }
 }
 
@@ -1020,7 +1029,7 @@ class SoundLoaderResource extends LoaderResource {
     }
 }
 class SoundLoader extends LoaderBase {
-    _loadAsync(target) {
+    _loadAsync(target, options = {}) {
         return new Promise(resolve => {
             const howl = new Howl({
                 src: target,
@@ -1034,8 +1043,8 @@ class SoundLoader extends LoaderBase {
             });
         });
     }
-    _loadXhrAsync(url) {
-        const xhrOptions = this._options.xhrOptions || {};
+    _loadXhrAsync(url, options) {
+        const xhr = this._resolveXhrOptions(options.xhr);
         return new Promise(resolve => {
             const howl = new Howl({
                 src: url,
@@ -1046,23 +1055,21 @@ class SoundLoader extends LoaderBase {
                     const e = new Error('invalid resource: ' + url);
                     resolve(new SoundLoaderResource(howl, e));
                 },
-                xhr: xhrOptions.requestOptions || {}
+                xhr: xhr.requestOptions || {}
             });
         });
     }
 }
 
 class SoundManifest extends ManifestBase {
-    _loadAsync(targets, options = {}) {
-        const loader = new SoundLoader(options);
-        return this._doneLoaderAsync(loader, targets);
+    _createLoader() {
+        return new SoundLoader();
     }
 }
 
 class JsonManifest extends ManifestBase {
-    _loadAsync(targets, options = {}) {
-        const loader = new JsonLoader(options);
-        return this._doneLoaderAsync(loader, targets);
+    _createLoader() {
+        return new JsonLoader();
     }
 }
 
@@ -1122,7 +1129,7 @@ let _contentID = 0;
 function createManifests() {
     const res = {};
     for (let i in _manifests) {
-        res[i] = new _manifests[i]();
+        res[i] = new _manifests[i](i);
     }
     return res;
 }
@@ -1149,7 +1156,14 @@ class Content extends Emitter$1 {
         this._loadedResourceHandler = (data) => {
             this.emit(EVENT_LOADER_ASSET_LOADED, data);
         };
-        const basepath = options.basepath || '';
+        if (typeof (options.basepath) !== 'object') {
+            const basepath = {};
+            const v = options.basepath || '';
+            for (let i in _manifests) {
+                basepath[i] = v;
+            }
+            options.basepath = basepath;
+        }
         if (typeof (options.version) !== 'object') {
             const version = {};
             const v = options.version || '';
@@ -1157,14 +1171,6 @@ class Content extends Emitter$1 {
                 version[i] = v;
             }
             options.version = version;
-        }
-        if (typeof (options.useCache) !== 'object') {
-            const useCache = {};
-            const v = options.useCache || false;
-            for (let i in _manifests) {
-                useCache[i] = v;
-            }
-            options.useCache = useCache;
         }
         const contentDeliverData = {
             width: piximData.config.width,
@@ -1175,10 +1181,9 @@ class Content extends Emitter$1 {
         };
         this._piximData = {
             contentID: (++_contentID).toString(),
-            basepath,
+            basepath: options.basepath,
             version: options.version,
-            useCache: options.useCache,
-            xhrOptions: options.xhrOptions || {},
+            xhr: options.xhr,
             $: new ContentDeliver(contentDeliverData),
             manifests: piximData.manifests,
             additionalManifests: createManifests(),
@@ -1410,11 +1415,9 @@ class Content extends Emitter$1 {
         const manifests = this._piximData.manifests;
         const additionalManifests = this._piximData.additionalManifests;
         for (let i in manifests) {
-            manifests[i].destroyResources();
             manifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
         }
         for (let i in additionalManifests) {
-            additionalManifests[i].destroyResources();
             additionalManifests[i].off(EVENT_LOADER_ASSET_LOADED, this._loadedResourceHandler);
         }
         const resources = contentDeliverData.resources;
@@ -1445,9 +1448,8 @@ class Content extends Emitter$1 {
      * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
      */
     _loadAssetAsync(manifests) {
-        const basepath = this._piximData.basepath;
+        const basepaths = this._piximData.basepath;
         const versions = this._piximData.version;
-        const useCaches = this._piximData.useCache;
         const resources = this._piximData.$.resources;
         const loaderCount = Object.keys(manifests).length;
         if (loaderCount === 0) {
@@ -1458,10 +1460,10 @@ class Content extends Emitter$1 {
         for (let i in manifests) {
             const type = i;
             keys.push(type);
+            const basepath = (basepaths[type] || '').replace(/(.+[^\/])$/, '$1/');
             const version = versions[type] || '';
-            const useCache = useCaches[type] || false;
             const manifest = manifests[type];
-            promises.push(manifest.getAsync({ basepath, version, useCache /*, xhrOptions */ }));
+            promises.push(manifest.getAsync({ basepath, version, xhr: this._piximData.xhr }));
         }
         return Promise.all(promises)
             .then(resolver => {

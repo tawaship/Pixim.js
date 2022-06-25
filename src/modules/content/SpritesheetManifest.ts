@@ -11,12 +11,12 @@ export interface ISpritesheetDictionary extends ManifestBase.IRawResourceDiction
 
 }
 
-export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource, SpritesheetLoader.TSpritesheetLoaderFetchResolver> {
+export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource> {
 	protected _createLoader() {
 		return new SpritesheetLoader.SpritesheetLoader();
 	}
 	
-	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption<LoaderBase.ILoaderXhrOption<SpritesheetLoader.TSpritesheetLoaderFetchResolver>> = {}) {
+	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption = {}) {
 		if (typeof(target) === 'string') {
 			return this._resolveTargetPath(target, options);
 		}
@@ -28,7 +28,7 @@ export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLo
 		return target;
 	}
 	
-	protected _getAppendOption(options: ManifestBase.IManifestLoaderOption<LoaderBase.ILoaderXhrOption<SpritesheetLoader.TSpritesheetLoaderFetchResolver>> = {}): SpritesheetLoader.ISpritesheetLoaderOption {
+	protected _getAppendOption(options: ManifestBase.IManifestLoaderOption = {}): SpritesheetLoader.ISpritesheetLoaderOption {
 		return {
 			version: options.version
 		};

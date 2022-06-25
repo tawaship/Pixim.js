@@ -20,13 +20,11 @@ export interface ISoundLoaderResourceDictionary extends LoaderBase.ILoaderResour
 
 }
 
-export type TSoundLoaderFetchResolver = (res: Howl) => Promise<Howl>;
-
-export interface ISoundLoaderOption extends LoaderBase.ILoaderOption<TSoundLoaderFetchResolver> {
+export interface ISoundLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, TSoundLoaderFetchResolver> {
+export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource> {
 	protected _loadAsync(target: TSoundLoaderTarget, options: ISoundLoaderOption = {}) {
 		return new Promise<SoundLoaderResource>(resolve => {
 			const howl = new Howl({

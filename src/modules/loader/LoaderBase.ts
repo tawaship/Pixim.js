@@ -25,13 +25,12 @@ export interface IFetchRequestOption {
 	[key: string]: string;
 }
 
-export interface ILoaderXhrOption<TResolver> {
+export interface ILoaderXhrOption {
 	requestOptions?: IFetchRequestOption;
-	dataResolver?: TResolver;
 }
 
-export interface ILoaderOption<TResolver> {
-	xhr?: ILoaderXhrOption<TResolver> | boolean;
+export interface ILoaderOption {
+	xhr?: ILoaderXhrOption | boolean;
 }
 
 export interface ILoaderResourceDictionary<T> {
@@ -43,10 +42,10 @@ export interface ILoaderTargetDictionary<T> {
 }
 
 export interface ILoaderDataDictionary<TTarget, TLoaderOption> {
-	[name: string]: { target: TTarget, options?: TLoaderOption };
+	[name: string]: { src: TTarget, options?: TLoaderOption };
 }
 
-export abstract class LoaderBase<TTarget, TResource, TResolver> {
+export abstract class LoaderBase<TTarget, TResource> {
 	/**
 	 * Callback when one of the resources has succeeded loading.
 	 */
@@ -55,13 +54,17 @@ export abstract class LoaderBase<TTarget, TResource, TResolver> {
 	/**
 	 * @fires [[LoaderBase.loaded]]
 	 */
-	loadAsync(target: TTarget, options?: ILoaderOption<TResolver>) {
+	loadAsync(target: TTarget, options?: ILoaderOption) {
 		return (() => {
 			if (!options) {
 				return this._loadAsync(target, options);
 			}
 			
 			if (typeof(target) !== 'string') {
+				return this._loadAsync(target, options);
+			}
+			
+			if (!utils.isUrl(target)) {
 				return this._loadAsync(target, options);
 			}
 			
@@ -80,14 +83,14 @@ export abstract class LoaderBase<TTarget, TResource, TResolver> {
 		});
 	}
 	
-	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption<TResolver>): Promise<LoaderResource<TResource>>;
+	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption): Promise<LoaderResource<TResource>>;
 	
-	protected abstract _loadXhrAsync(url: string, options?: ILoaderOption<TResolver>): Promise<LoaderResource<TResource>>;
+	protected abstract _loadXhrAsync(url: string, options?: ILoaderOption): Promise<LoaderResource<TResource>>;
 	
 	/**
 	 * @fires [[LoaderBase.loaded]]
 	 */
-	loadAllAsync(data: ILoaderDataDictionary<TTarget, ILoaderOption<TResolver>>) {
+	loadAllAsync(data: ILoaderDataDictionary<TTarget, ILoaderOption>) {
 		const res: ILoaderResourceDictionary<TResource> = {};
 		
 		if (Object.keys(data).length === 0) {
@@ -98,7 +101,7 @@ export abstract class LoaderBase<TTarget, TResource, TResolver> {
 		
 		for (let i in data) {
 			promises.push(
-				this.loadAsync(data[i].target, data[i].options)
+				this.loadAsync(data[i].src, data[i].options)
 					.then(resource => {
 						res[i] = resource;
 					})
@@ -111,13 +114,15 @@ export abstract class LoaderBase<TTarget, TResource, TResolver> {
 			});
 	}
 	
-	protected _resolveXhrOptions(xhr: ILoaderXhrOption<TResolver> | boolean): ILoaderXhrOption<TResolver> {
+	protected _resolveXhrOptions(xhr?: ILoaderXhrOption | boolean): ILoaderXhrOption {
+		if (!xhr) {
+			return {};
+		}
+		
 		const requestOptions: IFetchRequestOption = typeof(xhr) === 'boolean' ? {} : (xhr.requestOptions || {});
-		const dataResolver: TResolver | undefined = typeof(xhr) === 'boolean' ? undefined : xhr.dataResolver;
 		
 		return {
-			requestOptions,
-			dataResolver
+			requestOptions
 		};
 	}
 }

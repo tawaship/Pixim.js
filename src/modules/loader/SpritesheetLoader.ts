@@ -43,13 +43,7 @@ export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoader
 
 }
 
-/**
- * - 0: for JsonLoader
- * - 1: for TextureLoader
- */
-export type TSpritesheetLoaderFetchResolver = [ JsonLoader.TJsonLoaderFetchResolver, TextureLoader.TTextureLoaderFetchResolver ];
-
-export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption<TSpritesheetLoaderFetchResolver> {
+export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
 	version?: string | number;
 }
 
@@ -58,35 +52,23 @@ export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption<TSpri
  */
 const KEY_SINGLE_SPRITESHEET = '--single-spritesheet';
 
-export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, TSpritesheetLoaderFetchResolver> {
+export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource> {
 	protected _loadAsync(target: TSpritesheetLoaderTarget, options: ISpritesheetLoaderOption = {}) {
 		if (typeof target !== 'string') {
-			return this._loadTextureFromJson(target);
+			return this._loadTextureFromJson(target, options);
 		} else {
-			return this._loadFromUrlAsync(target, options.version || '');
+			return this._loadFromUrlAsync(target, options);
 		}
 	}
 	
 	protected _loadXhrAsync(url: string, options: ISpritesheetLoaderOption) {
-		const xhr = this._resolveXhrOptions(options.xhr);
-		
-		const jsonXhr = {
-			requestOptions: xhr.requestOptions,
-			dataResolver: xhr.dataResolver ? xhr.dataResolver[0] : xhr.dataResolver
-		}
-		
-		const textureXhr = {
-			requestOptions: xhr.requestOptions,
-			dataResolver: xhr.dataResolver ? xhr.dataResolver[1] : xhr.dataResolver
-		}
-		
-		return this._loadFromUrlAsync(url, options.version || '', { xhr: jsonXhr }, { xhr: textureXhr });
+		return this._loadFromUrlAsync(url, options);
 	}
 	
-	private _loadFromUrlAsync(url: string, jsonVersion: string | number, jsonOptions?: JsonLoader.IJsonLoaderOption, textureOptions?: TextureLoader.ITextureLoaderOption) {
+	private _loadFromUrlAsync(url: string, options: ISpritesheetLoaderOption) {
 		const loader = new JsonLoader.JsonLoader();
 		
-		return loader.loadAsync(url, jsonOptions)
+		return loader.loadAsync(url, options)
 			.then(resource => {
 				const json = resource.data;
 				
@@ -94,10 +76,8 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					return new SpritesheetLoaderResource({}, 'invalid json');
 				}
 				
-				const basepath = url;
-				const version = jsonVersion;
-				const preUri = utils.resolvePath(basepath, json.meta.image);
-				
+				const version = options.version || '';
+				const preUri = utils.resolvePath(url, json.meta.image);
 				json.meta.image = version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
 				
 				const data: ISpritesheetJson = {
@@ -105,14 +85,14 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					meta: json.meta
 				};
 				
-				return this._loadTextureFromJson(data, textureOptions);
+				return this._loadTextureFromJson(data, options);
 			});
 	}
 	
-	private _loadTextureFromJson(json: ISpritesheetJson, textureOptions?: TextureLoader.ITextureLoaderOption) {
+	private _loadTextureFromJson(json: ISpritesheetJson, options: ISpritesheetLoaderOption) {
 		const loader = new TextureLoader.TextureLoader();
 		
-		return loader.loadAsync(json.meta.image, textureOptions)
+		return loader.loadAsync(json.meta.image, options)
 			.then(resource => {
 				if (resource.error) {
 					return new SpritesheetLoaderResource({}, resource.error);

@@ -1,0 +1,11 @@
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers 'X-A'
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	RewriteCond %{HTTP:Authorization} .
+	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+	
+	RewriteCond %{REQUEST_URI} (.*/server/)(.*\.(js|png|jpg|json|mp3))$
+	RewriteRule .* %1auth.php?file=%2
+</IfModule>

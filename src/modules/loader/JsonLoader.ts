@@ -22,13 +22,11 @@ export interface IJsonLoaderResourceDictionary extends LoaderBase.ILoaderResourc
 
 }
 
-export type TJsonLoaderFetchResolver = (res: Response) => IJsonData;
-
-export interface IJsonLoaderOption extends LoaderBase.ILoaderOption<TJsonLoaderFetchResolver> {
+export interface IJsonLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, TJsonLoaderFetchResolver> {
+export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource> {
 	protected _loadAsync(target: TJsonLoaderTarget, options: IJsonLoaderOption = {}) {
 		return fetch(target)
 			.then(res => res.json())
@@ -40,9 +38,7 @@ export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLo
 		const xhr = this._resolveXhrOptions(options.xhr);
 		
 		return fetch(url, xhr.requestOptions)
-			.then(res => {
-				return xhr.dataResolver ? xhrOptions.dataResolver(res) : res.json();
-			})
+			.then(res => res.json())
 			.then(json => new JsonLoaderResource(json, null))
 			.catch((e: any) => new JsonLoaderResource({}, e));
 	}

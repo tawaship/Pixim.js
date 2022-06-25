@@ -9,7 +9,7 @@ export interface ITextureDictionary extends ManifestBase.IRawResourceDictionary<
 
 }
 
-export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTextureLoaderTarget, TextureLoader.TTextureLoaderRawResource, TextureLoader.TTextureLoaderFetchResolver> {
+export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTextureLoaderTarget, TextureLoader.TTextureLoaderRawResource> {
 	protected _createLoader() {
 		return new TextureLoader.TextureLoader();
 	}

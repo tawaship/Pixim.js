@@ -35,6 +35,32 @@ export default (async () => {
 			output: [
 				{
 					banner,
+					file: 'dist/Pixim.cjs.js',
+					format: 'cjs',
+					sourcemap: true
+				},
+				{
+					banner,
+					file: 'dist/Pixim.esm.js',
+					format: 'esm',
+					sourcemap: true
+				}
+			],
+			external: ['pixi.js', '@tawaship/emitter', 'howler'],
+			watch: {
+				clearScreen: false
+			},
+			plugins: [
+				nodeResolve(),
+				commonjs(),
+				typescript()
+			]
+		},
+		{
+			input: 'src/Pixim.ts',
+			output: [
+				{
+					banner,
 					intro,
 					file: 'dist/Pixim.js',
 					format: 'iife',
@@ -98,32 +124,6 @@ export default (async () => {
 						pure_funcs: ['console.log']
 					}
 				})
-			]
-		},
-		{
-			input: 'src/Pixim.ts',
-			output: [
-				{
-					banner,
-					file: 'dist/Pixim.cjs.js',
-					format: 'cjs',
-					sourcemap: true
-				},
-				{
-					banner,
-					file: 'dist/Pixim.esm.js',
-					format: 'esm',
-					sourcemap: true
-				}
-			],
-			external: ['pixi.js', '@tawaship/emitter', 'howler'],
-			watch: {
-				clearScreen: false
-			},
-			plugins: [
-				nodeResolve(),
-				commonjs(),
-				typescript()
 			]
 		}
 	]

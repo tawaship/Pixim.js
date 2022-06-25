@@ -15,12 +15,8 @@ export interface IContentAssetVersion {
 	[key: string]: TManifestResourceVersion;
 }
 
-export interface IContentAssetCache {
-	[key: string]: boolean;
-}
-
 export interface IContentManifests {
-	[key: string]: ManifestBase<any, any, any>;
+	[key: string]: ManifestBase<any, any>;
 }
 
 export interface IContentConfigData {
@@ -32,8 +28,7 @@ export interface IContentData {
 	contentID: string;
 	basepath: IContentAssetBasepath;
 	version: IContentAssetVersion;
-	useCache: IContentAssetCache;
-	xhr?: ILoaderXhrOptionFacotryDelegate<any>;
+	xhr?: ILoaderXhrOptionFacotryDelegate;
 	$: ContentDeliver;
 	manifests: IContentManifests;
 	additionalManifests: IContentManifests;
@@ -58,15 +53,10 @@ export interface IContentOption {
 	version?: TManifestResourceVersion | IContentAssetVersion;
 	
 	/**
-	 * Whether cache textures.
-	 */
-	useCache?: boolean | IContentAssetCache;
-	
-	/**
 	 * A header given when loading an asset, or a function that returns a header.
 	 * If non-null is specified, fetch API will be used instead of the default Loader when loading each asset.
 	 */
-	xhr?: ILoaderXhrOptionFacotryDelegate<any>;
+	xhr?: ILoaderXhrOptionFacotryDelegate;
 }
 
 /**
@@ -147,15 +137,6 @@ export class Content extends Emitter {
 			options.version = version;
 		}
 		
-		if (typeof(options.useCache) !== 'object') {
-			const useCache: IContentAssetCache = {};
-			const v = options.useCache || false;
-			for (let i in _manifests) {
-				useCache[i] = v;
-			}
-			options.useCache = useCache;
-		}
-		
 		const contentDeliverData = {
 			width: piximData.config.width,
 			height: piximData.config.height,
@@ -168,7 +149,6 @@ export class Content extends Emitter {
 			contentID: (++_contentID).toString(),
 			basepath: options.basepath,
 			version: options.version,
-			useCache: options.useCache,
 			xhr: options.xhr,
 			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
@@ -490,7 +470,6 @@ export class Content extends Emitter {
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 		const basepaths: IContentAssetBasepath = this._piximData.basepath;
 		const versions: IContentAssetVersion = this._piximData.version;
-		const useCaches: IContentAssetCache = this._piximData.useCache;
 		const resources: IContentResourceDictionary = this._piximData.$.resources;
 		
 		const loaderCount = Object.keys(manifests).length;
@@ -505,12 +484,11 @@ export class Content extends Emitter {
 			const type = i;
 			keys.push(type);
 			
-			const basepath = basepaths[type];
-			const version = versions[type];
-			const useCache = useCaches[type];
+			const basepath = (basepaths[type] || '').replace(/(.+[^\/])$/, '$1/');
+			const version = versions[type] || '';
 			const manifest = manifests[type];
 			
-			promises.push(manifest.getAsync({ basepath, version, useCache, xhr: this._piximData.xhr }));
+			promises.push(manifest.getAsync({ basepath, version, xhr: this._piximData.xhr }));
 		}
 		
 		return Promise.all(promises)

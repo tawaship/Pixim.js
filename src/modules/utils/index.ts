@@ -8,11 +8,11 @@ export function resolvePath(basepath: string, path: string) {
 	//if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
 	//	return path;
 	//} else {
-		return PIXI.utils.url.resolve(basepath.replace(/([^\/])$/, '$1/'), path);
+	return PIXI.utils.url.resolve(basepath, path);
 	//}
 }
 
-export function isUrl(uri: string) {
+export function isUrl(uri: any) {
 	if (uri.indexOf('data:') === 0) {
 		return false;
 	}

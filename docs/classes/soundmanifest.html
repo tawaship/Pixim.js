@@ -104,8 +104,10 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="soundmanifest.html#_doneloaderasync" class="tsd-kind-icon">_done<wbr>Loader<wbr>Async</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="soundmanifest.html#_loadasync" class="tsd-kind-icon">_load<wbr>Async</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="soundmanifest.html#_createloader" class="tsd-kind-icon">_create<wbr>Loader</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="soundmanifest.html#_getappendoption" class="tsd-kind-icon">_get<wbr>Append<wbr>Option</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="soundmanifest.html#_resolvetarget" class="tsd-kind-icon">_resolve<wbr>Target</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="soundmanifest.html#_resolvetargetpath" class="tsd-kind-icon">_resolve<wbr>Target<wbr>Path</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="soundmanifest.html#add" class="tsd-kind-icon">add</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="soundmanifest.html#cemit" class="tsd-kind-icon">cemit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="soundmanifest.html#cemitall" class="tsd-kind-icon">cemit<wbr>All</a></li>
@@ -128,13 +130,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Sound<wbr>Manifest<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="soundmanifest.html" class="tsd-signature-type" data-tsd-kind="Class">SoundManifest</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Sound<wbr>Manifest<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="soundmanifest.html" class="tsd-signature-type" data-tsd-kind="Class">SoundManifest</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L51">src/modules/content/ManifestBase.ts:51</a></li>
+								</ul>
 							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="soundmanifest.html" class="tsd-signature-type" data-tsd-kind="Class">SoundManifest</a></h4>
 						</li>
 					</ul>
@@ -149,7 +160,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_data">_data</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L34">src/modules/content/ManifestBase.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L49">src/modules/content/ManifestBase.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,7 +171,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_resources">_resources</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L35">src/modules/content/ManifestBase.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L50">src/modules/content/ManifestBase.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -177,7 +188,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L51">src/modules/content/ManifestBase.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L72">src/modules/content/ManifestBase.ts:72</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -187,64 +198,99 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-					<a name="_doneloaderasync" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _done<wbr>Loader<wbr>Async</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">_done<wbr>Loader<wbr>Async<span class="tsd-signature-symbol">(</span>loader<span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span>, targets<span class="tsd-signature-symbol">: </span><a href="../interfaces/imanifesttargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestTargetDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="_createloader" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _create<wbr>Loader</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_create<wbr>Loader<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="soundloader.html" class="tsd-signature-type" data-tsd-kind="Class">SoundLoader</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_doneloaderasync">_doneLoaderAsync</a></p>
+								<p>Overrides <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_createloader">_createLoader</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L99">src/modules/content/ManifestBase.ts:99</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/SoundManifest.ts#L14">src/modules/content/SoundManifest.ts:14</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>fires</dt>
-									<dd><p>[[LoaderBase.EVENT_LOADER_ASSET_LOADED]]</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>loader: <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-								<li>
-									<h5>targets: <a href="../interfaces/imanifesttargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestTargetDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="soundloader.html" class="tsd-signature-type" data-tsd-kind="Class">SoundLoader</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
-					<a name="_loadasync" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _load<wbr>Async</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">_load<wbr>Async<span class="tsd-signature-symbol">(</span>targets<span class="tsd-signature-symbol">: </span><a href="../interfaces/isoundmanifesttargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ISoundManifestTargetDictionary</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/isoundloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ISoundLoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="_getappendoption" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _get<wbr>Append<wbr>Option</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_get<wbr>Append<wbr>Option<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_loadasync">_loadAsync</a></p>
+								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_getappendoption">_getAppendOption</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/SoundManifest.ts#L13">src/modules/content/SoundManifest.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L156">src/modules/content/ManifestBase.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>targets: <a href="../interfaces/isoundmanifesttargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ISoundManifestTargetDictionary</a></h5>
-								</li>
-								<li>
-									<h5>options: <a href="../interfaces/isoundloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ISoundLoaderOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
+									<h5>options: <a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Howl</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="_resolvetarget" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _resolve<wbr>Target</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_resolve<wbr>Target<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_resolvetarget">_resolveTarget</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L152">src/modules/content/ManifestBase.ts:152</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>target: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="_resolvetargetpath" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _resolve<wbr>Target<wbr>Path</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_resolve<wbr>Target<wbr>Path<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#_resolvetargetpath">_resolveTargetPath</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L160">src/modules/content/ManifestBase.ts:160</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>target: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -259,7 +305,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L40">src/modules/content/ManifestBase.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L61">src/modules/content/ManifestBase.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,7 +451,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#destroyresources">destroyResources</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L107">src/modules/content/ManifestBase.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L176">src/modules/content/ManifestBase.ts:176</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -486,14 +532,14 @@
 					<a name="getasync" class="tsd-anchor"></a>
 					<h3>get<wbr>Async</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Async<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Async<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="manifestbase.html">ManifestBase</a>.<a href="manifestbase.html#getasync">getAsync</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L58">src/modules/content/ManifestBase.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L79">src/modules/content/ManifestBase.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -504,7 +550,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>options: <a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a></h5>
+									<h5>options: <a href="../interfaces/imanifestloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">IManifestLoaderOption</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -654,11 +700,17 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="soundmanifest.html#count" class="tsd-kind-icon">count</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="soundmanifest.html#_doneloaderasync" class="tsd-kind-icon">_done<wbr>Loader<wbr>Async</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
-								<a href="soundmanifest.html#_loadasync" class="tsd-kind-icon">_load<wbr>Async</a>
+								<a href="soundmanifest.html#_createloader" class="tsd-kind-icon">_create<wbr>Loader</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="soundmanifest.html#_getappendoption" class="tsd-kind-icon">_get<wbr>Append<wbr>Option</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="soundmanifest.html#_resolvetarget" class="tsd-kind-icon">_resolve<wbr>Target</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="soundmanifest.html#_resolvetargetpath" class="tsd-kind-icon">_resolve<wbr>Target<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="soundmanifest.html#add" class="tsd-kind-icon">add</a>
@@ -708,16 +760,18 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>

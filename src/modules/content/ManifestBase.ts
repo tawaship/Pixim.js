@@ -3,7 +3,7 @@ import { Emitter } from '@tawaship/emitter';
 import * as utils from '../utils/index';
 
 export interface IManifestClass {
-	new(type: string): ManifestBase<any, any, any>;
+	new(type: string): ManifestBase<any, any>;
 }
 
 export interface IResourceManagerData<T> {
@@ -33,20 +33,19 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 export type TManifestResourceVersion = string | number;
 
-export interface ILoaderXhrOptionFacotryDelegate<TLoaderXhrOption> {
-	(type: string, url: string): Promise<TLoaderXhrOption>;
+export interface ILoaderXhrOptionFacotryDelegate {
+	(type: string, url: string): Promise<LoaderBase.ILoaderXhrOption>;
 }
 
-export interface IManifestLoaderOption<TLoaderXhrOption> {
+export interface IManifestLoaderOption {
 	basepath?: string;
 	version?: TManifestResourceVersion;
-	useCache?: boolean;
-	xhr?: ILoaderXhrOptionFacotryDelegate<TLoaderXhrOption> | boolean;
+	xhr?: ILoaderXhrOptionFacotryDelegate | boolean;
 }
 
 export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 
-export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitter {
+export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
 	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
 	private _type: string;
@@ -77,54 +76,50 @@ export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitte
 	/**
 	 * Get resources.
 	 */
-	getAsync(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>) {
+	getAsync(options: IManifestLoaderOption) {
 		if (Object.keys(this._data).length === 0) {
 			return Promise.resolve({});
 		}
 		
 		const res: IRawResourceDictionary<TResource> = {};
-		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption<TResolver>> = {};
 		
 		const loader = this._createLoader();
 		loader.onLoaded = resource => {
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
-		const loaderOptions: LoaderBase.ILoaderOption<TResolver> = this._getAppendOption(options);
+		const loaderOptions: LoaderBase.ILoaderOption = this._getAppendOption(options);
 		loaderOptions.xhr = false;
 		
 		return (() => {
+			const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption> = {};
 			const promises: Promise<void>[] = [];
 			
-			let f = false;
-			if (typeof(options.xhr) === 'boolean') {
-				loaderOptions.xhr = options.xhr;
-				for (let i in this._data) {
-					const target = this._resolveTarget(this._data[i].target, options);
-					data[i] = { target, options: loaderOptions };
+			for (let i in this._data) {
+				const src = this._resolveTarget(this._data[i].target, options);
+				
+				if (typeof(options.xhr) === 'boolean') {
+					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: options.xhr }) };
+					continue;
 				}
-			} else if (typeof(options.xhr) !== 'function') {
-				loaderOptions.xhr = false;
-				for (let i in this._data) {
-					const target = this._resolveTarget(this._data[i].target, options);
-					data[i] = { target, options: loaderOptions };
+				
+				if (typeof(options.xhr) !== 'function') {
+					loaderOptions.xhr = false;
+					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
+					continue;
 				}
-			} else {
-				for (let i in this._data) {
-					const target = this._resolveTarget(this._data[i].target, options);
-					
-					if (typeof(target) !== 'string') {
-						data[i] = { target, options: Object.assign({}, loaderOptions, { xhr: false }) };
-						continue;
-					}
-					
-					promises.push(
-						options.xhr(this._type, target)
-							.then(xhr => {
-								data[i] = { target, options: Object.assign({}, loaderOptions, { xhr }) };
-							})
-					);
+				
+				if (typeof(src) !== 'string') {
+					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
+					continue;
 				}
+				
+				promises.push(
+					options.xhr(this._type, src)
+						.then(xhr => {
+							data[i] = { src, options: Object.assign({}, loaderOptions, { xhr }) };
+						})
+				);
 			}
 			
 			return Promise.all(promises).then(() => data);
@@ -152,17 +147,17 @@ export abstract class ManifestBase<TTarget, TResource, TResolver> extends Emitte
 		});
 	}
 	
-	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource, TResolver>;
+	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource>;
 	
-	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>): TTarget {
+	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption): TTarget {
 		return this._resolveTargetPath(target, options);
 	}
 	
-	protected _getAppendOption(options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>>): LoaderBase.ILoaderOption<TResolver> {
+	protected _getAppendOption(options: IManifestLoaderOption): LoaderBase.ILoaderOption {
 		return {};
 	}
 	
-	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption<LoaderBase.ILoaderXhrOption<TResolver>> = {}) {
+	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption = {}) {
 		if (typeof(target) !== 'string') {
 			return target;
 		}
