@@ -1,15 +1,28 @@
 import * as PIXI from 'pixi.js';
 
+export function resolveUri(basepath: string, uri: any, version?: string | number) {
+	if (typeof(uri) !== 'string') {
+		return uri;
+	}
+		
+	if (!isUrl(uri)) {
+		return uri;
+	}
+	
+	basepath = basepath || '';
+	version = version || '';
+	const preUri = resolvePath(basepath, uri);
+	
+	return version ? resolveQuery(preUri, { _fv: version }) : preUri;
+}
+
+
 export function resolvePath(basepath: string, path: string) {
 	if (!isUrl(path)) {
 		return path;
 	}
 	
-	//if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
-	//	return path;
-	//} else {
 	return PIXI.utils.url.resolve(basepath, path);
-	//}
 }
 
 export function isUrl(uri: any) {

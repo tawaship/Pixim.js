@@ -18,11 +18,11 @@ export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLo
 	
 	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption = {}) {
 		if (typeof(target) === 'string') {
-			return this._resolveTargetPath(target, options);
+			return utils.resolveUri(options.basepath || '', target, options.version);
 		}
 		
 		if (typeof(target.meta.image) === 'string') {
-			target.meta.image = this._resolveTargetPath(target.meta.image, options);
+			target.meta.image = utils.resolveUri(options.basepath || '', target.meta.image, options.version);
 		}
 		
 		return target;

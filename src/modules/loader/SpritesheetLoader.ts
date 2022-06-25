@@ -76,9 +76,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					return new SpritesheetLoaderResource({}, 'invalid json');
 				}
 				
-				const version = options.version || '';
-				const preUri = utils.resolvePath(url, json.meta.image);
-				json.meta.image = version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
+				json.meta.image = utils.resolveUri(url, json.meta.image, options.version || '');
 				
 				const data: ISpritesheetJson = {
 					frames: json.frames,

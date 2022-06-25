@@ -23,4 +23,22 @@
 		die();
 	}
 	
+	$ext = array_pop(explode('.', $_GET["file"]));
+	
+	$extensions = [
+		"png" => "image/png",
+		"jpg" => "image/jpeg",
+		"json" => "application/json",
+		"js" => "text/javascript",
+		"mp3" => "audio/mp3"
+	];
+	
+	if (!isset($extensions[$ext])) {
+		http_response_code(403);
+		die();
+	}
+	
+	header("Content-Type: ". $extensions[$ext]);
+	header("Cache-Control: max-age=3600");
+	
 	echo $res;

@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.3
+ * @tawaship/pixim.js - v1.14.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -8,7 +8,7 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
-    window.console.log("%c pixim.js%cv1.13.3 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.14.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     /*!
      * @tawaship/emitter - v3.1.1
      * 
@@ -436,6 +436,19 @@
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
     }(Emitter$1);
+    function resolveUri(basepath, uri, version) {
+        if ("string" != typeof uri) {
+            return uri;
+        }
+        if (!isUrl(uri)) {
+            return uri;
+        }
+        version = version || "";
+        var preUri = resolvePath(basepath = basepath || "", uri);
+        return version ? resolveQuery(preUri, {
+            _fv: version
+        }) : preUri;
+    }
     function resolvePath(basepath, path) {
         return isUrl(path) ? PIXI.utils.url.resolve(basepath, path) : path;
     }
@@ -459,6 +472,7 @@
     }
     var index = Object.freeze({
         __proto__: null,
+        resolveUri: resolveUri,
         resolvePath: resolvePath,
         isUrl: isUrl,
         resolveQuery: resolveQuery
@@ -546,20 +560,9 @@
                 return res;
             }));
         }, ManifestBase.prototype._resolveTarget = function(target, options) {
-            return this._resolveTargetPath(target, options);
+            return resolveUri(options.basepath || "", target, options.version);
         }, ManifestBase.prototype._getAppendOption = function(options) {
             return {};
-        }, ManifestBase.prototype._resolveTargetPath = function(target, options) {
-            if (void 0 === options && (options = {}), "string" != typeof target) {
-                return target;
-            }
-            if (!isUrl(target)) {
-                return target;
-            }
-            var basepath = options.basepath || "", version = options.version || "", preUri = resolvePath(basepath, target);
-            return version ? resolveQuery(preUri, {
-                _fv: version
-            }) : preUri;
         }, ManifestBase.prototype.destroyResources = function() {
             for (var i in this._resources) {
                 this._resources[i].destroy();
@@ -709,10 +712,7 @@
                 if (!json.meta || !json.meta.image || !json.frames) {
                     return new SpritesheetLoaderResource({}, "invalid json");
                 }
-                var version = options.version || "", preUri = resolvePath(url, json.meta.image);
-                json.meta.image = version ? resolveQuery(preUri, {
-                    _fv: version
-                }) : preUri;
+                json.meta.image = resolveUri(url, json.meta.image, options.version || "");
                 var data = {
                     frames: json.frames,
                     meta: json.meta
@@ -746,7 +746,7 @@
         SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._createLoader = function() {
             return new SpritesheetLoader;
         }, SpritesheetManifest.prototype._resolveTarget = function(target, options) {
-            return void 0 === options && (options = {}), "string" == typeof target ? this._resolveTargetPath(target, options) : ("string" == typeof target.meta.image && (target.meta.image = this._resolveTargetPath(target.meta.image, options)), 
+            return void 0 === options && (options = {}), "string" == typeof target ? resolveUri(options.basepath || "", target, options.version) : ("string" == typeof target.meta.image && (target.meta.image = resolveUri(options.basepath || "", target.meta.image, options.version)), 
             target);
         }, SpritesheetManifest.prototype._getAppendOption = function(options) {
             return void 0 === options && (options = {}), {
@@ -1055,10 +1055,44 @@
         }, Object.defineProperties(Content.prototype, prototypeAccessors), Content;
     }(Emitter);
     Content.registerManifest("images", TextureManifest), Content.registerManifest("spritesheets", SpritesheetManifest), 
-    Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest), 
+    Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest);
+    var JsLoaderResource = function(superclass) {
+        function JsLoaderResource() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (JsLoaderResource.__proto__ = superclass), JsLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        JsLoaderResource.prototype.constructor = JsLoaderResource, JsLoaderResource.prototype.destroy = function() {}, 
+        JsLoaderResource.prototype.ref = function() {
+            document.body.appendChild(document.createElement("script")).text = this._data;
+        }, JsLoaderResource;
+    }(LoaderResource), JsLoader = function(superclass) {
+        function JsLoader() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (JsLoader.__proto__ = superclass), JsLoader.prototype = Object.create(superclass && superclass.prototype), 
+        JsLoader.prototype.constructor = JsLoader, JsLoader.prototype._loadAsync = function(target, options) {
+            return fetch(target).then((function(res) {
+                return res.text();
+            })).then((function(text) {
+                return new JsLoaderResource(text, null);
+            })).catch((function(e) {
+                return new JsLoaderResource("", e);
+            }));
+        }, JsLoader.prototype._loadXhrAsync = function(url, options) {
+            var xhr = this._resolveXhrOptions(options.xhr);
+            return fetch(url, xhr.requestOptions).then((function(res) {
+                return res.json();
+            })).then((function(text) {
+                return new JsLoaderResource(text, null);
+            })).catch((function(e) {
+                return new JsLoaderResource("", e);
+            }));
+        }, JsLoader;
+    }(LoaderBase);
     exports.Application = Application, exports.Container = Container, exports.Content = Content, 
     exports.ContentDeliver = ContentDeliver, exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", 
-    exports.Emitter = Emitter$1, exports.JsonLoader = JsonLoader, exports.JsonLoaderResource = JsonLoaderResource, 
+    exports.Emitter = Emitter$1, exports.JsLoader = JsLoader, exports.JsLoaderResource = JsLoaderResource, 
+    exports.JsonLoader = JsonLoader, exports.JsonLoaderResource = JsonLoaderResource, 
     exports.JsonManifest = JsonManifest, exports.Layer = Layer, exports.LoaderBase = LoaderBase, 
     exports.LoaderResource = LoaderResource, exports.ManifestBase = ManifestBase, exports.SoundLoader = SoundLoader, 
     exports.SoundLoaderResource = SoundLoaderResource, exports.SoundManifest = SoundManifest, 

@@ -150,27 +150,11 @@ export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource>;
 	
 	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption): TTarget {
-		return this._resolveTargetPath(target, options);
+		return utils.resolveUri(options.basepath || '', target, options.version);
 	}
 	
 	protected _getAppendOption(options: IManifestLoaderOption): LoaderBase.ILoaderOption {
 		return {};
-	}
-	
-	protected _resolveTargetPath(target: TTarget, options: IManifestLoaderOption = {}) {
-		if (typeof(target) !== 'string') {
-			return target;
-		}
-		
-		if (!utils.isUrl(target)) {
-			return target;
-		}
-		
-		const basepath = options.basepath || '';
-		const version = options.version || '';
-		const preUri = utils.resolvePath(basepath, target);
-		
-		return version ? utils.resolveQuery(preUri, { _fv: version }) : preUri;
 	}
 	
 	destroyResources() {

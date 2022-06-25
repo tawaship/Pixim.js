@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.13.3
+ * @tawaship/pixim.js - v1.14.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -648,15 +648,23 @@ class Application extends Emitter {
     }
 }
 
+function resolveUri(basepath, uri, version) {
+    if (typeof (uri) !== 'string') {
+        return uri;
+    }
+    if (!isUrl(uri)) {
+        return uri;
+    }
+    basepath = basepath || '';
+    version = version || '';
+    const preUri = resolvePath(basepath, uri);
+    return version ? resolveQuery(preUri, { _fv: version }) : preUri;
+}
 function resolvePath(basepath, path) {
     if (!isUrl(path)) {
         return path;
     }
-    //if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0) {
-    //	return path;
-    //} else {
     return PIXI.utils.url.resolve(basepath, path);
-    //}
 }
 function isUrl(uri) {
     if (uri.indexOf('data:') === 0) {
@@ -692,6 +700,7 @@ function resolveQuery(uri, queries) {
 
 var index = /*#__PURE__*/Object.freeze({
     __proto__: null,
+    resolveUri: resolveUri,
     resolvePath: resolvePath,
     isUrl: isUrl,
     resolveQuery: resolveQuery
@@ -778,22 +787,10 @@ class ManifestBase extends emitter.Emitter {
         });
     }
     _resolveTarget(target, options) {
-        return this._resolveTargetPath(target, options);
+        return resolveUri(options.basepath || '', target, options.version);
     }
     _getAppendOption(options) {
         return {};
-    }
-    _resolveTargetPath(target, options = {}) {
-        if (typeof (target) !== 'string') {
-            return target;
-        }
-        if (!isUrl(target)) {
-            return target;
-        }
-        const basepath = options.basepath || '';
-        const version = options.version || '';
-        const preUri = resolvePath(basepath, target);
-        return version ? resolveQuery(preUri, { _fv: version }) : preUri;
     }
     destroyResources() {
         for (let i in this._resources) {
@@ -972,9 +969,7 @@ class SpritesheetLoader extends LoaderBase {
             if (!json.meta || !json.meta.image || !json.frames) {
                 return new SpritesheetLoaderResource({}, 'invalid json');
             }
-            const version = options.version || '';
-            const preUri = resolvePath(url, json.meta.image);
-            json.meta.image = version ? resolveQuery(preUri, { _fv: version }) : preUri;
+            json.meta.image = resolveUri(url, json.meta.image, options.version || '');
             const data = {
                 frames: json.frames,
                 meta: json.meta
@@ -1012,10 +1007,10 @@ class SpritesheetManifest extends ManifestBase {
     }
     _resolveTarget(target, options = {}) {
         if (typeof (target) === 'string') {
-            return this._resolveTargetPath(target, options);
+            return resolveUri(options.basepath || '', target, options.version);
         }
         if (typeof (target.meta.image) === 'string') {
-            target.meta.image = this._resolveTargetPath(target.meta.image, options);
+            target.meta.image = resolveUri(options.basepath || '', target.meta.image, options.version);
         }
         return target;
     }
@@ -1485,12 +1480,38 @@ Content.registerManifest('spritesheets', SpritesheetManifest);
 Content.registerManifest('sounds', SoundManifest);
 Content.registerManifest('jsons', JsonManifest);
 
+class JsLoaderResource extends LoaderResource {
+    destroy() {
+    }
+    ref() {
+        const script = document.body.appendChild(document.createElement('script'));
+        script.text = this._data;
+    }
+}
+class JsLoader extends LoaderBase {
+    _loadAsync(target, options = {}) {
+        return fetch(target)
+            .then(res => res.text())
+            .then(text => new JsLoaderResource(text, null))
+            .catch((e) => new JsLoaderResource('', e));
+    }
+    _loadXhrAsync(url, options) {
+        const xhr = this._resolveXhrOptions(options.xhr);
+        return fetch(url, xhr.requestOptions)
+            .then(res => res.json())
+            .then(text => new JsLoaderResource(text, null))
+            .catch((e) => new JsLoaderResource('', e));
+    }
+}
+
 exports.Application = Application;
 exports.Container = Container;
 exports.Content = Content;
 exports.ContentDeliver = ContentDeliver;
 exports.EVENT_LOADER_ASSET_LOADED = EVENT_LOADER_ASSET_LOADED;
 exports.Emitter = Emitter;
+exports.JsLoader = JsLoader;
+exports.JsLoaderResource = JsLoaderResource;
 exports.JsonLoader = JsonLoader;
 exports.JsonLoaderResource = JsonLoaderResource;
 exports.JsonManifest = JsonManifest;
