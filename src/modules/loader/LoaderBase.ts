@@ -105,7 +105,7 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 			});
 	}
 	
-	protected _resolveParams(target: TTarget, options: ILoaderOption = {}): ILoaderResolvedParam {
+	protected _resolveParams(target: any, options: ILoaderOption = {}): ILoaderResolvedParam {
 		const src = utils.resolveUri(options.basepath || '', target, options.version || '');
 		
 		if (typeof(src) !== 'string') {

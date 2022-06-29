@@ -127,7 +127,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_loadasync" class="tsd-kind-icon">_load<wbr>Async</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_resolvexhr" class="tsd-kind-icon">_resolve<wbr>Xhr</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="loaderbase.html#_resolveparams" class="tsd-kind-icon">_resolve<wbr>Params</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="loaderbase.html#loadallasync" class="tsd-kind-icon">load<wbr>All<wbr>Async</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="loaderbase.html#loadasync" class="tsd-kind-icon">load<wbr>Async</a></li>
 							</ul>
@@ -172,7 +172,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Loaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>resource<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L62">src/modules/loader/LoaderBase.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L61">src/modules/loader/LoaderBase.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,7 +215,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L80">src/modules/loader/LoaderBase.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L79">src/modules/loader/LoaderBase.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -232,28 +232,28 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-					<a name="_resolvexhr" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _resolve<wbr>Xhr</h3>
+					<a name="_resolveparams" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _resolve<wbr>Params</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">_resolve<wbr>Xhr<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TTarget</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/iloaderxhroption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderXhrOption</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/iloaderxhroptionfacotrydelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderXhrOptionFacotryDelegate</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#tloaderresolvedxhroption" class="tsd-signature-type" data-tsd-kind="Type alias">TLoaderResolvedXhrOption</a></li>
+						<li class="tsd-signature tsd-kind-icon">_resolve<wbr>Params<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/iloaderresolvedparam.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResolvedParam</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L109">src/modules/loader/LoaderBase.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L108">src/modules/loader/LoaderBase.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>target: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TTarget</span></h5>
+									<h5>target: <span class="tsd-signature-type">any</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/iloaderxhroption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderXhrOption</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/iloaderxhroptionfacotrydelegate.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderXhrOptionFacotryDelegate</a></h5>
+									<h5>options: <a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol"> = {}</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules.html#tloaderresolvedxhroption" class="tsd-signature-type" data-tsd-kind="Type alias">TLoaderResolvedXhrOption</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/iloaderresolvedparam.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResolvedParam</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -261,13 +261,13 @@
 					<a name="loadallasync" class="tsd-anchor"></a>
 					<h3>load<wbr>All<wbr>Async</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>All<wbr>Async<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../interfaces/iloaderdatadictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderDataDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<wbr>All<wbr>Async<span class="tsd-signature-symbol">(</span>targets<span class="tsd-signature-symbol">: </span><a href="../interfaces/iloadertargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderTargetDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L85">src/modules/loader/LoaderBase.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L84">src/modules/loader/LoaderBase.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -280,7 +280,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>data: <a href="../interfaces/iloaderdatadictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderDataDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>targets: <a href="../interfaces/iloadertargetdictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderTargetDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/iloaderoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderOption</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -297,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L67">src/modules/loader/LoaderBase.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/loader/LoaderBase.ts#L66">src/modules/loader/LoaderBase.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -347,7 +350,7 @@
 								<a href="loaderbase.html#_loadasync" class="tsd-kind-icon">_load<wbr>Async</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-								<a href="loaderbase.html#_resolvexhr" class="tsd-kind-icon">_resolve<wbr>Xhr</a>
+								<a href="loaderbase.html#_resolveparams" class="tsd-kind-icon">_resolve<wbr>Params</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="loaderbase.html#loadallasync" class="tsd-kind-icon">load<wbr>All<wbr>Async</a>
