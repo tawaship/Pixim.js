@@ -30,12 +30,15 @@ export interface IJsLoaderOption extends LoaderBase.ILoaderOption {
 export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, JsLoaderResource> {
 	protected _loadAsync(target: TJsLoaderTarget, options: IJsLoaderOption = {}) {
 		return (() => {
-			const xhr = this._resolveXhr(target, options.xhr)
+			const data = this._resolveParams(target, options);
+			const src = data.src;
+			const xhr = data.xhr;
+			
 			if (!xhr) {
-				return fetch(target);
+				return fetch(src);
 			}
 			
-			return fetch(xhr.src, xhr.requestOptions);
+			return fetch(src, xhr.requestOptions || {});
 		})()
 		.then(res => {
 			if (!res.ok) {

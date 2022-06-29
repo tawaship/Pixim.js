@@ -70,7 +70,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 	private _loadJsonAsync(url: string, options: ISpritesheetLoaderOption) {
 		const loader = new JsonLoader();
 		
-		return loader.loadAsync(url, { xhr: options.xhr })
+		return loader.loadAsync(url, options)
 			.then(resource => {
 				if (resource.error) {
 					throw resource.error;
@@ -86,7 +86,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					throw 'invalid json';
 				}
 				
-				json.meta.image = utils.resolveUri(url, json.meta.image, options.textureVersion || '');
+				json.meta.image = utils.resolveUri(url, json.meta.image);
 				
 				const data: ISpritesheetJson = {
 					frames: json.frames,
@@ -100,7 +100,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 	private _loadTextureAsync(json: ISpritesheetJson, options: ISpritesheetLoaderOption) {
 		const loader = new TextureLoader.TextureLoader();
 		
-		return loader.loadAsync(json.meta.image, { xhr: options.xhr })
+		return loader.loadAsync(json.meta.image, Object.assign({}, options, { version: options.textureVersion || options.version }))
 			.then(resource => {
 				if (resource.error) {
 					throw resource.error;

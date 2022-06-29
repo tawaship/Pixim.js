@@ -30,16 +30,19 @@ export interface ISoundLoaderOption extends LoaderBase.ILoaderOption {
 export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, SoundLoaderResource> {
 	protected _loadAsync(target: TSoundLoaderTarget, options: ISoundLoaderOption = {}) {
 		return (() => {
-			const xhr = this._resolveXhr(target, options.xhr)
+			const data = this._resolveParams(target, options);
+			const src = data.src;
+			const xhr = data.xhr;
+			
 			if (!xhr) {
 				return new Promise<Howl>((resolve, reject) => {
 					const howl = new Howl({
-						src: target,
+						src,
 						onload: () => {
 							resolve(howl);
 						},
 						onloaderror: () => {
-							const e = new Error('invalid resource: ' + target);
+							const e = new Error('invalid resource: ' + src);
 							reject(e);
 						}
 					});
@@ -48,15 +51,15 @@ export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoun
 			
 			return new Promise<Howl>((resolve, reject) => {
 				const howl = new Howl({
-					src: xhr.src,
+					src,
 					onload: () => {
 						resolve(howl);
 					},
 					onloaderror: () => {
-						const e = new Error('invalid resource: ' + target);
+						const e = new Error('invalid resource: ' + src);
 						reject(e);
 					},
-					xhr: xhr.requestOptions
+					xhr: xhr.requestOptions || {}
 				});
 			});
 		})()

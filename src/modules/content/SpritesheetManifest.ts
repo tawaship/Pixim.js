@@ -15,22 +15,4 @@ export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLo
 	protected _createLoader() {
 		return new SpritesheetLoader.SpritesheetLoader();
 	}
-	
-	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption) {
-		if (typeof(target) === 'string') {
-			return utils.resolveUri(options.basepath || '', target, options.version);
-		}
-		
-		if (typeof(target.meta.image) === 'string') {
-			target.meta.image = utils.resolveUri(options.basepath || '', target.meta.image, options.version);
-		}
-		
-		return target;
-	}
-	
-	protected _getAppendOption(options: ManifestBase.IManifestLoaderOption): SpritesheetLoader.ISpritesheetLoaderOption {
-		return {
-			textureVersion: options.others.textureVersion || options.version
-		};
-	}
 }

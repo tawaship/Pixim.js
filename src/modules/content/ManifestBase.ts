@@ -31,18 +31,18 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 }
 
-export type TManifestResourceVersion = string | number;
+export type TManifestResourceVersion = LoaderBase.TLoaderResourceVersion;
 
 export interface IManifestLoaderXhrOptionFacotryDelegate {
-	(type: string, url: string): LoaderBase.TLoaderResolvedXhrOption;
+	(type: string, url: string): LoaderBase.ILoaderXhrOption;
 }
 
-export type TLoaderXhrOption = IManifestLoaderXhrOptionFacotryDelegate | boolean | LoaderBase.ILoaderXhrOption;
+export type TManifestLoaderXhrOption = IManifestLoaderXhrOptionFacotryDelegate | boolean | LoaderBase.ILoaderXhrOption;
 
 export interface IManifestLoaderOption {
 	basepath: string;
 	version: TManifestResourceVersion;
-	xhr: TLoaderXhrOption;
+	xhr: TManifestLoaderXhrOption;
 	others: { [key: string]: any };
 }
 
@@ -91,16 +91,27 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
-		const loaderOptions: LoaderBase.ILoaderOption = this._getAppendOption(options);
+		const loaderOptions: LoaderBase.ILoaderOption = Object.assign({}, options.others, {
+			basepath: options.basepath,
+			version: options.version,
+			xhr: ((type: string, xhr: TManifestLoaderXhrOption) => {
+				if (typeof(xhr) === 'function') {
+					return (url: string) => {
+						return xhr(type, url);
+					};
+				}
+				
+				return xhr;
+			})(this._type, options.xhr)
+		});
 		
-		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption> = {};
+		const data: LoaderBase.ILoaderTargetDictionary<TTarget> = {};
 		
 		for (let i in this._data) {
-			const src = this._resolveTarget(this._data[i].target, options);
-			data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: options.xhr }) };
+			data[i] = this._data[i].target;
 		}
 		
-		return loader.loadAllAsync(data)
+		return loader.loadAllAsync(data, loaderOptions)
 			.then(resources => {
 				for (let i in resources) {
 					const resource = resources[i];
@@ -122,14 +133,6 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 	}
 	
 	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TRawResource, TResource>;
-	
-	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption): TTarget {
-		return utils.resolveUri(options.basepath || '', target, options.version);
-	}
-	
-	protected _getAppendOption(options: IManifestLoaderOption): LoaderBase.ILoaderOption {
-		return {};
-	}
 	
 	destroyResources() {
 		for (let i in this._resources) {

@@ -42,14 +42,17 @@ export interface ITextureLoaderOption extends LoaderBase.ILoaderOption {
 export class TextureLoader extends LoaderBase.LoaderBase<TTextureLoaderTarget, TTextureLoaderRawResource, TextureLoaderResource> {
 	protected _loadAsync(target: TTextureLoaderTarget, options: ITextureLoaderOption = {}) {
 		return (() => {
-			const xhr = this._resolveXhr(target, options.xhr)
+			const data = this._resolveParams(target, options);
+			const src = data.src;
+			const xhr = data.xhr;
+			
 			if (!xhr) {
-				return this._loadBaseTextureAsync(target);
+				return this._loadBaseTextureAsync(src);
 			}
 			
 			const loader = new BlobLoader();
 			
-			return loader.loadAsync(xhr.src, { xhr: options.xhr })
+			return loader.loadAsync(src, { xhr })
 				.then(resource => {
 					if (resource.error) {
 						throw resource.error;

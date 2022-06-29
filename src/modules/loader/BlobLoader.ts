@@ -26,12 +26,15 @@ export interface IBlobLoaderOption extends LoaderBase.ILoaderOption {
 export class BlobLoader extends LoaderBase.LoaderBase<TBlobLoaderTarget, TBlobLoaderRawResource, BlobLoaderResource> {
 	protected _loadAsync(target: TBlobLoaderTarget, options: IBlobLoaderOption = {}) {
 		return (() => {
-			const xhr = this._resolveXhr(target, options.xhr)
+			const data = this._resolveParams(target, options);
+			const src = data.src;
+			const xhr = data.xhr;
+			
 			if (!xhr) {
-				return fetch(target);
+				return fetch(src);
 			}
 			
-			return fetch(xhr.src, xhr.requestOptions);
+			return fetch(src, xhr.requestOptions || {});
 		})()
 		.then(res => {
 			if (!res.ok) {

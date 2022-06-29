@@ -29,17 +29,20 @@ export interface ILoaderXhrOption {
 	requestOptions?: IFetchRequestOption;
 }
 
-export interface ILoaderResolvedXhrOption extends ILoaderXhrOption {
+export interface ILoaderResolvedParam {
 	src: string;
+	xhr?: ILoaderXhrOption;
 }
-
-export type TLoaderResolvedXhrOption = ILoaderResolvedXhrOption | null;
 
 export interface ILoaderXhrOptionFacotryDelegate {
-	(url: string): TLoaderResolvedXhrOption;
+	(url: string): ILoaderXhrOption;
 }
 
+export type TLoaderResourceVersion = string | number;
+
 export interface ILoaderOption {
+	basepath?: string;
+	version?: TLoaderResourceVersion;
 	xhr?: ILoaderXhrOption | boolean | ILoaderXhrOptionFacotryDelegate;
 }
 
@@ -49,10 +52,6 @@ export interface ILoaderResourceDictionary<T> {
 
 export interface ILoaderTargetDictionary<T> {
 	[ name: string ]: T;
-}
-
-export interface ILoaderDataDictionary<TTarget, TLoaderOption> {
-	[name: string]: { src: TTarget, options?: TLoaderOption };
 }
 
 export abstract class LoaderBase<TTarget, TRawResource, TResource extends LoaderResource<TRawResource>> {
@@ -82,18 +81,18 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 	/**
 	 * @fires [[LoaderBase.loaded]]
 	 */
-	loadAllAsync(data: ILoaderDataDictionary<TTarget, ILoaderOption>) {
+	loadAllAsync(targets: ILoaderTargetDictionary<TTarget>, options?: ILoaderOption) {
 		const res: ILoaderResourceDictionary<TResource> = {};
 		
-		if (Object.keys(data).length === 0) {
+		if (Object.keys(targets).length === 0) {
 			return Promise.resolve(res);
 		}
 		
 		const promises = [];
 		
-		for (let i in data) {
+		for (let i in targets) {
 			promises.push(
-				this.loadAsync(data[i].src, data[i].options)
+				this.loadAsync(targets[i], options)
 					.then(resource => {
 						res[i] = resource;
 					})
@@ -106,33 +105,44 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 			});
 	}
 	
-	protected _resolveXhr(target: TTarget | string, options?: ILoaderXhrOption | boolean | ILoaderXhrOptionFacotryDelegate): TLoaderResolvedXhrOption {
-		if (typeof(target) !== 'string') {
-			return null;
-		}
+	protected _resolveParams(target: TTarget, options: ILoaderOption = {}): ILoaderResolvedParam {
+		const src = utils.resolveUri(options.basepath || '', target, options.version || '');
 		
-		if (!utils.isUrl(target)) {
-			return null;
-		}
-		
-		if (!options) {
-			return null;
-		}
-		
-		if (options === true) {
+		if (typeof(src) !== 'string') {
 			return {
-				src: target,
-				requestOptions: {}
+				src
 			};
 		}
 		
-		if (typeof(options) === 'function') {
-			return options(target);
+		if (!utils.isUrl(src)) {
+			return {
+				src
+			};
+		}
+		
+		if (!options.xhr) {
+			return {
+				src
+			};
+		}
+		
+		if (options.xhr === true) {
+			return {
+				src,
+				xhr: {}
+			};
+		}
+		
+		if (typeof(options.xhr) === 'function') {
+			return {
+				src,
+				xhr: options.xhr(src)
+			};
 		}
 		
 		return {
-			src: target,
-			requestOptions: options.requestOptions || {}
+			src,
+			xhr: options.xhr || {}
 		};
 	}
 }

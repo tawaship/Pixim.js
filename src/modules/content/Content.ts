@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, IManifestLoaderOption, IManifestLoaderXhrOptionFacotryDelegate, TManifestResourceVersion, TLoaderXhrOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
+import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, IManifestLoaderOption, IManifestLoaderXhrOptionFacotryDelegate, TManifestResourceVersion, TManifestLoaderXhrOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
 import { TextureManifest, ITextureManifestTargetDictionary } from './TextureManifest';
 import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './SpritesheetManifest';
 import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
@@ -16,7 +16,7 @@ export interface IContentAssetVersion {
 }
 
 export interface IContentAssetXhrOption {
-	[manifestKey: string]: TLoaderXhrOption;
+	[manifestKey: string]: TManifestLoaderXhrOption;
 }
 
 export interface IContentAssetOtherOption {
@@ -62,7 +62,7 @@ export interface IContentOption {
 	 * A header given when loading an asset, or a function that returns a header.
 	 * If a value that can be considered true is specified, fetch API will be used instead of the default Loader when loading each asset.
 	 */
-	xhr?: TLoaderXhrOption;
+	xhr?: TManifestLoaderXhrOption;
 	
 	others?: IContentAssetOtherOption;
 }
@@ -519,31 +519,9 @@ export class Content extends Emitter {
 		})();
 		
 		const xhr = (() => {
-			if (typeof(options.xhr) === 'undefined') {
-				const xhr: IContentAssetXhrOption = {};
-				for (let i in manifests) {
-					xhr[i] = false;
-				}
-				
-				return xhr;
-			}
-			
-			if (typeof(options.xhr) === 'function') {
-				const xhr: IContentAssetXhrOption = {};
-				for (let i in manifests) {
-					xhr[i] = ((type: string, f: IManifestLoaderXhrOptionFacotryDelegate) => {
-						return (url: string) => {
-							return f(type, url);
-						};
-					})(i, options.xhr);
-				}
-				
-				return xhr;
-			}
-			
 			const xhr: IContentAssetXhrOption = {};
 			for (let i in manifests) {
-				xhr[i] = options.xhr;
+				xhr[i] = options.xhr || false;
 			}
 			
 			return xhr;

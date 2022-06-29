@@ -29,12 +29,15 @@ export interface IJsonLoaderOption extends LoaderBase.ILoaderOption {
 export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, JsonLoaderResource> {
 	protected _loadAsync(target: TJsonLoaderTarget, options: IJsonLoaderOption = {}) {
 		return (() => {
-			const xhr = this._resolveXhr(target, options.xhr)
+			const data = this._resolveParams(target, options);
+			const src = data.src;
+			const xhr = data.xhr;
+			
 			if (!xhr) {
-				return fetch(target);
+				return fetch(src);
 			}
 			
-			return fetch(xhr.src, xhr.requestOptions);
+			return fetch(src, xhr.requestOptions);
 		})()
 		.then(res => {
 			if (!res.ok) {
