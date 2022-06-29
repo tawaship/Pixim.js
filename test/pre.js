@@ -1,3 +1,3 @@
-function A() {
-	alert("A")
+function A(obj) {
+	obj.a = 1;
 }

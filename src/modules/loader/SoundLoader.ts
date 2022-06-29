@@ -1,12 +1,15 @@
 import { Howl } from 'howler';
 import * as LoaderBase from './LoaderBase';
 
-export type TSoundLoaderRawResource = Howl;
+export type TSoundLoaderRawResource = Howl | null;
 
 export class SoundLoaderResource extends LoaderBase.LoaderResource<TSoundLoaderRawResource> {
 	destroy() {
-		this._data.stop();
-		this._data.unload();
+		if (this._data) {
+			this._data.stop();
+			this._data.unload();
+			this._data = null;
+		}
 	}
 }
 
@@ -16,7 +19,7 @@ export interface ISoundLoaderTargetDictionary extends LoaderBase.ILoaderTargetDi
 
 }
 
-export interface ISoundLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<TSoundLoaderRawResource> {
+export interface ISoundLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<SoundLoaderResource> {
 
 }
 
@@ -24,37 +27,40 @@ export interface ISoundLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource> {
+export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, SoundLoaderResource> {
 	protected _loadAsync(target: TSoundLoaderTarget, options: ISoundLoaderOption = {}) {
-		return new Promise<SoundLoaderResource>(resolve => {
-			const howl = new Howl({
-				src: target,
-				onload: () => {
-					resolve(new SoundLoaderResource(howl, null));
-				},
-				onloaderror: () => {
-					const e = new Error('invalid resource: ' + target);
-					resolve(new SoundLoaderResource(howl, e));
-				}
+		return (() => {
+			const xhr = this._resolveXhr(target, options.xhr)
+			if (!xhr) {
+				return new Promise<Howl>((resolve, reject) => {
+					const howl = new Howl({
+						src: target,
+						onload: () => {
+							resolve(howl);
+						},
+						onloaderror: () => {
+							const e = new Error('invalid resource: ' + target);
+							reject(e);
+						}
+					});
+				});
+			}
+			
+			return new Promise<Howl>((resolve, reject) => {
+				const howl = new Howl({
+					src: xhr.src,
+					onload: () => {
+						resolve(howl);
+					},
+					onloaderror: () => {
+						const e = new Error('invalid resource: ' + target);
+						reject(e);
+					},
+					xhr: xhr.requestOptions
+				});
 			});
-		});
-	}
-	
-	protected _loadXhrAsync(url: string, options: ISoundLoaderOption) {
-		const xhr = this._resolveXhrOptions(options.xhr);
-		
-		return new Promise<SoundLoaderResource>(resolve => {
-			const howl = new Howl({
-				src: url,
-				onload: () => {
-					resolve(new SoundLoaderResource(howl, null));
-				},
-				onloaderror: () => {
-					const e = new Error('invalid resource: ' + url);
-					resolve(new SoundLoaderResource(howl, e));
-				},
-				xhr: xhr.requestOptions || {}
-			});
-		});
+		})()
+		.then(howl => new SoundLoaderResource(howl, null))
+		.catch(e => new SoundLoaderResource(null, e));
 	}
 }

@@ -11,12 +11,12 @@ export interface ISpritesheetDictionary extends ManifestBase.IRawResourceDiction
 
 }
 
-export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource> {
+export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource, SpritesheetLoader.SpritesheetLoaderResource> {
 	protected _createLoader() {
 		return new SpritesheetLoader.SpritesheetLoader();
 	}
 	
-	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption = {}) {
+	protected _resolveTarget(target: SpritesheetLoader.TSpritesheetLoaderTarget, options: ManifestBase.IManifestLoaderOption) {
 		if (typeof(target) === 'string') {
 			return utils.resolveUri(options.basepath || '', target, options.version);
 		}
@@ -28,9 +28,9 @@ export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLo
 		return target;
 	}
 	
-	protected _getAppendOption(options: ManifestBase.IManifestLoaderOption = {}): SpritesheetLoader.ISpritesheetLoaderOption {
+	protected _getAppendOption(options: ManifestBase.IManifestLoaderOption): SpritesheetLoader.ISpritesheetLoaderOption {
 		return {
-			version: options.version
+			textureVersion: options.others.textureVersion || options.version
 		};
 	}
 }

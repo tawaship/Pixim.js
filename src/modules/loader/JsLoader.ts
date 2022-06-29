@@ -4,7 +4,7 @@ export type TJsLoaderRawResource = string;
 
 export class JsLoaderResource extends LoaderBase.LoaderResource<TJsLoaderRawResource> {
 	destroy() {
-		
+		this._data = '';
 	}
 	
 	ref() {
@@ -19,7 +19,7 @@ export interface IJsLoaderTargetDictionary extends LoaderBase.ILoaderTargetDicti
 
 }
 
-export interface IJsLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<TJsLoaderRawResource> {
+export interface IJsLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<JsLoaderResource> {
 
 }
 
@@ -27,20 +27,24 @@ export interface IJsLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource> {
+export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, JsLoaderResource> {
 	protected _loadAsync(target: TJsLoaderTarget, options: IJsLoaderOption = {}) {
-		return fetch(target)
-			.then(res => res.text())
-			.then(text => new JsLoaderResource(text, null))
-			.catch((e: any) => new JsLoaderResource('', e));
-	}
-	
-	protected _loadXhrAsync(url: string, options: IJsLoaderOption) {
-		const xhr = this._resolveXhrOptions(options.xhr);
-		
-		return fetch(url, xhr.requestOptions)
-			.then(res => res.json())
-			.then(text => new JsLoaderResource(text, null))
-			.catch((e: any) => new JsLoaderResource('', e));
+		return (() => {
+			const xhr = this._resolveXhr(target, options.xhr)
+			if (!xhr) {
+				return fetch(target);
+			}
+			
+			return fetch(xhr.src, xhr.requestOptions);
+		})()
+		.then(res => {
+			if (!res.ok) {
+				throw res.statusText;
+			}
+			
+			return res.text();
+		})
+		.then(text => new JsLoaderResource(text, null))
+		.catch((e: any) => new JsLoaderResource('', e));
 	}
 }

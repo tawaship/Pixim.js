@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as LoaderBase from './LoaderBase';
-import * as JsonLoader from './JsonLoader';
+import { JsonLoader } from './JsonLoader';
 import * as TextureLoader from './TextureLoader';
 import * as utils from '../utils/index';
 
@@ -11,6 +11,8 @@ export class SpritesheetLoaderResource extends LoaderBase.LoaderResource<TSprite
 		for (let i in this._data) {
 			this._data[i].destroy(true);
 		}
+		
+		this._data = {};
 	}
 }
 
@@ -39,12 +41,12 @@ export interface ISpritesheetLoaderJsonTargetDictionary extends LoaderBase.ILoad
 
 }
 
-export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<TSpritesheetLoaderRawResource> {
+export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<SpritesheetLoaderResource> {
 
 }
 
 export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
-	version?: string | number;
+	textureVersion?: string | number;
 }
 
 /**
@@ -52,66 +54,73 @@ export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
  */
 const KEY_SINGLE_SPRITESHEET = '--single-spritesheet';
 
-export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource> {
+export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, SpritesheetLoaderResource> {
 	protected _loadAsync(target: TSpritesheetLoaderTarget, options: ISpritesheetLoaderOption = {}) {
-		if (typeof target !== 'string') {
-			return this._loadTextureFromJson(target, options);
-		} else {
-			return this._loadFromUrlAsync(target, options);
-		}
+		return (() => {
+			if (typeof target !== 'string') {
+				return this._loadTextureAsync(target, options);
+			} else {
+				return this._loadJsonAsync(target, options);
+			}
+		})()
+		.then(textures => new SpritesheetLoaderResource(textures, null))
+		.catch(e => new SpritesheetLoaderResource({}, e));
 	}
 	
-	protected _loadXhrAsync(url: string, options: ISpritesheetLoaderOption) {
-		return this._loadFromUrlAsync(url, options);
-	}
-	
-	private _loadFromUrlAsync(url: string, options: ISpritesheetLoaderOption) {
-		const loader = new JsonLoader.JsonLoader();
+	private _loadJsonAsync(url: string, options: ISpritesheetLoaderOption) {
+		const loader = new JsonLoader();
 		
-		return loader.loadAsync(url, options)
+		return loader.loadAsync(url, { xhr: options.xhr })
 			.then(resource => {
+				if (resource.error) {
+					throw resource.error;
+				}
+				
+				if (!resource.data) {
+					throw 'invalid resource';
+				}
+				
 				const json = resource.data;
 				
 				if (!json.meta || !json.meta.image || !json.frames) {
-					return new SpritesheetLoaderResource({}, 'invalid json');
+					throw 'invalid json';
 				}
 				
-				json.meta.image = utils.resolveUri(url, json.meta.image, options.version || '');
+				json.meta.image = utils.resolveUri(url, json.meta.image, options.textureVersion || '');
 				
 				const data: ISpritesheetJson = {
 					frames: json.frames,
 					meta: json.meta
 				};
 				
-				return this._loadTextureFromJson(data, options);
+				return this._loadTextureAsync(data, options);
 			});
 	}
 	
-	private _loadTextureFromJson(json: ISpritesheetJson, options: ISpritesheetLoaderOption) {
+	private _loadTextureAsync(json: ISpritesheetJson, options: ISpritesheetLoaderOption) {
 		const loader = new TextureLoader.TextureLoader();
 		
-		return loader.loadAsync(json.meta.image, options)
+		return loader.loadAsync(json.meta.image, { xhr: options.xhr })
 			.then(resource => {
 				if (resource.error) {
-					return new SpritesheetLoaderResource({}, resource.error);
+					throw resource.error;
+				}
+				
+				if (!resource.data) {
+					throw 'invalid resource';
 				}
 				
 				const ss = new PIXI.Spritesheet(resource.data, json);
 				
-				return new Promise<SpritesheetLoaderResource>(resolve => {
+				return new Promise<PIXI.ITextureDictionary>(resolve => {
 					ss.parse(e => {
-						const resource = new SpritesheetLoaderResource(ss.textures, null);
-						
 						for (let i in ss.textures) {
 							TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
 						}
 						
-						resolve(resource);
+						resolve(ss.textures);
 					});
 				});
-			})
-			.catch(e => {
-				return new SpritesheetLoaderResource({}, e);
 			});
 	}
 }

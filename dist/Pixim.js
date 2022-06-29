@@ -507,46 +507,17 @@
             loader.onLoaded = function(resource) {
                 this$1.emit("loaderAssetLoaded", resource);
             };
-            var loaderOptions = this._getAppendOption(options);
-            return loaderOptions.xhr = !1, function() {
-                var data = {}, promises = [], loop = function(i) {
-                    var src = this$1._resolveTarget(this$1._data[i].target, options);
-                    if ("boolean" != typeof options.xhr) {
-                        return "function" != typeof options.xhr ? (loaderOptions.xhr = !1, void (data[i] = {
-                            src: src,
-                            options: Object.assign({}, loaderOptions, {
-                                xhr: !1
-                            })
-                        })) : void ("string" == typeof src ? promises.push(options.xhr(this$1._type, src).then((function(xhr) {
-                            data[i] = {
-                                src: src,
-                                options: Object.assign({}, loaderOptions, {
-                                    xhr: xhr
-                                })
-                            };
-                        }))) : data[i] = {
-                            src: src,
-                            options: Object.assign({}, loaderOptions, {
-                                xhr: !1
-                            })
-                        });
-                    }
-                    data[i] = {
-                        src: src,
-                        options: Object.assign({}, loaderOptions, {
-                            xhr: options.xhr
-                        })
-                    };
+            var loaderOptions = this._getAppendOption(options), data = {};
+            for (var i in this._data) {
+                var src = this._resolveTarget(this._data[i].target, options);
+                data[i] = {
+                    src: src,
+                    options: Object.assign({}, loaderOptions, {
+                        xhr: options.xhr
+                    })
                 };
-                for (var i in this$1._data) {
-                    loop(i);
-                }
-                return Promise.all(promises).then((function() {
-                    return data;
-                }));
-            }().then((function(data) {
-                return loader.loadAllAsync(data);
-            })).then((function(resources) {
+            }
+            return loader.loadAllAsync(data).then((function(resources) {
                 for (var i in resources) {
                     var resource = resources[i];
                     if (resource.error && !this$1._data[i].unrequired) {
@@ -586,7 +557,7 @@
     var LoaderBase = function() {};
     LoaderBase.prototype.loadAsync = function(target, options) {
         var this$1 = this;
-        return (options ? "string" != typeof target ? this$1._loadAsync(target, options) : isUrl(target) && options.xhr ? this$1._loadXhrAsync(target, options) : this$1._loadAsync(target, options) : this$1._loadAsync(target, options)).then((function(resource) {
+        return this$1._loadAsync(target, options).then((function(resource) {
             return resource.error || this$1.onLoaded && this$1.onLoaded(resource), resource;
         }));
     }, LoaderBase.prototype.loadAllAsync = function(data) {
@@ -605,18 +576,52 @@
         return Promise.all(promises).then((function() {
             return res;
         }));
-    }, LoaderBase.prototype._resolveXhrOptions = function(xhr) {
-        return xhr ? {
-            requestOptions: "boolean" == typeof xhr ? {} : xhr.requestOptions || {}
-        } : {};
+    }, LoaderBase.prototype._resolveXhr = function(target, options) {
+        return "string" != typeof target ? null : isUrl(target) && options ? !0 === options ? {
+            src: target,
+            requestOptions: {}
+        } : "function" == typeof options ? options(target) : {
+            src: target,
+            requestOptions: options.requestOptions || {}
+        } : null;
     };
-    var TextureLoaderResource = function(superclass) {
+    var BlobLoaderResource = function(superclass) {
+        function BlobLoaderResource() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (BlobLoaderResource.__proto__ = superclass), BlobLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        BlobLoaderResource.prototype.constructor = BlobLoaderResource, BlobLoaderResource.prototype.destroy = function() {
+            (window.URL || window.webkitURL).revokeObjectURL(this._data), this._data = "";
+        }, BlobLoaderResource;
+    }(LoaderResource), BlobLoader = function(superclass) {
+        function BlobLoader() {
+            superclass.apply(this, arguments);
+        }
+        return superclass && (BlobLoader.__proto__ = superclass), BlobLoader.prototype = Object.create(superclass && superclass.prototype), 
+        BlobLoader.prototype.constructor = BlobLoader, BlobLoader.prototype._loadAsync = function(target, options) {
+            var xhr;
+            return void 0 === options && (options = {}), (xhr = this._resolveXhr(target, options.xhr), 
+            xhr ? fetch(xhr.src, xhr.requestOptions) : fetch(target)).then((function(res) {
+                if (!res.ok) {
+                    throw res.statusText;
+                }
+                return res.blob();
+            })).then((function(blob) {
+                return (window.URL || window.webkitURL).createObjectURL(blob);
+            })).then((function(uri) {
+                return new BlobLoaderResource(uri, null);
+            })).catch((function(e) {
+                return new BlobLoaderResource("", e);
+            }));
+        }, BlobLoader;
+    }(LoaderBase), TextureLoaderResource = function(superclass) {
         function TextureLoaderResource() {
             superclass.apply(this, arguments);
         }
         return superclass && (TextureLoaderResource.__proto__ = superclass), TextureLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
         TextureLoaderResource.prototype.constructor = TextureLoaderResource, TextureLoaderResource.prototype.destroy = function() {
-            TextureLoaderResource.removeCache(this._data), this._data.destroy(!0);
+            this._data && (TextureLoaderResource.removeCache(this._data), this._data.destroy(!0), 
+            this._data = null);
         }, TextureLoaderResource.removeCache = function(texture) {
             PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture);
         }, TextureLoaderResource;
@@ -626,26 +631,35 @@
         }
         return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
         TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target, options) {
+            var xhr, this$1 = this;
+            return void 0 === options && (options = {}), (xhr = this$1._resolveXhr(target, options.xhr), 
+            xhr ? (new BlobLoader).loadAsync(xhr.src, {
+                xhr: options.xhr
+            }).then((function(resource) {
+                if (resource.error) {
+                    throw resource.error;
+                }
+                if (!resource.data) {
+                    throw "invalid resource";
+                }
+                return this$1._loadBaseTextureAsync(resource.data);
+            })) : this$1._loadBaseTextureAsync(target)).then((function(baseTexture) {
+                return new TextureLoaderResource(new PIXI.Texture(baseTexture), null);
+            })).catch((function(e) {
+                return new TextureLoaderResource(null, e);
+            }));
+        }, TextureLoader.prototype._loadBaseTextureAsync = function(target) {
             return (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous"), 
-            new Promise((function(resolve) {
+            new Promise((function(resolve, reject) {
                 var bt = PIXI.BaseTexture.from(target);
                 if (bt.valid) {
-                    return PIXI.BaseTexture.removeFromCache(bt), void resolve(new TextureLoaderResource(new PIXI.Texture(bt), null));
+                    return PIXI.BaseTexture.removeFromCache(bt), void resolve(bt);
                 }
                 bt.on("loaded", (function(baseTexture) {
-                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), null));
+                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(baseTexture);
                 })), bt.on("error", (function(baseTexture, e) {
-                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(new TextureLoaderResource(new PIXI.Texture(baseTexture), e));
+                    PIXI.BaseTexture.removeFromCache(baseTexture), reject(e);
                 }));
-            }));
-        }, TextureLoader.prototype._loadXhrAsync = function(url, options) {
-            var this$1 = this, xhr = this._resolveXhrOptions(options.xhr);
-            return fetch(url, xhr.requestOptions).then((function(res) {
-                return res.blob();
-            })).then((function(blob) {
-                return (window.URL || window.webkitURL).createObjectURL(blob);
-            })).then((function(uri) {
-                return this$1._loadAsync(uri);
             }));
         }, TextureLoader;
     }(LoaderBase), TextureManifest = function(superclass) {
@@ -661,24 +675,21 @@
             superclass.apply(this, arguments);
         }
         return superclass && (JsonLoaderResource.__proto__ = superclass), JsonLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
-        JsonLoaderResource.prototype.constructor = JsonLoaderResource, JsonLoaderResource.prototype.destroy = function() {}, 
-        JsonLoaderResource;
+        JsonLoaderResource.prototype.constructor = JsonLoaderResource, JsonLoaderResource.prototype.destroy = function() {
+            this._data = {};
+        }, JsonLoaderResource;
     }(LoaderResource), JsonLoader = function(superclass) {
         function JsonLoader() {
             superclass.apply(this, arguments);
         }
         return superclass && (JsonLoader.__proto__ = superclass), JsonLoader.prototype = Object.create(superclass && superclass.prototype), 
         JsonLoader.prototype.constructor = JsonLoader, JsonLoader.prototype._loadAsync = function(target, options) {
-            return fetch(target).then((function(res) {
-                return res.json();
-            })).then((function(json) {
-                return new JsonLoaderResource(json, null);
-            })).catch((function(e) {
-                return new JsonLoaderResource({}, e);
-            }));
-        }, JsonLoader.prototype._loadXhrAsync = function(url, options) {
-            var xhr = this._resolveXhrOptions(options.xhr);
-            return fetch(url, xhr.requestOptions).then((function(res) {
+            var xhr;
+            return void 0 === options && (options = {}), (xhr = this._resolveXhr(target, options.xhr), 
+            xhr ? fetch(xhr.src, xhr.requestOptions) : fetch(target)).then((function(res) {
+                if (!res.ok) {
+                    throw res.statusText;
+                }
                 return res.json();
             })).then((function(json) {
                 return new JsonLoaderResource(json, null);
@@ -695,6 +706,7 @@
             for (var i in this._data) {
                 this._data[i].destroy(!0);
             }
+            this._data = {};
         }, SpritesheetLoaderResource;
     }(LoaderResource), SpritesheetLoader = function(superclass) {
         function SpritesheetLoader() {
@@ -702,40 +714,53 @@
         }
         return superclass && (SpritesheetLoader.__proto__ = superclass), SpritesheetLoader.prototype = Object.create(superclass && superclass.prototype), 
         SpritesheetLoader.prototype.constructor = SpritesheetLoader, SpritesheetLoader.prototype._loadAsync = function(target, options) {
-            return void 0 === options && (options = {}), "string" != typeof target ? this._loadTextureFromJson(target, options) : this._loadFromUrlAsync(target, options);
-        }, SpritesheetLoader.prototype._loadXhrAsync = function(url, options) {
-            return this._loadFromUrlAsync(url, options);
-        }, SpritesheetLoader.prototype._loadFromUrlAsync = function(url, options) {
             var this$1 = this;
-            return (new JsonLoader).loadAsync(url, options).then((function(resource) {
+            return void 0 === options && (options = {}), ("string" != typeof target ? this$1._loadTextureAsync(target, options) : this$1._loadJsonAsync(target, options)).then((function(textures) {
+                return new SpritesheetLoaderResource(textures, null);
+            })).catch((function(e) {
+                return new SpritesheetLoaderResource({}, e);
+            }));
+        }, SpritesheetLoader.prototype._loadJsonAsync = function(url, options) {
+            var this$1 = this;
+            return (new JsonLoader).loadAsync(url, {
+                xhr: options.xhr
+            }).then((function(resource) {
+                if (resource.error) {
+                    throw resource.error;
+                }
+                if (!resource.data) {
+                    throw "invalid resource";
+                }
                 var json = resource.data;
                 if (!json.meta || !json.meta.image || !json.frames) {
-                    return new SpritesheetLoaderResource({}, "invalid json");
+                    throw "invalid json";
                 }
-                json.meta.image = resolveUri(url, json.meta.image, options.version || "");
+                json.meta.image = resolveUri(url, json.meta.image, options.textureVersion || "");
                 var data = {
                     frames: json.frames,
                     meta: json.meta
                 };
-                return this$1._loadTextureFromJson(data, options);
+                return this$1._loadTextureAsync(data, options);
             }));
-        }, SpritesheetLoader.prototype._loadTextureFromJson = function(json, options) {
-            return (new TextureLoader).loadAsync(json.meta.image, options).then((function(resource) {
+        }, SpritesheetLoader.prototype._loadTextureAsync = function(json, options) {
+            return (new TextureLoader).loadAsync(json.meta.image, {
+                xhr: options.xhr
+            }).then((function(resource) {
                 if (resource.error) {
-                    return new SpritesheetLoaderResource({}, resource.error);
+                    throw resource.error;
+                }
+                if (!resource.data) {
+                    throw "invalid resource";
                 }
                 var ss = new PIXI.Spritesheet(resource.data, json);
                 return new Promise((function(resolve) {
                     ss.parse((function(e) {
-                        var resource = new SpritesheetLoaderResource(ss.textures, null);
                         for (var i in ss.textures) {
                             TextureLoaderResource.removeCache(ss.textures[i]);
                         }
-                        resolve(resource);
+                        resolve(ss.textures);
                     }));
                 }));
-            })).catch((function(e) {
-                return new SpritesheetLoaderResource({}, e);
             }));
         }, SpritesheetLoader;
     }(LoaderBase), SpritesheetManifest = function(superclass) {
@@ -746,11 +771,11 @@
         SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._createLoader = function() {
             return new SpritesheetLoader;
         }, SpritesheetManifest.prototype._resolveTarget = function(target, options) {
-            return void 0 === options && (options = {}), "string" == typeof target ? resolveUri(options.basepath || "", target, options.version) : ("string" == typeof target.meta.image && (target.meta.image = resolveUri(options.basepath || "", target.meta.image, options.version)), 
+            return "string" == typeof target ? resolveUri(options.basepath || "", target, options.version) : ("string" == typeof target.meta.image && (target.meta.image = resolveUri(options.basepath || "", target.meta.image, options.version)), 
             target);
         }, SpritesheetManifest.prototype._getAppendOption = function(options) {
-            return void 0 === options && (options = {}), {
-                version: options.version
+            return {
+                textureVersion: options.others.textureVersion || options.version
             };
         }, SpritesheetManifest;
     }(ManifestBase), SoundLoaderResource = function(superclass) {
@@ -759,7 +784,7 @@
         }
         return superclass && (SoundLoaderResource.__proto__ = superclass), SoundLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
         SoundLoaderResource.prototype.constructor = SoundLoaderResource, SoundLoaderResource.prototype.destroy = function() {
-            this._data.stop(), this._data.unload();
+            this._data && (this._data.stop(), this._data.unload(), this._data = null);
         }, SoundLoaderResource;
     }(LoaderResource), SoundLoader = function(superclass) {
         function SoundLoader() {
@@ -767,32 +792,35 @@
         }
         return superclass && (SoundLoader.__proto__ = superclass), SoundLoader.prototype = Object.create(superclass && superclass.prototype), 
         SoundLoader.prototype.constructor = SoundLoader, SoundLoader.prototype._loadAsync = function(target, options) {
-            return new Promise((function(resolve) {
+            var xhr;
+            return void 0 === options && (options = {}), (xhr = this._resolveXhr(target, options.xhr), 
+            new Promise(xhr ? function(resolve, reject) {
                 var howl = new howler.Howl({
-                    src: target,
+                    src: xhr.src,
                     onload: function() {
-                        resolve(new SoundLoaderResource(howl, null));
+                        resolve(howl);
                     },
                     onloaderror: function() {
                         var e = new Error("invalid resource: " + target);
-                        resolve(new SoundLoaderResource(howl, e));
-                    }
+                        reject(e);
+                    },
+                    xhr: xhr.requestOptions
                 });
-            }));
-        }, SoundLoader.prototype._loadXhrAsync = function(url, options) {
-            var xhr = this._resolveXhrOptions(options.xhr);
-            return new Promise((function(resolve) {
+            } : function(resolve, reject) {
                 var howl = new howler.Howl({
-                    src: url,
+                    src: target,
                     onload: function() {
-                        resolve(new SoundLoaderResource(howl, null));
+                        resolve(howl);
                     },
                     onloaderror: function() {
-                        var e = new Error("invalid resource: " + url);
-                        resolve(new SoundLoaderResource(howl, e));
-                    },
-                    xhr: xhr.requestOptions || {}
+                        var e = new Error("invalid resource: " + target);
+                        reject(e);
+                    }
                 });
+            })).then((function(howl) {
+                return new SoundLoaderResource(howl, null);
+            })).catch((function(e) {
+                return new SoundLoaderResource(null, e);
             }));
         }, SoundLoader;
     }(LoaderBase), SoundManifest = function(superclass) {
@@ -858,23 +886,10 @@
     var _manifests = {}, Content = function(Emitter) {
         function Content(options, piximData) {
             var this$1 = this;
-            if (void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
+            void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
             Emitter.call(this), this._loadedResourceHandler = function(data) {
                 this$1.emit("loaderAssetLoaded", data);
-            }, "object" != typeof options.basepath) {
-                var basepath = {}, v = options.basepath || "";
-                for (var i in _manifests) {
-                    basepath[i] = v;
-                }
-                options.basepath = basepath;
-            }
-            if ("object" != typeof options.version) {
-                var version = {}, v$1 = options.version || "";
-                for (var i$1 in _manifests) {
-                    version[i$1] = v$1;
-                }
-                options.version = version;
-            }
+            };
             var contentDeliverData = {
                 width: piximData.config.width,
                 height: piximData.config.height,
@@ -882,11 +897,9 @@
                 resources: {},
                 vars: {}
             };
-            for (var i$2 in this._piximData = {
+            for (var i in this._piximData = {
                 contentID: (++_contentID).toString(),
-                basepath: options.basepath,
-                version: options.version,
-                xhr: options.xhr,
+                options: options,
                 $: new ContentDeliver(contentDeliverData),
                 manifests: piximData.manifests,
                 additionalManifests: createManifests(),
@@ -894,10 +907,10 @@
                 postloadPromise: null,
                 contentDeliverData: contentDeliverData
             }, this._piximData.manifests) {
-                this._piximData.manifests[i$2].on("loaderAssetLoaded", this._loadedResourceHandler);
+                this._piximData.manifests[i].on("loaderAssetLoaded", this._loadedResourceHandler);
             }
-            for (var i$3 in this._piximData.additionalManifests) {
-                this._piximData.additionalManifests[i$3].on("loaderAssetLoaded", this._loadedResourceHandler);
+            for (var i$1 in this._piximData.additionalManifests) {
+                this._piximData.additionalManifests[i$1].on("loaderAssetLoaded", this._loadedResourceHandler);
             }
         }
         Emitter && (Content.__proto__ = Emitter), Content.prototype = Object.create(Emitter && Emitter.prototype), 
@@ -1030,20 +1043,100 @@
         }, prototypeAccessors.assetCount.get = function() {
             return this.classAssetCount + this.instanceAssetCount;
         }, Content.prototype._loadAssetAsync = function(manifests) {
-            var basepaths = this._piximData.basepath, versions = this._piximData.version, resources = this._piximData.$.resources;
             if (0 === Object.keys(manifests).length) {
                 return Promise.resolve();
             }
-            var promises = [], keys = [];
+            var options = this._piximData.options, basepath = function() {
+                if (void 0 === options.basepath) {
+                    var basepath$1 = {};
+                    for (var i in manifests) {
+                        basepath$1[i] = "";
+                    }
+                    return basepath$1;
+                }
+                if ("string" == typeof options.basepath) {
+                    var basepath$2 = {};
+                    for (var i$1 in manifests) {
+                        basepath$2[i$1] = options.basepath.replace(/(.+[^\/])$/, "$1/");
+                    }
+                    return basepath$2;
+                }
+                var basepath = {};
+                for (var i$2 in manifests) {
+                    basepath[i$2] = (options.basepath[i$2] || "").replace(/(.+[^\/])$/, "$1/");
+                }
+                return basepath;
+            }(), version = function() {
+                if (void 0 === options.version) {
+                    var version$1 = {};
+                    for (var i in manifests) {
+                        version$1[i] = "";
+                    }
+                    return version$1;
+                }
+                if ("string" == typeof options.version || "number" == typeof options.version) {
+                    var version$2 = {};
+                    for (var i$1 in manifests) {
+                        version$2[i$1] = options.version;
+                    }
+                    return version$2;
+                }
+                var version = {};
+                for (var i$2 in manifests) {
+                    version[i$2] = options.version[i$2] || "";
+                }
+                return version;
+            }(), xhr = function() {
+                if (void 0 === options.xhr) {
+                    var xhr$1 = {};
+                    for (var i in manifests) {
+                        xhr$1[i] = !1;
+                    }
+                    return xhr$1;
+                }
+                if ("function" == typeof options.xhr) {
+                    var xhr$2 = {};
+                    for (var i$1 in manifests) {
+                        xhr$2[i$1] = function(type, f) {
+                            return function(url) {
+                                return f(type, url);
+                            };
+                        }(i$1, options.xhr);
+                    }
+                    return xhr$2;
+                }
+                var xhr = {};
+                for (var i$2 in manifests) {
+                    xhr[i$2] = options.xhr;
+                }
+                return xhr;
+            }(), others = function() {
+                if (void 0 === options.others) {
+                    var others$1 = {};
+                    for (var i in manifests) {
+                        others$1[i] = [];
+                    }
+                    return others$1;
+                }
+                var others = {};
+                for (var i$1 in manifests) {
+                    others[i$1] = options.others[i$1] || {};
+                }
+                return others;
+            }(), loaderOptions = {};
             for (var i in manifests) {
-                var type = i;
-                keys.push(type);
-                var basepath = (basepaths[type] || "").replace(/(.+[^\/])$/, "$1/"), version = versions[type] || "", manifest = manifests[type];
-                promises.push(manifest.getAsync({
-                    basepath: basepath,
-                    version: version,
-                    xhr: this._piximData.xhr
-                }));
+                loaderOptions[i] = {
+                    basepath: basepath[i],
+                    version: version[i],
+                    xhr: xhr[i],
+                    others: others[i]
+                };
+            }
+            var resources = this._piximData.$.resources, promises = [], keys = [];
+            for (var i$1 in manifests) {
+                keys.push(i$1);
+                var manifest = manifests[i$1];
+                promises.push(manifest.getAsync(loaderOptions[i$1]));
             }
             return Promise.all(promises).then((function(resolver) {
                 for (var i = 0; i < resolver.length; i++) {
@@ -1061,8 +1154,9 @@
             superclass.apply(this, arguments);
         }
         return superclass && (JsLoaderResource.__proto__ = superclass), JsLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
-        JsLoaderResource.prototype.constructor = JsLoaderResource, JsLoaderResource.prototype.destroy = function() {}, 
-        JsLoaderResource.prototype.ref = function() {
+        JsLoaderResource.prototype.constructor = JsLoaderResource, JsLoaderResource.prototype.destroy = function() {
+            this._data = "";
+        }, JsLoaderResource.prototype.ref = function() {
             document.body.appendChild(document.createElement("script")).text = this._data;
         }, JsLoaderResource;
     }(LoaderResource), JsLoader = function(superclass) {
@@ -1071,17 +1165,13 @@
         }
         return superclass && (JsLoader.__proto__ = superclass), JsLoader.prototype = Object.create(superclass && superclass.prototype), 
         JsLoader.prototype.constructor = JsLoader, JsLoader.prototype._loadAsync = function(target, options) {
-            return fetch(target).then((function(res) {
+            var xhr;
+            return void 0 === options && (options = {}), (xhr = this._resolveXhr(target, options.xhr), 
+            xhr ? fetch(xhr.src, xhr.requestOptions) : fetch(target)).then((function(res) {
+                if (!res.ok) {
+                    throw res.statusText;
+                }
                 return res.text();
-            })).then((function(text) {
-                return new JsLoaderResource(text, null);
-            })).catch((function(e) {
-                return new JsLoaderResource("", e);
-            }));
-        }, JsLoader.prototype._loadXhrAsync = function(url, options) {
-            var xhr = this._resolveXhrOptions(options.xhr);
-            return fetch(url, xhr.requestOptions).then((function(res) {
-                return res.json();
             })).then((function(text) {
                 return new JsLoaderResource(text, null);
             })).catch((function(e) {
@@ -1089,17 +1179,17 @@
             }));
         }, JsLoader;
     }(LoaderBase);
-    exports.Application = Application, exports.Container = Container, exports.Content = Content, 
-    exports.ContentDeliver = ContentDeliver, exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", 
-    exports.Emitter = Emitter$1, exports.JsLoader = JsLoader, exports.JsLoaderResource = JsLoaderResource, 
-    exports.JsonLoader = JsonLoader, exports.JsonLoaderResource = JsonLoaderResource, 
-    exports.JsonManifest = JsonManifest, exports.Layer = Layer, exports.LoaderBase = LoaderBase, 
-    exports.LoaderResource = LoaderResource, exports.ManifestBase = ManifestBase, exports.SoundLoader = SoundLoader, 
-    exports.SoundLoaderResource = SoundLoaderResource, exports.SoundManifest = SoundManifest, 
-    exports.SpritesheetLoader = SpritesheetLoader, exports.SpritesheetLoaderResource = SpritesheetLoaderResource, 
-    exports.SpritesheetManifest = SpritesheetManifest, exports.Task = Task$1, exports.TextureLoader = TextureLoader, 
-    exports.TextureLoaderResource = TextureLoaderResource, exports.TextureManifest = TextureManifest, 
-    exports.utils = index;
+    exports.Application = Application, exports.BlobLoader = BlobLoader, exports.BlobLoaderResource = BlobLoaderResource, 
+    exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
+    exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", exports.Emitter = Emitter$1, 
+    exports.JsLoader = JsLoader, exports.JsLoaderResource = JsLoaderResource, exports.JsonLoader = JsonLoader, 
+    exports.JsonLoaderResource = JsonLoaderResource, exports.JsonManifest = JsonManifest, 
+    exports.Layer = Layer, exports.LoaderBase = LoaderBase, exports.LoaderResource = LoaderResource, 
+    exports.ManifestBase = ManifestBase, exports.SoundLoader = SoundLoader, exports.SoundLoaderResource = SoundLoaderResource, 
+    exports.SoundManifest = SoundManifest, exports.SpritesheetLoader = SpritesheetLoader, 
+    exports.SpritesheetLoaderResource = SpritesheetLoaderResource, exports.SpritesheetManifest = SpritesheetManifest, 
+    exports.Task = Task$1, exports.TextureLoader = TextureLoader, exports.TextureLoaderResource = TextureLoaderResource, 
+    exports.TextureManifest = TextureManifest, exports.utils = index;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl
 });

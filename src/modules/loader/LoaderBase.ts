@@ -29,12 +29,22 @@ export interface ILoaderXhrOption {
 	requestOptions?: IFetchRequestOption;
 }
 
+export interface ILoaderResolvedXhrOption extends ILoaderXhrOption {
+	src: string;
+}
+
+export type TLoaderResolvedXhrOption = ILoaderResolvedXhrOption | null;
+
+export interface ILoaderXhrOptionFacotryDelegate {
+	(url: string): TLoaderResolvedXhrOption;
+}
+
 export interface ILoaderOption {
-	xhr?: ILoaderXhrOption | boolean;
+	xhr?: ILoaderXhrOption | boolean | ILoaderXhrOptionFacotryDelegate;
 }
 
 export interface ILoaderResourceDictionary<T> {
-	[ name: string ]: LoaderResource<T>;
+	[ name: string ]: T;
 }
 
 export interface ILoaderTargetDictionary<T> {
@@ -45,34 +55,18 @@ export interface ILoaderDataDictionary<TTarget, TLoaderOption> {
 	[name: string]: { src: TTarget, options?: TLoaderOption };
 }
 
-export abstract class LoaderBase<TTarget, TResource> {
+export abstract class LoaderBase<TTarget, TRawResource, TResource extends LoaderResource<TRawResource>> {
 	/**
 	 * Callback when one of the resources has succeeded loading.
 	 */
-	onLoaded?: (resource: LoaderResource<TResource>) => void;
+	onLoaded?: (resource: TResource) => void;
 	
 	/**
 	 * @fires [[LoaderBase.loaded]]
 	 */
 	loadAsync(target: TTarget, options?: ILoaderOption) {
 		return (() => {
-			if (!options) {
-				return this._loadAsync(target, options);
-			}
-			
-			if (typeof(target) !== 'string') {
-				return this._loadAsync(target, options);
-			}
-			
-			if (!utils.isUrl(target)) {
-				return this._loadAsync(target, options);
-			}
-			
-			if (!options.xhr) {
-				return this._loadAsync(target, options);
-			}
-			
-			return this._loadXhrAsync(target, options);
+			return this._loadAsync(target, options);
 		})()
 		.then(resource => {
 			if (!resource.error) {
@@ -83,9 +77,7 @@ export abstract class LoaderBase<TTarget, TResource> {
 		});
 	}
 	
-	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption): Promise<LoaderResource<TResource>>;
-	
-	protected abstract _loadXhrAsync(url: string, options?: ILoaderOption): Promise<LoaderResource<TResource>>;
+	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption): Promise<TResource>;
 	
 	/**
 	 * @fires [[LoaderBase.loaded]]
@@ -114,15 +106,33 @@ export abstract class LoaderBase<TTarget, TResource> {
 			});
 	}
 	
-	protected _resolveXhrOptions(xhr?: ILoaderXhrOption | boolean): ILoaderXhrOption {
-		if (!xhr) {
-			return {};
+	protected _resolveXhr(target: TTarget | string, options?: ILoaderXhrOption | boolean | ILoaderXhrOptionFacotryDelegate): TLoaderResolvedXhrOption {
+		if (typeof(target) !== 'string') {
+			return null;
 		}
 		
-		const requestOptions: IFetchRequestOption = typeof(xhr) === 'boolean' ? {} : (xhr.requestOptions || {});
+		if (!utils.isUrl(target)) {
+			return null;
+		}
+		
+		if (!options) {
+			return null;
+		}
+		
+		if (options === true) {
+			return {
+				src: target,
+				requestOptions: {}
+			};
+		}
+		
+		if (typeof(options) === 'function') {
+			return options(target);
+		}
 		
 		return {
-			requestOptions
+			src: target,
+			requestOptions: options.requestOptions || {}
 		};
 	}
 }

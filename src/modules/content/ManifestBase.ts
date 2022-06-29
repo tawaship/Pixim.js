@@ -3,7 +3,7 @@ import { Emitter } from '@tawaship/emitter';
 import * as utils from '../utils/index';
 
 export interface IManifestClass {
-	new(type: string): ManifestBase<any, any>;
+	new(type: string): ManifestBase<any, any, any>;
 }
 
 export interface IResourceManagerData<T> {
@@ -33,19 +33,22 @@ export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDi
 
 export type TManifestResourceVersion = string | number;
 
-export interface ILoaderXhrOptionFacotryDelegate {
-	(type: string, url: string): Promise<LoaderBase.ILoaderXhrOption>;
+export interface IManifestLoaderXhrOptionFacotryDelegate {
+	(type: string, url: string): LoaderBase.TLoaderResolvedXhrOption;
 }
 
+export type TLoaderXhrOption = IManifestLoaderXhrOptionFacotryDelegate | boolean | LoaderBase.ILoaderXhrOption;
+
 export interface IManifestLoaderOption {
-	basepath?: string;
-	version?: TManifestResourceVersion;
-	xhr?: ILoaderXhrOptionFacotryDelegate | boolean;
+	basepath: string;
+	version: TManifestResourceVersion;
+	xhr: TLoaderXhrOption;
+	others: { [key: string]: any };
 }
 
 export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 
-export abstract class ManifestBase<TTarget, TResource> extends Emitter {
+export abstract class ManifestBase<TTarget, TRawResource, TResource extends LoaderBase.LoaderResource<TRawResource>> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
 	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
 	private _type: string;
@@ -81,73 +84,44 @@ export abstract class ManifestBase<TTarget, TResource> extends Emitter {
 			return Promise.resolve({});
 		}
 		
-		const res: IRawResourceDictionary<TResource> = {};
+		const res: IRawResourceDictionary<TRawResource> = {};
 		
 		const loader = this._createLoader();
-		loader.onLoaded = resource => {
+		loader.onLoaded = (resource: TResource) => {
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
 		const loaderOptions: LoaderBase.ILoaderOption = this._getAppendOption(options);
-		loaderOptions.xhr = false;
 		
-		return (() => {
-			const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption> = {};
-			const promises: Promise<void>[] = [];
-			
-			for (let i in this._data) {
-				const src = this._resolveTarget(this._data[i].target, options);
-				
-				if (typeof(options.xhr) === 'boolean') {
-					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: options.xhr }) };
-					continue;
+		const data: LoaderBase.ILoaderDataDictionary<TTarget, LoaderBase.ILoaderOption> = {};
+		
+		for (let i in this._data) {
+			const src = this._resolveTarget(this._data[i].target, options);
+			data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: options.xhr }) };
+		}
+		
+		return loader.loadAllAsync(data)
+			.then(resources => {
+				for (let i in resources) {
+					const resource = resources[i];
+					
+					if (resource.error && !this._data[i].unrequired) {
+						throw resource.error;
+					}
 				}
 				
-				if (typeof(options.xhr) !== 'function') {
-					loaderOptions.xhr = false;
-					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
-					continue;
+				for (let i in resources) {
+					const resource = resources[i];
+					
+					this._resources[i] = resource;
+					res[i] = resource.data;
 				}
 				
-				if (typeof(src) !== 'string') {
-					data[i] = { src, options: Object.assign({}, loaderOptions, { xhr: false }) };
-					continue;
-				}
-				
-				promises.push(
-					options.xhr(this._type, src)
-						.then(xhr => {
-							data[i] = { src, options: Object.assign({}, loaderOptions, { xhr }) };
-						})
-				);
-			}
-			
-			return Promise.all(promises).then(() => data);
-		})()
-		.then(data => {
-			return loader.loadAllAsync(data);
-		})
-		.then(resources => {
-			for (let i in resources) {
-				const resource = resources[i];
-				
-				if (resource.error && !this._data[i].unrequired) {
-					throw resource.error;
-				}
-			}
-			
-			for (let i in resources) {
-				const resource = resources[i];
-				
-				this._resources[i] = resource;
-				res[i] = resource.data;
-			}
-			
-			return res;
-		});
+				return res;
+			});
 	}
 	
-	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TResource>;
+	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TRawResource, TResource>;
 	
 	protected _resolveTarget(target: TTarget, options: IManifestLoaderOption): TTarget {
 		return utils.resolveUri(options.basepath || '', target, options.version);

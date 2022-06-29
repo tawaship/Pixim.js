@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, ILoaderXhrOptionFacotryDelegate, TManifestResourceVersion, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
+import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, IManifestLoaderOption, IManifestLoaderXhrOptionFacotryDelegate, TManifestResourceVersion, TLoaderXhrOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
 import { TextureManifest, ITextureManifestTargetDictionary } from './TextureManifest';
 import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './SpritesheetManifest';
 import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
@@ -8,15 +8,23 @@ import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibra
 import { Emitter } from '@tawaship/emitter';
 
 export interface IContentAssetBasepath {
-	[key: string]: string;
+	[manifestKey: string]: string;
 }
 
 export interface IContentAssetVersion {
-	[key: string]: TManifestResourceVersion;
+	[manifestKey: string]: TManifestResourceVersion;
+}
+
+export interface IContentAssetXhrOption {
+	[manifestKey: string]: TLoaderXhrOption;
+}
+
+export interface IContentAssetOtherOption {
+	[manifestKey: string]: { [key: string]: any };
 }
 
 export interface IContentManifests {
-	[key: string]: ManifestBase<any, any>;
+	[manifestKey: string]: ManifestBase<any, any, any>;
 }
 
 export interface IContentConfigData {
@@ -26,9 +34,7 @@ export interface IContentConfigData {
 
 export interface IContentData {
 	contentID: string;
-	basepath: IContentAssetBasepath;
-	version: IContentAssetVersion;
-	xhr?: ILoaderXhrOptionFacotryDelegate;
+	options: IContentOption;
 	$: ContentDeliver;
 	manifests: IContentManifests;
 	additionalManifests: IContentManifests;
@@ -54,9 +60,11 @@ export interface IContentOption {
 	
 	/**
 	 * A header given when loading an asset, or a function that returns a header.
-	 * If non-null is specified, fetch API will be used instead of the default Loader when loading each asset.
+	 * If a value that can be considered true is specified, fetch API will be used instead of the default Loader when loading each asset.
 	 */
-	xhr?: ILoaderXhrOptionFacotryDelegate;
+	xhr?: TLoaderXhrOption;
+	
+	others?: IContentAssetOtherOption;
 }
 
 /**
@@ -119,24 +127,6 @@ export class Content extends Emitter {
 			this.emit(EVENT_LOADER_ASSET_LOADED, data);
 		};
 		
-		if (typeof(options.basepath) !== 'object') {
-			const basepath: IContentAssetBasepath = {};
-			const v = options.basepath || '';
-			for (let i in _manifests) {
-				basepath[i] = v;
-			}
-			options.basepath = basepath;
-		}
-		
-		if (typeof(options.version) !== 'object') {
-			const version: IContentAssetVersion = {};
-			const v = options.version || '';
-			for (let i in _manifests) {
-				version[i] = v;
-			}
-			options.version = version;
-		}
-		
 		const contentDeliverData = {
 			width: piximData.config.width,
 			height: piximData.config.height,
@@ -147,9 +137,7 @@ export class Content extends Emitter {
 		
 		this._piximData = {
 			contentID: (++_contentID).toString(),
-			basepath: options.basepath,
-			version: options.version,
-			xhr: options.xhr,
+			options,
 			$: new ContentDeliver(contentDeliverData),
 			manifests: piximData.manifests,
 			additionalManifests: createManifests(),
@@ -468,27 +456,137 @@ export class Content extends Emitter {
 	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
 	 */
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
-		const basepaths: IContentAssetBasepath = this._piximData.basepath;
-		const versions: IContentAssetVersion = this._piximData.version;
-		const resources: IContentResourceDictionary = this._piximData.$.resources;
-		
 		const loaderCount = Object.keys(manifests).length;
 		
 		if (loaderCount === 0) {
 			return Promise.resolve();
 		}
 		
+		const options = this._piximData.options;
+		
+		const basepath = (() => {
+			if (typeof(options.basepath) === 'undefined') {
+				const basepath: IContentAssetBasepath = {};
+				for (let i in manifests) {
+					basepath[i] = '';
+				}
+				
+				return basepath;
+			}
+			
+			if (typeof(options.basepath) === 'string') {
+				const basepath: IContentAssetBasepath = {};
+				for (let i in manifests) {
+					basepath[i] = options.basepath.replace(/(.+[^\/])$/, '$1/');
+				}
+				
+				return basepath;
+			}
+			
+			const basepath: IContentAssetBasepath = {};
+			for (let i in manifests) {
+				basepath[i] = (options.basepath[i] || '').replace(/(.+[^\/])$/, '$1/');
+			}
+			
+			return basepath;
+		})();
+		
+		const version = (() => {
+			if (typeof(options.version) === 'undefined') {
+				const version: IContentAssetVersion = {};
+				for (let i in manifests) {
+					version[i] = '';
+				}
+				
+				return version;
+			}
+			
+			if (typeof(options.version) === 'string' || typeof(options.version) === 'number') {
+				const version: IContentAssetVersion = {};
+				for (let i in manifests) {
+					version[i] = options.version;
+				}
+				
+				return version;
+			}
+			
+			const version: IContentAssetVersion = {};
+			for (let i in manifests) {
+				version[i] = options.version[i] || '';
+			}
+			
+			return version;
+		})();
+		
+		const xhr = (() => {
+			if (typeof(options.xhr) === 'undefined') {
+				const xhr: IContentAssetXhrOption = {};
+				for (let i in manifests) {
+					xhr[i] = false;
+				}
+				
+				return xhr;
+			}
+			
+			if (typeof(options.xhr) === 'function') {
+				const xhr: IContentAssetXhrOption = {};
+				for (let i in manifests) {
+					xhr[i] = ((type: string, f: IManifestLoaderXhrOptionFacotryDelegate) => {
+						return (url: string) => {
+							return f(type, url);
+						};
+					})(i, options.xhr);
+				}
+				
+				return xhr;
+			}
+			
+			const xhr: IContentAssetXhrOption = {};
+			for (let i in manifests) {
+				xhr[i] = options.xhr;
+			}
+			
+			return xhr;
+		})();
+		
+		const others = (() => {
+			if (typeof(options.others) === 'undefined') {
+				const others: IContentAssetOtherOption = {};
+				for (let i in manifests) {
+					others[i] = [];
+				}
+				
+				return others;
+			}
+			
+			const others: IContentAssetOtherOption = {};
+			for (let i in manifests) {
+				others[i] = options.others[i] || {};
+			}
+			
+			return others;
+		})();
+		
+		const loaderOptions: { [manifestKey: string]: IManifestLoaderOption } = {};
+		for (let i in manifests) {
+			loaderOptions[i] = {
+				basepath: basepath[i],
+				version: version[i],
+				xhr: xhr[i],
+				others: others[i]
+			};
+		}
+		
+		const resources: IContentResourceDictionary = this._piximData.$.resources;
+		
 		const promises: Promise<IRawResourceDictionary<any>>[] = [];
 		const keys: string[] = [];
 		for (let i in manifests) {
-			const type = i;
-			keys.push(type);
+			keys.push(i);
 			
-			const basepath = (basepaths[type] || '').replace(/(.+[^\/])$/, '$1/');
-			const version = versions[type] || '';
-			const manifest = manifests[type];
+			const manifest = manifests[i];
 			
-			promises.push(manifest.getAsync({ basepath, version, xhr: this._piximData.xhr }));
+			promises.push(manifest.getAsync(loaderOptions[i]));
 		}
 		
 		return Promise.all(promises)

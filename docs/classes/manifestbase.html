@@ -58,7 +58,7 @@
 					<a href="manifestbase.html">ManifestBase</a>
 				</li>
 			</ul>
-			<h1>Class ManifestBase&lt;TTarget, TResource&gt;</h1>
+			<h1>Class ManifestBase&lt;TTarget, TRawResource, TResource&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,10 @@
 						<h4>TTarget</h4>
 					</li>
 					<li>
-						<h4>TResource</h4>
+						<h4>TRawResource</h4>
+					</li>
+					<li>
+						<h4>TResource<span class="tsd-signature-symbol">: </span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -155,14 +158,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Manifest<wbr>Base&lt;TTarget, TResource&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Manifest<wbr>Base&lt;TTarget, TRawResource, TResource&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides Emitter.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L51">src/modules/content/ManifestBase.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L54">src/modules/content/ManifestBase.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -171,7 +174,10 @@
 									<h4>TTarget</h4>
 								</li>
 								<li>
-									<h4>TResource</h4>
+									<h4>TRawResource</h4>
+								</li>
+								<li>
+									<h4>TResource<span class="tsd-signature-symbol">: </span><a href="loaderresource.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderResource</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -180,7 +186,7 @@
 									<h5>type: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -193,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">_data<span class="tsd-signature-symbol">:</span> <a href="../interfaces/iresourcemanagermanifest.html" class="tsd-signature-type" data-tsd-kind="Interface">IResourceManagerManifest</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L49">src/modules/content/ManifestBase.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L52">src/modules/content/ManifestBase.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -203,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">_resources<span class="tsd-signature-symbol">:</span> <a href="../interfaces/iloaderresourcedictionary.html" class="tsd-signature-type" data-tsd-kind="Interface">ILoaderResourceDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L50">src/modules/content/ManifestBase.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L53">src/modules/content/ManifestBase.ts:53</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -213,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">_type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L51">src/modules/content/ManifestBase.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L54">src/modules/content/ManifestBase.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -230,7 +236,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L72">src/modules/content/ManifestBase.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L75">src/modules/content/ManifestBase.ts:75</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -244,16 +250,16 @@
 					<a name="_createloader" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> _create<wbr>Loader</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">_create<wbr>Loader<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">_create<wbr>Loader<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L150">src/modules/content/ManifestBase.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L124">src/modules/content/ManifestBase.ts:124</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="loaderbase.html" class="tsd-signature-type" data-tsd-kind="Class">LoaderBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -267,7 +273,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L156">src/modules/content/ManifestBase.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L130">src/modules/content/ManifestBase.ts:130</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -290,7 +296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L152">src/modules/content/ManifestBase.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L126">src/modules/content/ManifestBase.ts:126</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -316,7 +322,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L61">src/modules/content/ManifestBase.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L64">src/modules/content/ManifestBase.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -341,7 +347,7 @@
 					<a name="cemit" class="tsd-anchor"></a>
 					<h3>cemit</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">cemit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">cemit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -377,7 +383,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -385,7 +391,7 @@
 					<a name="cemitall" class="tsd-anchor"></a>
 					<h3>cemit<wbr>All</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">cemit<wbr>All<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">cemit<wbr>All<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -415,7 +421,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -423,7 +429,7 @@
 					<a name="clear" class="tsd-anchor"></a>
 					<h3>clear</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -447,7 +453,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -461,7 +467,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L160">src/modules/content/ManifestBase.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L134">src/modules/content/ManifestBase.ts:134</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -472,7 +478,7 @@
 					<a name="emit" class="tsd-anchor"></a>
 					<h3>emit</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">emit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">emit<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -502,7 +508,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -510,7 +516,7 @@
 					<a name="emitall" class="tsd-anchor"></a>
 					<h3>emit<wbr>All</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">emit<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">emit<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -534,7 +540,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -548,7 +554,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L79">src/modules/content/ManifestBase.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/tawaship/Pixim.js/blob/master/src/modules/content/ManifestBase.ts#L82">src/modules/content/ManifestBase.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -570,7 +576,7 @@
 					<a name="off" class="tsd-anchor"></a>
 					<h3>off</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">off<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -600,7 +606,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -608,7 +614,7 @@
 					<a name="on" class="tsd-anchor"></a>
 					<h3>on</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -638,7 +644,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -646,7 +652,7 @@
 					<a name="once" class="tsd-anchor"></a>
 					<h3>once</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IEmitterDelegate</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -676,7 +682,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="manifestbase.html" class="tsd-signature-type" data-tsd-kind="Class">ManifestBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTarget</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TRawResource</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResource</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>

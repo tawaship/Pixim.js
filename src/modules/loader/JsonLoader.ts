@@ -8,7 +8,7 @@ export type TJsonLoaderRawResource = IJsonData;
 
 export class JsonLoaderResource extends LoaderBase.LoaderResource<TJsonLoaderRawResource> {
 	destroy() {
-		
+		this._data = {};
 	}
 }
 
@@ -18,7 +18,7 @@ export interface IJsonLoaderTargetDictionary extends LoaderBase.ILoaderTargetDic
 
 }
 
-export interface IJsonLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<TJsonLoaderRawResource> {
+export interface IJsonLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<JsonLoaderResource> {
 
 }
 
@@ -26,20 +26,24 @@ export interface IJsonLoaderOption extends LoaderBase.ILoaderOption {
 
 }
 
-export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource> {
+export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, JsonLoaderResource> {
 	protected _loadAsync(target: TJsonLoaderTarget, options: IJsonLoaderOption = {}) {
-		return fetch(target)
-			.then(res => res.json())
-			.then(json => new JsonLoaderResource(json, null))
-			.catch((e: any) => new JsonLoaderResource({}, e));
-	}
-	
-	protected _loadXhrAsync(url: string, options: IJsonLoaderOption) {
-		const xhr = this._resolveXhrOptions(options.xhr);
-		
-		return fetch(url, xhr.requestOptions)
-			.then(res => res.json())
-			.then(json => new JsonLoaderResource(json, null))
-			.catch((e: any) => new JsonLoaderResource({}, e));
+		return (() => {
+			const xhr = this._resolveXhr(target, options.xhr)
+			if (!xhr) {
+				return fetch(target);
+			}
+			
+			return fetch(xhr.src, xhr.requestOptions);
+		})()
+		.then(res => {
+			if (!res.ok) {
+				throw res.statusText;
+			}
+			
+			return res.json();
+		})
+		.then(json => new JsonLoaderResource(json, null))
+		.catch((e: any) => new JsonLoaderResource({}, e));
 	}
 }
