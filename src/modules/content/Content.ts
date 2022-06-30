@@ -19,7 +19,7 @@ export interface IContentAssetXhrOption {
 	[manifestKey: string]: TManifestLoaderXhrOption;
 }
 
-export interface IContentAssetOtherOption {
+export interface IContentAssetLoaderOption {
 	[manifestKey: string]: { [key: string]: any };
 }
 
@@ -64,7 +64,7 @@ export interface IContentOption {
 	 */
 	xhr?: TManifestLoaderXhrOption;
 	
-	others?: IContentAssetOtherOption;
+	typeOptions?: IContentAssetLoaderOption;
 }
 
 /**
@@ -527,22 +527,22 @@ export class Content extends Emitter {
 			return xhr;
 		})();
 		
-		const others = (() => {
-			if (typeof(options.others) === 'undefined') {
-				const others: IContentAssetOtherOption = {};
+		const typeOptions = (() => {
+			if (typeof(options.typeOptions) === 'undefined') {
+				const typeOptions: IContentAssetLoaderOption = {};
 				for (let i in manifests) {
-					others[i] = [];
+					typeOptions[i] = [];
 				}
 				
-				return others;
+				return typeOptions;
 			}
 			
-			const others: IContentAssetOtherOption = {};
+			const typeOptions: IContentAssetLoaderOption = {};
 			for (let i in manifests) {
-				others[i] = options.others[i] || {};
+				typeOptions[i] = options.typeOptions[i] || {};
 			}
 			
-			return others;
+			return typeOptions;
 		})();
 		
 		const loaderOptions: { [manifestKey: string]: IManifestLoaderOption } = {};
@@ -551,7 +551,7 @@ export class Content extends Emitter {
 				basepath: basepath[i],
 				version: version[i],
 				xhr: xhr[i],
-				others: others[i]
+				typeOptions: typeOptions[i]
 			};
 		}
 		

@@ -43,7 +43,7 @@ export interface IManifestLoaderOption {
 	basepath: string;
 	version: TManifestResourceVersion;
 	xhr: TManifestLoaderXhrOption;
-	others: { [key: string]: any };
+	typeOptions: { [key: string]: any };
 }
 
 export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
@@ -91,7 +91,7 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
-		const loaderOptions: LoaderBase.ILoaderOption = Object.assign({}, options.others, {
+		const loaderOptions: LoaderBase.ILoaderOption = Object.assign({}, options.typeOptions, {
 			basepath: options.basepath,
 			version: options.version,
 			xhr: ((type: string, xhr: TManifestLoaderXhrOption) => {

@@ -683,7 +683,7 @@ class ManifestBase extends emitter.Emitter {
         loader.onLoaded = (resource) => {
             this.emit(EVENT_LOADER_ASSET_LOADED, resource);
         };
-        const loaderOptions = Object.assign({}, options.others, {
+        const loaderOptions = Object.assign({}, options.typeOptions, {
             basepath: options.basepath,
             version: options.version,
             xhr: ((type, xhr) => {
@@ -1532,19 +1532,19 @@ class Content extends emitter.Emitter {
             }
             return xhr;
         })();
-        const others = (() => {
-            if (typeof (options.others) === 'undefined') {
-                const others = {};
+        const typeOptions = (() => {
+            if (typeof (options.typeOptions) === 'undefined') {
+                const typeOptions = {};
                 for (let i in manifests) {
-                    others[i] = [];
+                    typeOptions[i] = [];
                 }
-                return others;
+                return typeOptions;
             }
-            const others = {};
+            const typeOptions = {};
             for (let i in manifests) {
-                others[i] = options.others[i] || {};
+                typeOptions[i] = options.typeOptions[i] || {};
             }
-            return others;
+            return typeOptions;
         })();
         const loaderOptions = {};
         for (let i in manifests) {
@@ -1552,7 +1552,7 @@ class Content extends emitter.Emitter {
                 basepath: basepath[i],
                 version: version[i],
                 xhr: xhr[i],
-                others: others[i]
+                typeOptions: typeOptions[i]
             };
         }
         const resources = this._piximData.$.resources;

@@ -466,7 +466,7 @@
             loader.onLoaded = function(resource) {
                 this$1.emit("loaderAssetLoaded", resource);
             };
-            var type, xhr, loaderOptions = Object.assign({}, options.others, {
+            var type, xhr, loaderOptions = Object.assign({}, options.typeOptions, {
                 basepath: options.basepath,
                 version: options.version,
                 xhr: (type = this._type, xhr = options.xhr, "function" == typeof xhr ? function(url) {
@@ -1088,26 +1088,26 @@
                     xhr[i] = options.xhr || !1;
                 }
                 return xhr;
-            }(), others = function() {
-                if (void 0 === options.others) {
-                    var others$1 = {};
+            }(), typeOptions = function() {
+                if (void 0 === options.typeOptions) {
+                    var typeOptions$1 = {};
                     for (var i in manifests) {
-                        others$1[i] = [];
+                        typeOptions$1[i] = [];
                     }
-                    return others$1;
+                    return typeOptions$1;
                 }
-                var others = {};
+                var typeOptions = {};
                 for (var i$1 in manifests) {
-                    others[i$1] = options.others[i$1] || {};
+                    typeOptions[i$1] = options.typeOptions[i$1] || {};
                 }
-                return others;
+                return typeOptions;
             }(), loaderOptions = {};
             for (var i in manifests) {
                 loaderOptions[i] = {
                     basepath: basepath[i],
                     version: version[i],
                     xhr: xhr[i],
-                    others: others[i]
+                    typeOptions: typeOptions[i]
                 };
             }
             var resources = this._piximData.$.resources, promises = [], keys = [];
