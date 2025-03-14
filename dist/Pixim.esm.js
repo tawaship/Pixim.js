@@ -7,12 +7,12 @@
  * @license MIT
  */
 
-import { Container as Container$1, Application as Application$1, utils, Texture, BaseTexture, Spritesheet } from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { Emitter as Emitter$1 } from '@tawaship/emitter';
 import { Howl } from 'howler';
 
 /**
- * [[https://tawaship.github.io/Emitter/index.html | @tawaship/emitter]]
+ * {@link https://tawaship.github.io/Emitter/index.html | @tawaship/emitter}
  */
 class Emitter extends Emitter$1 {
 }
@@ -24,7 +24,7 @@ class Emitter extends Emitter$1 {
  * @license MIT
  */
 
-class Task {
+let Task$1 = class Task {
     constructor(callbacks, context) {
         this._taskData = {
             context: context == null ? this : context,
@@ -52,7 +52,7 @@ class Task {
             callbacks = [callbacks];
         }
         const list = this._taskData.callbacks;
-        const flag = list.length === 0;
+        list.length === 0;
         for (let i = 0; i < callbacks.length; i++) {
             if (!(callbacks[i] instanceof Function)) {
                 continue;
@@ -130,12 +130,12 @@ class Task {
     get value() {
         return this._taskData.value;
     }
-}
+};
 
 /**
- * [[https://tawaship.github.io/Task/index.html | @tawaship/task]]
+ * {@link https://tawaship.github.io/Task/index.html | @tawaship/task}
  */
-class Task$1 extends Task {
+class Task extends Task$1 {
     constructor(tasks, context) {
         super(tasks, context);
         this.enabled = true;
@@ -143,30 +143,18 @@ class Task$1 extends Task {
             emitter: new Emitter()
         };
     }
-    /**
-     * @deprecated 1.7.0
-     */
     on(type, callback) {
         this._piximData.emitter.on(type, callback);
         return this;
     }
-    /**
-     * @deprecated 1.7.0
-     */
     once(type, callback) {
         this._piximData.emitter.once(type, callback);
         return this;
     }
-    /**
-     * @deprecated 1.7.0
-     */
     off(type, callback) {
         this._piximData.emitter.off(type, callback);
         return this;
     }
-    /**
-     * @deprecated 1.7.0
-     */
     emit(type, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -174,9 +162,6 @@ class Task$1 extends Task {
         this._piximData.emitter.emit(type, ...args);
         return this;
     }
-    /**
-     * @deprecated 1.7.0
-     */
     cemit(type, context, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -184,9 +169,6 @@ class Task$1 extends Task {
         this._piximData.emitter.cemit(type, context, ...args);
         return this;
     }
-    /**
-     * @deprecated 1.9.0
-     */
     emitAll(...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -194,9 +176,6 @@ class Task$1 extends Task {
         this._piximData.emitter.emitAll(...args);
         return this;
     }
-    /**
-     * @deprecated 1.9.0
-     */
     cemitAll(context, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -204,9 +183,6 @@ class Task$1 extends Task {
         this._piximData.emitter.cemitAll(context, ...args);
         return this;
     }
-    /**
-     * @deprecated 1.7.0
-     */
     clear(type = '') {
         this._piximData.emitter.clear(type);
         return this;
@@ -218,13 +194,13 @@ class Task$1 extends Task {
 }
 
 /**
- * [[http://pixijs.download/release/docs/PIXI.Container.html]]
+ * {@link http://pixijs.download/v5.3.2/docs/docs/PIXI.Container.html}
  */
-class Container extends Container$1 {
+class Container extends PIXI.Container {
     constructor(...args) {
         super();
         this._piximData = {
-            task: new Task$1([], this),
+            task: new Task([], this),
             taskEnabledChildren: true
         };
         this._piximData.task.first();
@@ -261,7 +237,6 @@ class Container extends Container$1 {
         }
         */
         task.done(e);
-        // will be deprecated
         task.cemitAll(this, e);
     }
     /**
@@ -299,7 +274,7 @@ class Container extends Container$1 {
     }
 }
 
-class Layer extends Container$1 {
+class Layer extends PIXI.Container {
 }
 /**
  * @ignore
@@ -317,19 +292,19 @@ function taskHandler(obj, e) {
     }
     for (let i = 0; i < children.length; i++) {
         const child = children[i];
-        if (child instanceof Container$1) {
+        if (child instanceof PIXI.Container) {
             taskHandler(child, e);
         }
     }
 }
 class Application extends Emitter {
     /**
-     * @param pixiOptions Optional data when call 'new [[[[http://pixijs.download/v5.2.1/docs/PIXI.Application.html | PIXI.Application]]]]'.
+     * @param pixiOptions Optional data for {@link http://pixijs.download/v5.3.2/docs/PIXI.Application.html | PIXI.Application} constructor.
      * @param piximOptions Optional data for Pixim.
      */
     constructor(pixiOptions = {}, piximOptions = {}) {
         super();
-        const app = new Application$1(pixiOptions);
+        const app = new PIXI.Application(pixiOptions);
         app.stop();
         app.view.style.position = 'absolute';
         const autoAdjust = piximOptions.autoAdjust || false;
@@ -734,7 +709,7 @@ function resolvePath(basepath, path) {
     if (!isUrl(path)) {
         return path;
     }
-    return utils.url.resolve(basepath, path);
+    return PIXI.utils.url.resolve(basepath, path);
 }
 function isUrl(uri) {
     if (uri.indexOf('data:') === 0) {
@@ -770,10 +745,10 @@ function resolveQuery(uri, queries) {
 
 var index = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    resolveUri: resolveUri,
-    resolvePath: resolvePath,
     isUrl: isUrl,
-    resolveQuery: resolveQuery
+    resolvePath: resolvePath,
+    resolveQuery: resolveQuery,
+    resolveUri: resolveUri
 });
 
 class LoaderResource {
@@ -804,7 +779,7 @@ class LoaderBase {
         });
     }
     /**
-     * @fires [[LoaderBase.loaded]]
+     * @link LoaderBase.loaded
      */
     loadAllAsync(targets, options) {
         const res = {};
@@ -899,9 +874,9 @@ class TextureLoaderResource extends LoaderResource {
         }
     }
     static removeCache(texture) {
-        Texture.removeFromCache(texture);
+        PIXI.Texture.removeFromCache(texture);
         if (texture.baseTexture) {
-            BaseTexture.removeFromCache(texture.baseTexture);
+            PIXI.BaseTexture.removeFromCache(texture.baseTexture);
         }
     }
 }
@@ -926,7 +901,7 @@ class TextureLoader extends LoaderBase {
                 return this._loadBaseTextureAsync(resource.data);
             });
         })()
-            .then(baseTexture => new TextureLoaderResource(new Texture(baseTexture), null))
+            .then(baseTexture => new TextureLoaderResource(new PIXI.Texture(baseTexture), null))
             .catch(e => new TextureLoaderResource(null, e));
     }
     _loadBaseTextureAsync(target) {
@@ -934,18 +909,18 @@ class TextureLoader extends LoaderBase {
             target.crossOrigin = 'anonymous';
         }
         return new Promise((resolve, reject) => {
-            const bt = BaseTexture.from(target);
+            const bt = PIXI.BaseTexture.from(target);
             if (bt.valid) {
-                BaseTexture.removeFromCache(bt);
+                PIXI.BaseTexture.removeFromCache(bt);
                 resolve(bt);
                 return;
             }
             bt.on('loaded', (baseTexture) => {
-                BaseTexture.removeFromCache(baseTexture);
+                PIXI.BaseTexture.removeFromCache(baseTexture);
                 resolve(baseTexture);
             });
             bt.on('error', (baseTexture, e) => {
-                BaseTexture.removeFromCache(baseTexture);
+                PIXI.BaseTexture.removeFromCache(baseTexture);
                 reject(e);
             });
         });
@@ -1038,7 +1013,7 @@ class SpritesheetLoader extends LoaderBase {
             if (!resource.data) {
                 throw 'invalid resource';
             }
-            const ss = new Spritesheet(resource.data, json);
+            const ss = new PIXI.Spritesheet(resource.data, json);
             return new Promise(resolve => {
                 ss.parse(e => {
                     for (let i in ss.textures) {
@@ -1195,6 +1170,11 @@ function createContentStatic() {
  */
 const _manifests = {};
 class Content extends Emitter$1 {
+    /**
+     * {@link EVENT_LOADER_ASSET_LOADED} fired when any of the assets are loaded.
+     * @param options
+     * @param piximData
+     */
     constructor(options = {}, piximData = Content._piximData) {
         super();
         this._loadedResourceHandler = (data) => {
@@ -1260,7 +1240,6 @@ class Content extends Emitter$1 {
     /**
      * Remove cloned content.
      *
-     * @function Pixim.Content.removeContent
      * @param key {string}
      */
     static remove(key) {
@@ -1470,9 +1449,6 @@ class Content extends Emitter$1 {
     get assetCount() {
         return this.classAssetCount + this.instanceAssetCount;
     }
-    /**
-     * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
-     */
     _loadAssetAsync(manifests) {
         const loaderCount = Object.keys(manifests).length;
         if (loaderCount === 0) {
@@ -1606,5 +1582,5 @@ class JsLoader extends LoaderBase {
     }
 }
 
-export { Application, BlobLoader, BlobLoaderResource, Container, Content, ContentDeliver, EVENT_LOADER_ASSET_LOADED, Emitter, JsLoader, JsLoaderResource, JsonLoader, JsonLoaderResource, JsonManifest, Layer, LoaderBase, LoaderResource, ManifestBase, SoundLoader, SoundLoaderResource, SoundManifest, SpritesheetLoader, SpritesheetLoaderResource, SpritesheetManifest, Task$1 as Task, TextureLoader, TextureLoaderResource, TextureManifest, index as utils };
+export { Application, BlobLoader, BlobLoaderResource, Container, Content, ContentDeliver, EVENT_LOADER_ASSET_LOADED, Emitter, JsLoader, JsLoaderResource, JsonLoader, JsonLoaderResource, JsonManifest, Layer, LoaderBase, LoaderResource, ManifestBase, SoundLoader, SoundLoaderResource, SoundManifest, SpritesheetLoader, SpritesheetLoaderResource, SpritesheetManifest, Task, TextureLoader, TextureLoaderResource, TextureManifest, index as utils };
 //# sourceMappingURL=Pixim.esm.js.map

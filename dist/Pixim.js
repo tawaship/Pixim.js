@@ -8,17 +8,30 @@
  */
 !function(exports, PIXI, howler) {
     "use strict";
+    function _interopNamespaceDefault(e) {
+        var n = Object.create(null);
+        return e && Object.keys(e).forEach((function(k) {
+            if ("default" !== k) {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: !0,
+                    get: function() {
+                        return e[k];
+                    }
+                });
+            }
+        })), n.default = e, Object.freeze(n);
+    }
     window.console.log("%c pixim.js%cv1.14.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    var PIXI__namespace = _interopNamespaceDefault(PIXI), Emitter$1 = function() {
+        this._events = {};
+    };
     /*!
      * @tawaship/emitter - v3.1.1
      * 
      * @author tawaship (makazu.mori@gmail.com)
      * @license MIT
-     */
-    var Emitter = function() {
-        this._events = {};
-    };
-    Emitter.prototype._on = function(type, callback, once) {
+     */    Emitter$1.prototype._on = function(type, callback, once) {
         if (!type || !callback) {
             return this;
         }
@@ -31,11 +44,11 @@
             callback: callback,
             once: once
         }), this;
-    }, Emitter.prototype.on = function(type, callback) {
+    }, Emitter$1.prototype.on = function(type, callback) {
         return this._on(type, callback, !1);
-    }, Emitter.prototype.once = function(type, callback) {
+    }, Emitter$1.prototype.once = function(type, callback) {
         return this._on(type, callback, !0);
-    }, Emitter.prototype.off = function(type, callback) {
+    }, Emitter$1.prototype.off = function(type, callback) {
         if (!type || !callback) {
             return this;
         }
@@ -45,7 +58,7 @@
             }
         }
         return this;
-    }, Emitter.prototype._emit = function(type, context) {
+    }, Emitter$1.prototype._emit = function(type, context) {
         for (var args = [], len = arguments.length - 2; len-- > 0; ) {
             args[len] = arguments[len + 2];
         }
@@ -60,17 +73,17 @@
             targets[i$1].callback.apply(context, args);
         }
         return this;
-    }, Emitter.prototype.emit = function(type) {
+    }, Emitter$1.prototype.emit = function(type) {
         for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
             args[len] = arguments[len + 1];
         }
         return (ref = this)._emit.apply(ref, [ type, this ].concat(args));
-    }, Emitter.prototype.cemit = function(type, context) {
+    }, Emitter$1.prototype.cemit = function(type, context) {
         for (var ref, args = [], len = arguments.length - 2; len-- > 0; ) {
             args[len] = arguments[len + 2];
         }
         return (ref = this)._emit.apply(ref, [ type, context ].concat(args));
-    }, Emitter.prototype._emitAll = function(context) {
+    }, Emitter$1.prototype._emitAll = function(context) {
         for (var args = [], len = arguments.length - 1; len-- > 0; ) {
             args[len] = arguments[len + 1];
         }
@@ -88,27 +101,27 @@
             targets[i$1].callback.apply(context, args);
         }
         return this;
-    }, Emitter.prototype.emitAll = function() {
+    }, Emitter$1.prototype.emitAll = function() {
         for (var ref, args = [], len = arguments.length; len--; ) {
             args[len] = arguments[len];
         }
         return (ref = this)._emitAll.apply(ref, [ this ].concat(args));
-    }, Emitter.prototype.cemitAll = function(context) {
+    }, Emitter$1.prototype.cemitAll = function(context) {
         for (var ref, args = [], len = arguments.length - 1; len-- > 0; ) {
             args[len] = arguments[len + 1];
         }
         return (ref = this)._emitAll.apply(ref, [ context ].concat(args));
-    }, Emitter.prototype.clear = function(type) {
+    }, Emitter$1.prototype.clear = function(type) {
         return void 0 === type && (type = ""), type ? delete this._events[type] : this._events = {}, 
         this;
     };
-    var Emitter$1 = function(_Emitter) {
+    var Emitter = function(_Emitter) {
         function Emitter() {
             _Emitter.apply(this, arguments);
         }
         return _Emitter && (Emitter.__proto__ = _Emitter), Emitter.prototype = Object.create(_Emitter && _Emitter.prototype), 
         Emitter.prototype.constructor = Emitter, Emitter;
-    }(Emitter), Task = function(callbacks, context) {
+    }(Emitter$1), Task$1 = function(callbacks, context) {
         this._taskData = {
             context: null == context ? this : context,
             enabled: !0,
@@ -116,7 +129,7 @@
             callbacks: [],
             value: null
         }, this.add(callbacks);
-    }, prototypeAccessors = {
+    }, prototypeAccessors$2 = {
         enabled: {
             configurable: !0
         },
@@ -129,17 +142,19 @@
      * 
      * @author tawaship (makazu.mori@gmail.com)
      * @license MIT
-     */    prototypeAccessors.enabled.get = function() {
+     */    prototypeAccessors$2.enabled.get = function() {
         return this._taskData.enabled;
-    }, prototypeAccessors.enabled.set = function(enabled) {
+    }, prototypeAccessors$2.enabled.set = function(enabled) {
         this._taskData.enabled = enabled;
-    }, Task.prototype.add = function(callbacks) {
+    }, Task$1.prototype.add = function(callbacks) {
         Array.isArray(callbacks) || (callbacks = [ callbacks ]);
-        for (var list = this._taskData.callbacks, i = (list.length, 0); i < callbacks.length; i++) {
+        var list = this._taskData.callbacks;
+        list.length;
+        for (var i = 0; i < callbacks.length; i++) {
             callbacks[i] instanceof Function && list.push(callbacks[i]);
         }
         return this;
-    }, Task.prototype.done = function() {
+    }, Task$1.prototype.done = function() {
         for (var args = [], len = arguments.length; len--; ) {
             args[len] = arguments[len];
         }
@@ -149,30 +164,30 @@
                 return this._taskData.value = task.apply(this._taskData.context, args);
             }
         }
-    }, Task.prototype._to = function(index) {
+    }, Task$1.prototype._to = function(index) {
         return this._taskData.index = Number(index), this;
-    }, Task.prototype.first = function() {
+    }, Task$1.prototype.first = function() {
         return this._to(0);
-    }, Task.prototype.prev = function() {
+    }, Task$1.prototype.prev = function() {
         return this._to(this._taskData.index - 1);
-    }, Task.prototype.next = function() {
+    }, Task$1.prototype.next = function() {
         return this._to(this._taskData.index + 1);
-    }, Task.prototype.to = function(index) {
+    }, Task$1.prototype.to = function(index) {
         return this._to(index);
-    }, Task.prototype.finish = function() {
+    }, Task$1.prototype.finish = function() {
         return this._taskData.index = -1, this;
-    }, Task.prototype.reset = function() {
+    }, Task$1.prototype.reset = function() {
         return this._taskData.callbacks = [], this._taskData.index = -1, this._taskData.value = null, 
         this;
-    }, Task.prototype.destroy = function() {
+    }, Task$1.prototype.destroy = function() {
         this.reset();
-    }, prototypeAccessors.value.get = function() {
+    }, prototypeAccessors$2.value.get = function() {
         return this._taskData.value;
-    }, Object.defineProperties(Task.prototype, prototypeAccessors);
-    var Task$1 = function(_Task) {
+    }, Object.defineProperties(Task$1.prototype, prototypeAccessors$2);
+    var Task = function(_Task) {
         function Task(tasks, context) {
             _Task.call(this, tasks, context), this.enabled = !0, this._piximData = {
-                emitter: new Emitter$1
+                emitter: new Emitter
             };
         }
         return _Task && (Task.__proto__ = _Task), Task.prototype = Object.create(_Task && _Task.prototype), 
@@ -211,13 +226,10 @@
         }, Task.prototype.destroy = function() {
             _Task.prototype.destroy.call(this), this.clear();
         }, Task;
-    }(Task), Container = function(superclass) {
+    }(Task$1), Container = function(superclass) {
         function Container() {
-            for (var args = [], len = arguments.length; len--; ) {
-                args[len] = arguments[len];
-            }
             superclass.call(this), this._piximData = {
-                task: new Task$1([], this),
+                task: new Task([], this),
                 taskEnabledChildren: !0
             }, this._piximData.task.first();
         }
@@ -253,13 +265,13 @@
             }
             superclass.prototype.destroy.apply(this, args), this._piximData.task.destroy();
         }, Object.defineProperties(Container.prototype, prototypeAccessors), Container;
-    }(PIXI.Container), Layer = function(superclass) {
+    }(PIXI__namespace.Container), Layer = function(superclass) {
         function Layer() {
             superclass.apply(this, arguments);
         }
         return superclass && (Layer.__proto__ = superclass), Layer.prototype = Object.create(superclass && superclass.prototype), 
         Layer.prototype.constructor = Layer, Layer;
-    }(PIXI.Container);
+    }(PIXI__namespace.Container);
     function taskHandler(obj, e) {
         if (!(obj instanceof Container) || (obj.updateTask(e), obj.taskEnabledChildren)) {
             for (var children = [], i = 0; i < obj.children.length; i++) {
@@ -267,16 +279,16 @@
             }
             for (var i$1 = 0; i$1 < children.length; i$1++) {
                 var child = children[i$1];
-                child instanceof PIXI.Container && taskHandler(child, e);
+                child instanceof PIXI__namespace.Container && taskHandler(child, e);
             }
         }
     }
     var Application = function(Emitter) {
         function Application(pixiOptions, piximOptions) {
-            var this$1 = this;
+            var this$1$1 = this;
             void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
             Emitter.call(this);
-            var app = new PIXI.Application(pixiOptions);
+            var app = new PIXI__namespace.Application(pixiOptions);
             app.stop(), app.view.style.position = "absolute";
             var autoAdjust = piximOptions.autoAdjust || !1;
             this._piximData = {
@@ -288,13 +300,13 @@
                 roots: {},
                 contents: {}
             }, this._piximData.app.ticker.add((function(delta) {
-                taskHandler(this$1._piximData.app.stage, {
+                taskHandler(this$1$1._piximData.app.stage, {
                     delta: delta
                 });
             })), autoAdjust && (this.autoAdjuster = !0 === autoAdjust ? function() {
-                this$1.fullScreen();
+                this$1$1.fullScreen();
             } : function() {
-                autoAdjust(this$1);
+                autoAdjust(this$1$1);
             });
         }
         Emitter && (Application.__proto__ = Emitter), Application.prototype = Object.create(Emitter && Emitter.prototype), 
@@ -335,10 +347,10 @@
             return this._hasLayer(name) ? (this._piximData.app.stage.removeChild(this._piximData.layers[name]), 
             delete this._piximData.layers[name], this) : this;
         }, Application.prototype.attachAsync = function(content, layerName) {
-            var this$1 = this;
+            var this$1$1 = this;
             return void 0 === layerName && (layerName = "anonymous"), content.buildAsync().then((function(root) {
-                return this$1.detach(content), this$1.addLayer(layerName), this$1._piximData.roots[content.contentID] = root, 
-                this$1._piximData.contents[content.contentID] = content, this$1._piximData.layers[layerName].addChild(root), 
+                return this$1$1.detach(content), this$1$1.addLayer(layerName), this$1$1._piximData.roots[content.contentID] = root, 
+                this$1$1._piximData.contents[content.contentID] = content, this$1$1._piximData.layers[layerName].addChild(root), 
                 root;
             }));
         }, Application.prototype.detach = function(content, stageOptions) {
@@ -435,7 +447,7 @@
                 height: parseInt(view.style.height.replace("px", ""))
             };
         }, Object.defineProperties(Application.prototype, prototypeAccessors), Application;
-    }(Emitter$1), ManifestBase = function(Emitter) {
+    }(Emitter), ManifestBase = function(Emitter) {
         function ManifestBase(type) {
             Emitter.call(this), this._data = {}, this._resources = {}, this._type = type;
         }
@@ -458,13 +470,13 @@
         }, prototypeAccessors.count.get = function() {
             return Object.keys(this._data).length;
         }, ManifestBase.prototype.getAsync = function(options) {
-            var this$1 = this;
+            var this$1$1 = this;
             if (0 === Object.keys(this._data).length) {
                 return Promise.resolve({});
             }
             var res = {}, loader = this._createLoader();
             loader.onLoaded = function(resource) {
-                this$1.emit("loaderAssetLoaded", resource);
+                this$1$1.emit("loaderAssetLoaded", resource);
             };
             var type, xhr, loaderOptions = Object.assign({}, options.typeOptions, {
                 basepath: options.basepath,
@@ -479,13 +491,13 @@
             return loader.loadAllAsync(data, loaderOptions).then((function(resources) {
                 for (var i in resources) {
                     var resource = resources[i];
-                    if (resource.error && !this$1._data[i].unrequired) {
+                    if (resource.error && !this$1$1._data[i].unrequired) {
                         throw resource.error;
                     }
                 }
                 for (var i$1 in resources) {
                     var resource$1 = resources[i$1];
-                    this$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
+                    this$1$1._resources[i$1] = resource$1, res[i$1] = resource$1.data;
                 }
                 return res;
             }));
@@ -494,7 +506,7 @@
                 this._resources[i].destroy();
             }
         }, Object.defineProperties(ManifestBase.prototype, prototypeAccessors), ManifestBase;
-    }(Emitter);
+    }(Emitter$1);
     function resolveUri(basepath, uri, version) {
         if ("string" != typeof uri) {
             return uri;
@@ -509,7 +521,7 @@
         }) : preUri;
     }
     function resolvePath(basepath, path) {
-        return isUrl(path) ? PIXI.utils.url.resolve(basepath, path) : path;
+        return isUrl(path) ? PIXI__namespace.utils.url.resolve(basepath, path) : path;
     }
     function isUrl(uri) {
         return 0 !== uri.indexOf("data:") && 0 !== uri.indexOf("blob:");
@@ -531,10 +543,10 @@
     }
     var index = Object.freeze({
         __proto__: null,
-        resolveUri: resolveUri,
-        resolvePath: resolvePath,
         isUrl: isUrl,
-        resolveQuery: resolveQuery
+        resolvePath: resolvePath,
+        resolveQuery: resolveQuery,
+        resolveUri: resolveUri
     }), LoaderResource = function(data, error) {
         this._data = data, this._error = error;
     }, prototypeAccessors$1 = {
@@ -552,17 +564,17 @@
     }, Object.defineProperties(LoaderResource.prototype, prototypeAccessors$1);
     var LoaderBase = function() {};
     LoaderBase.prototype.loadAsync = function(target, options) {
-        var this$1 = this;
-        return this$1._loadAsync(target, options).then((function(resource) {
-            return resource.error || this$1.onLoaded && this$1.onLoaded(resource), resource;
+        var this$1$1 = this;
+        return this$1$1._loadAsync(target, options).then((function(resource) {
+            return resource.error || this$1$1.onLoaded && this$1$1.onLoaded(resource), resource;
         }));
     }, LoaderBase.prototype.loadAllAsync = function(targets, options) {
-        var this$1 = this, res = {};
+        var this$1$1 = this, res = {};
         if (0 === Object.keys(targets).length) {
             return Promise.resolve(res);
         }
         var promises = [], loop = function(i) {
-            promises.push(this$1.loadAsync(targets[i], options).then((function(resource) {
+            promises.push(this$1$1.loadAsync(targets[i], options).then((function(resource) {
                 res[i] = resource;
             })));
         };
@@ -628,7 +640,7 @@
             this._data && (TextureLoaderResource.removeCache(this._data), this._data.destroy(!0), 
             this._data = null);
         }, TextureLoaderResource.removeCache = function(texture) {
-            PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture);
+            PIXI__namespace.Texture.removeFromCache(texture), texture.baseTexture && PIXI__namespace.BaseTexture.removeFromCache(texture.baseTexture);
         }, TextureLoaderResource;
     }(LoaderResource), TextureLoader = function(superclass) {
         function TextureLoader() {
@@ -636,8 +648,8 @@
         }
         return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
         TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target, options) {
-            var data, src, xhr, this$1 = this;
-            return void 0 === options && (options = {}), (data = this$1._resolveParams(target, options), 
+            var data, src, xhr, this$1$1 = this;
+            return void 0 === options && (options = {}), (data = this$1$1._resolveParams(target, options), 
             src = data.src, xhr = data.xhr, xhr ? (new BlobLoader).loadAsync(src, {
                 xhr: xhr
             }).then((function(resource) {
@@ -647,23 +659,23 @@
                 if (!resource.data) {
                     throw "invalid resource";
                 }
-                return this$1._loadBaseTextureAsync(resource.data);
-            })) : this$1._loadBaseTextureAsync(src)).then((function(baseTexture) {
-                return new TextureLoaderResource(new PIXI.Texture(baseTexture), null);
+                return this$1$1._loadBaseTextureAsync(resource.data);
+            })) : this$1$1._loadBaseTextureAsync(src)).then((function(baseTexture) {
+                return new TextureLoaderResource(new PIXI__namespace.Texture(baseTexture), null);
             })).catch((function(e) {
                 return new TextureLoaderResource(null, e);
             }));
         }, TextureLoader.prototype._loadBaseTextureAsync = function(target) {
             return (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous"), 
             new Promise((function(resolve, reject) {
-                var bt = PIXI.BaseTexture.from(target);
+                var bt = PIXI__namespace.BaseTexture.from(target);
                 if (bt.valid) {
-                    return PIXI.BaseTexture.removeFromCache(bt), void resolve(bt);
+                    return PIXI__namespace.BaseTexture.removeFromCache(bt), void resolve(bt);
                 }
                 bt.on("loaded", (function(baseTexture) {
-                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(baseTexture);
+                    PIXI__namespace.BaseTexture.removeFromCache(baseTexture), resolve(baseTexture);
                 })), bt.on("error", (function(baseTexture, e) {
-                    PIXI.BaseTexture.removeFromCache(baseTexture), reject(e);
+                    PIXI__namespace.BaseTexture.removeFromCache(baseTexture), reject(e);
                 }));
             }));
         }, TextureLoader;
@@ -719,14 +731,14 @@
         }
         return superclass && (SpritesheetLoader.__proto__ = superclass), SpritesheetLoader.prototype = Object.create(superclass && superclass.prototype), 
         SpritesheetLoader.prototype.constructor = SpritesheetLoader, SpritesheetLoader.prototype._loadAsync = function(target, options) {
-            var this$1 = this;
-            return void 0 === options && (options = {}), ("string" != typeof target ? this$1._loadTextureAsync(target, options) : this$1._loadJsonAsync(target, options)).then((function(textures) {
+            var this$1$1 = this;
+            return void 0 === options && (options = {}), ("string" != typeof target ? this$1$1._loadTextureAsync(target, options) : this$1$1._loadJsonAsync(target, options)).then((function(textures) {
                 return new SpritesheetLoaderResource(textures, null);
             })).catch((function(e) {
                 return new SpritesheetLoaderResource({}, e);
             }));
         }, SpritesheetLoader.prototype._loadJsonAsync = function(url, options) {
-            var this$1 = this;
+            var this$1$1 = this;
             return (new JsonLoader).loadAsync(url, options).then((function(resource) {
                 if (resource.error) {
                     throw resource.error;
@@ -743,7 +755,7 @@
                     frames: json.frames,
                     meta: json.meta
                 };
-                return this$1._loadTextureAsync(data, options);
+                return this$1$1._loadTextureAsync(data, options);
             }));
         }, SpritesheetLoader.prototype._loadTextureAsync = function(json, options) {
             return (new TextureLoader).loadAsync(json.meta.image, Object.assign({}, options, {
@@ -755,7 +767,7 @@
                 if (!resource.data) {
                     throw "invalid resource";
                 }
-                var ss = new PIXI.Spritesheet(resource.data, json);
+                var ss = new PIXI__namespace.Spritesheet(resource.data, json);
                 return new Promise((function(resolve) {
                     ss.parse((function(e) {
                         for (var i in ss.textures) {
@@ -843,7 +855,7 @@
             resources: data.resources,
             vars: data.vars
         };
-    }, prototypeAccessors$2 = {
+    }, prototypeAccessors = {
         width: {
             configurable: !0
         },
@@ -860,17 +872,17 @@
             configurable: !0
         }
     };
-    prototypeAccessors$2.width.get = function() {
+    prototypeAccessors.width.get = function() {
         return this._piximData.width;
-    }, prototypeAccessors$2.height.get = function() {
+    }, prototypeAccessors.height.get = function() {
         return this._piximData.height;
-    }, prototypeAccessors$2.lib.get = function() {
+    }, prototypeAccessors.lib.get = function() {
         return this._piximData.lib;
-    }, prototypeAccessors$2.resources.get = function() {
+    }, prototypeAccessors.resources.get = function() {
         return this._piximData.resources;
-    }, prototypeAccessors$2.vars.get = function() {
+    }, prototypeAccessors.vars.get = function() {
         return this._piximData.vars;
-    }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors$2);
+    }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors);
     var _contents = {}, _contentID = 0;
     function createManifests() {
         var res = {};
@@ -881,10 +893,10 @@
     }
     var _manifests = {}, Content = function(Emitter) {
         function Content(options, piximData) {
-            var this$1 = this;
+            var this$1$1 = this;
             void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
             Emitter.call(this), this._loadedResourceHandler = function(data) {
-                this$1.emit("loaderAssetLoaded", data);
+                this$1$1.emit("loaderAssetLoaded", data);
             };
             var contentDeliverData = {
                 width: piximData.config.width,
@@ -988,27 +1000,27 @@
             }
             return this;
         }, Content.prototype.prepareAsync = function() {
-            var this$1 = this;
+            var this$1$1 = this;
             return this.preloadClassAssetAsync().then((function() {
-                return this$1.preloadInstanceAssetAsync();
+                return this$1$1.preloadInstanceAssetAsync();
             }));
         }, Content.prototype.buildAsync = function() {
-            var this$1 = this;
+            var this$1$1 = this;
             if (!this._piximData.$.lib.root) {
                 throw new Error('There is no library named "root" in the content.');
             }
             return this.prepareAsync().then((function() {
-                return new this$1._piximData.$.lib.root(this$1._piximData.$);
+                return new this$1$1._piximData.$.lib.root(this$1$1._piximData.$);
             }));
         }, Content.prototype.preloadClassAssetAsync = function() {
-            var this$1 = this;
+            var this$1$1 = this;
             return this._piximData.preloadPromise ? this._piximData.preloadPromise : this._piximData.preloadPromise = this._loadAssetAsync(this._piximData.manifests).catch((function(e) {
-                throw this$1._piximData.preloadPromise = null, e;
+                throw this$1$1._piximData.preloadPromise = null, e;
             }));
         }, Content.prototype.preloadInstanceAssetAsync = function() {
-            var this$1 = this;
+            var this$1$1 = this;
             return this._piximData.postloadPromise ? this._piximData.postloadPromise : this._piximData.postloadPromise = this._loadAssetAsync(this._piximData.additionalManifests).catch((function(e) {
-                throw this$1._piximData.postloadPromise = null, e;
+                throw this$1$1._piximData.postloadPromise = null, e;
             }));
         }, Content.prototype.destroy = function() {
             var contentDeliverData = this._piximData.contentDeliverData;
@@ -1124,7 +1136,7 @@
                 }
             }));
         }, Object.defineProperties(Content.prototype, prototypeAccessors), Content;
-    }(Emitter);
+    }(Emitter$1);
     Content.registerManifest("images", TextureManifest), Content.registerManifest("spritesheets", SpritesheetManifest), 
     Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest);
     var JsLoaderResource = function(superclass) {
@@ -1159,14 +1171,14 @@
     }(LoaderBase);
     exports.Application = Application, exports.BlobLoader = BlobLoader, exports.BlobLoaderResource = BlobLoaderResource, 
     exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
-    exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", exports.Emitter = Emitter$1, 
+    exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", exports.Emitter = Emitter, 
     exports.JsLoader = JsLoader, exports.JsLoaderResource = JsLoaderResource, exports.JsonLoader = JsonLoader, 
     exports.JsonLoaderResource = JsonLoaderResource, exports.JsonManifest = JsonManifest, 
     exports.Layer = Layer, exports.LoaderBase = LoaderBase, exports.LoaderResource = LoaderResource, 
     exports.ManifestBase = ManifestBase, exports.SoundLoader = SoundLoader, exports.SoundLoaderResource = SoundLoaderResource, 
     exports.SoundManifest = SoundManifest, exports.SpritesheetLoader = SpritesheetLoader, 
     exports.SpritesheetLoaderResource = SpritesheetLoaderResource, exports.SpritesheetManifest = SpritesheetManifest, 
-    exports.Task = Task$1, exports.TextureLoader = TextureLoader, exports.TextureLoaderResource = TextureLoaderResource, 
+    exports.Task = Task, exports.TextureLoader = TextureLoader, exports.TextureLoaderResource = TextureLoaderResource, 
     exports.TextureManifest = TextureManifest, exports.utils = index;
 }(this.Pixim = this.Pixim || {}, PIXI, {
     Howl: "undefined" == typeof Howl ? null : Howl

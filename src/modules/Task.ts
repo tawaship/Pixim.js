@@ -1,12 +1,17 @@
+import { ITickerData } from './Application';
 import { Emitter } from './Emitter';
-import { Task as _Task, ITaskDelegate } from '@tawaship/task';
+import { Task as _Task } from '@tawaship/task';
 
 export interface ITaskData {
 	emitter: Emitter
 }
 
+export interface ITaskDelegate {
+    (e: ITickerData): void;
+}
+
 /**
- * [[https://tawaship.github.io/Task/index.html | @tawaship/task]]
+ * {@link https://tawaship.github.io/Task/index.html | @tawaship/task}
  */
 export class Task extends _Task {
 	private _piximData: ITaskData;
@@ -20,36 +25,24 @@ export class Task extends _Task {
 		};
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	on(type: string, callback: ITaskDelegate) {
 		this._piximData.emitter.on(type, callback);
 		
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	once(type: string, callback: ITaskDelegate) {
 		this._piximData.emitter.once(type, callback);
 		
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	off(type: string, callback: ITaskDelegate) {
 		this._piximData.emitter.off(type, callback);
 		
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	emit(type: string, ...args: any[]) {
 		if (!this._taskData.enabled) {
 			return this;
@@ -60,9 +53,6 @@ export class Task extends _Task {
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	cemit(type: string, context: any, ...args: any[]) {
 		if (!this._taskData.enabled) {
 			return this;
@@ -73,9 +63,6 @@ export class Task extends _Task {
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.9.0
-	 */
 	emitAll(...args: any[]) {
 		if (!this._taskData.enabled) {
 			return this;
@@ -86,9 +73,6 @@ export class Task extends _Task {
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.9.0
-	 */
 	cemitAll(context: any, ...args: any[]) {
 		if (!this._taskData.enabled) {
 			return this;
@@ -99,9 +83,6 @@ export class Task extends _Task {
 		return this;
 	}
 	
-	/**
-	 * @deprecated 1.7.0
-	 */
 	clear(type: string = '') {
 		this._piximData.emitter.clear(type);
 		

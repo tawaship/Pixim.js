@@ -120,6 +120,11 @@ export class Content extends Emitter {
 	protected _piximData: IContentData;
 	private _loadedResourceHandler: (data: { target: any, resource: any }) => void;
 	
+    /**
+     * {@link EVENT_LOADER_ASSET_LOADED} fired when any of the assets are loaded. 
+     * @param options 
+     * @param piximData 
+     */
 	constructor(options: IContentOption = {}, piximData: IContentStaticData = Content._piximData) {
 		super();
 		
@@ -198,7 +203,6 @@ export class Content extends Emitter {
 	/**
 	 * Remove cloned content.
 	 * 
-	 * @function Pixim.Content.removeContent
 	 * @param key {string}
 	 */
 	static remove(key: string): void {
@@ -452,9 +456,6 @@ export class Content extends Emitter {
 		return this.classAssetCount + this.instanceAssetCount;
 	}
 	
-	/**
-	 * @fires [[LoaderBase.EVENT_LOADER_ASSET_LOADED]]
-	 */
 	private _loadAssetAsync(manifests: IContentManifests): Promise<void> {
 		const loaderCount = Object.keys(manifests).length;
 		

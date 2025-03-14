@@ -79,7 +79,7 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption): Promise<TResource>;
 	
 	/**
-	 * @fires [[LoaderBase.loaded]]
+	 * @link LoaderBase.loaded
 	 */
 	loadAllAsync(targets: ILoaderTargetDictionary<TTarget>, options?: ILoaderOption) {
 		const res: ILoaderResourceDictionary<TResource> = {};
@@ -88,7 +88,7 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 			return Promise.resolve(res);
 		}
 		
-		const promises = [];
+		const promises: Promise<void>[] = [];
 		
 		for (let i in targets) {
 			promises.push(

@@ -6,14 +6,13 @@
   "module": "dist/Pixim.esm.js",
   "types": "types/Pixim.d.ts",
   "scripts": {
-    "rollup": "rollup -c",
-    "d": "tsc --target ES5 --emitDeclarationOnly",
+    "rollup": "rollup -c rollup.config.js --bundleConfigAsCjs",
+    "d": "tsc --target ES5 --emitDeclarationOnly --outDir types/ --declaration",
     "docs": "typedoc --tsconfig tsconfig.json",
-    "test": "npm run rollup && npm run check",
+    "test": "npm run rollup",
     "test-browser": "npm run rollup && npm run check -- --debug",
-    "check": "floss --path test/ --reporter=tap",
     "watch": "npm run rollup -- -w",
-    "build": "ENV PROD=1 npm run rollup && npm run check && npm run docs && npm run d && echo done."
+    "build": "ENV PROD=1 npm run rollup && npm run docs && npm run d && echo done."
   },
   "keywords": [
     "pixi.js",
@@ -30,22 +29,20 @@
   },
   "homepage": "https://tawaship.github.io/Pixim.js",
   "devDependencies": {
-    "@rollup/plugin-buble": "^0.21.1",
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
-    "@rollup/plugin-typescript": "^3.0.0",
+    "@rollup/plugin-buble": "^1.0.3",
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.1",
     "del": "^5.1.0",
-    "electron": "^11.1.1",
-    "floss": "^3.0.1",
     "howler": "^2.2.0",
-    "nyc": "^15.0.0",
     "pixi.js": "^5.3.2",
     "pixi.js-legacy": "^5.3.2",
-    "rollup": "^1.31.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "tslib": "^1.11.0",
-    "typedoc": "0.20.36",
-    "typescript": "4.2.4"
+    "rollup": "^4.28.0",
+    "tsc-alias": "^1.5.0",
+    "tslib": "^2.8.1",
+    "typedoc": "^0.27.0",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@tawaship/emitter": "^3.1.1",

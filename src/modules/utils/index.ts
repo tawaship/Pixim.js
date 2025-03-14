@@ -41,7 +41,7 @@ export function resolveQuery(uri: string, queries: { [ name: string ]: any }): s
 	if (!isUrl(uri)) {
 		return uri;
 	} else {
-		const q = [];
+		const q: string[] = [];
 		
 		const t = uri.split('?');
 		

@@ -14,7 +14,7 @@ export interface IContainerData {
 let _lastObserverID = 0;
 
 /**
- * [[http://pixijs.download/release/docs/PIXI.Container.html]]
+ * {@link http://pixijs.download/v5.3.2/docs/docs/PIXI.Container.html}
  */
 export class Container extends PIXI.Container {
 	protected _piximData: IContainerData;
@@ -68,7 +68,6 @@ export class Container extends PIXI.Container {
 		
 		task.done(e);
 		
-		// will be deprecated
 		task.cemitAll(this, e);
 	}
 	

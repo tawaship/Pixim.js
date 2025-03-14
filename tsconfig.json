@@ -3,9 +3,8 @@
   "compilerOptions": {
     "target": "ES6",
     "strict": true,
-    "declaration": true,
     "moduleResolution": "node",
-    "outDir": "./types"
+    "outDir": "./dist"
   },
   "typedocOptions": {
     "out": "docs",

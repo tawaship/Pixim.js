@@ -48,7 +48,7 @@ export interface IApplicationOption {
 export interface IApplicationData {
 	isRun: boolean;
 	/**
-	 * [[[[http://pixijs.download/v5.2.1/docs/PIXI.Application.html | PIXI.Application]]]]
+	 * {@link http://pixijs.download/v5.3.2/docs/PIXI.Application.html | PIXI.Application]
 	 */
 	app: PIXI.Application;
 	container: HTMLElement;
@@ -119,7 +119,7 @@ export class Application extends Emitter {
 	protected _piximData: IApplicationData;
 	
 	/**
-	 * @param pixiOptions Optional data when call 'new [[[[http://pixijs.download/v5.2.1/docs/PIXI.Application.html | PIXI.Application]]]]'.
+	 * @param pixiOptions Optional data for {@link http://pixijs.download/v5.3.2/docs/PIXI.Application.html | PIXI.Application} constructor.
 	 * @param piximOptions Optional data for Pixim.
 	 */
 	constructor(pixiOptions: Object = {}, piximOptions: IApplicationOption = {}) {
