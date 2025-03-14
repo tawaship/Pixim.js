@@ -46,13 +46,6 @@ export interface ILoaderOption {
 	xhr?: ILoaderXhrOption | boolean | ILoaderXhrOptionFacotryDelegate;
 }
 
-export interface ILoaderResourceDictionary<T> {
-	[ name: string ]: T;
-}
-
-export interface ILoaderTargetDictionary<T> {
-	[ name: string ]: T;
-}
 
 export abstract class LoaderBase<TTarget, TRawResource, TResource extends LoaderResource<TRawResource>> {
 	/**
@@ -60,9 +53,6 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 	 */
 	onLoaded?: (resource: TResource) => void;
 	
-	/**
-	 * @fires [[LoaderBase.loaded]]
-	 */
 	loadAsync(target: TTarget, options?: ILoaderOption) {
 		return (() => {
 			return this._loadAsync(target, options);
@@ -78,11 +68,8 @@ export abstract class LoaderBase<TTarget, TRawResource, TResource extends Loader
 	
 	protected abstract _loadAsync(target: TTarget, options?: ILoaderOption): Promise<TResource>;
 	
-	/**
-	 * @link LoaderBase.loaded
-	 */
-	loadAllAsync(targets: ILoaderTargetDictionary<TTarget>, options?: ILoaderOption) {
-		const res: ILoaderResourceDictionary<TResource> = {};
+	loadAllAsync(targets: Record<string, TTarget>, options?: ILoaderOption) {
+		const res: Record<string, TResource> = {};
 		
 		if (Object.keys(targets).length === 0) {
 			return Promise.resolve(res);

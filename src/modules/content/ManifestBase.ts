@@ -1,9 +1,8 @@
-import * as LoaderBase from '../loader/LoaderBase';
 import { Emitter } from '@tawaship/emitter';
-import * as utils from '../utils/index';
+import { ILoaderOption, ILoaderXhrOption, LoaderBase, LoaderResource, TLoaderResourceVersion } from '../loader';
 
-export interface IManifestClass {
-	new(type: string): ManifestBase<any, any, any>;
+export interface IManifestClass<TTarget, TRawResource, TResource extends LoaderResource<TRawResource>> {
+	new(type: string): ManifestBase<TTarget, TRawResource, TResource>;
 }
 
 export interface IResourceManagerData<T> {
@@ -19,38 +18,26 @@ export interface IManifestOption {
 	unrequired?: boolean;
 }
 
-export interface IResourceManifest<T> {
-	[ name: string ]: T;
-}
-
-export interface IRawResourceDictionary<T> {
-	[ name: string ]: T;
-}
-
-export interface IManifestTargetDictionary<T> extends LoaderBase.ILoaderTargetDictionary<T> {
-
-}
-
-export type TManifestResourceVersion = LoaderBase.TLoaderResourceVersion;
+export type TManifestResourceVersion = TLoaderResourceVersion;
 
 export interface IManifestLoaderXhrOptionFacotryDelegate {
-	(type: string, url: string): LoaderBase.ILoaderXhrOption;
+	(type: string, url: string): ILoaderXhrOption;
 }
 
-export type TManifestLoaderXhrOption = IManifestLoaderXhrOptionFacotryDelegate | boolean | LoaderBase.ILoaderXhrOption;
+export type TManifestLoaderXhrOption = IManifestLoaderXhrOptionFacotryDelegate | boolean | ILoaderXhrOption;
 
 export interface IManifestLoaderOption {
 	basepath: string;
 	version: TManifestResourceVersion;
 	xhr: TManifestLoaderXhrOption;
-	typeOptions: { [key: string]: any };
+	typeOptions: ILoaderOption;
 }
 
 export const EVENT_LOADER_ASSET_LOADED = 'loaderAssetLoaded';
 
-export abstract class ManifestBase<TTarget, TRawResource, TResource extends LoaderBase.LoaderResource<TRawResource>> extends Emitter {
+export abstract class ManifestBase<TTarget, TRawResource, TResource extends LoaderResource<TRawResource>> extends Emitter {
 	protected _data: IResourceManagerManifest<TTarget> = {};
-	protected _resources: LoaderBase.ILoaderResourceDictionary<TResource> = {};
+	protected _resources: Record<string, TResource> = {};
 	private _type: string;
 	
 	constructor(type: string) {
@@ -61,7 +48,7 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 	/**
 	 * Register targetss.
 	 */
-	add(targets: IManifestTargetDictionary<TTarget>, options: IManifestOption = {}): void {
+	add(targets: Record<string, TTarget>, options: IManifestOption = {}): void {
 		const unrequired = options.unrequired || false;
 		
 		for (let i in targets) {
@@ -80,18 +67,18 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 	 * Get resources.
 	 */
 	getAsync(options: IManifestLoaderOption) {
+        const res: Record<string, TRawResource> = {};
+
 		if (Object.keys(this._data).length === 0) {
-			return Promise.resolve({});
+			return Promise.resolve(res);
 		}
-		
-		const res: IRawResourceDictionary<TRawResource> = {};
 		
 		const loader = this._createLoader();
 		loader.onLoaded = (resource: TResource) => {
 			this.emit(EVENT_LOADER_ASSET_LOADED, resource);
 		};
 		
-		const loaderOptions: LoaderBase.ILoaderOption = Object.assign({}, options.typeOptions, {
+		const loaderOptions: ILoaderOption = Object.assign({}, options.typeOptions, {
 			basepath: options.basepath,
 			version: options.version,
 			xhr: ((type: string, xhr: TManifestLoaderXhrOption) => {
@@ -105,7 +92,7 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 			})(this._type, options.xhr)
 		});
 		
-		const data: LoaderBase.ILoaderTargetDictionary<TTarget> = {};
+		const data: Record<string, TTarget> = {};
 		
 		for (let i in this._data) {
 			data[i] = this._data[i].target;
@@ -132,7 +119,7 @@ export abstract class ManifestBase<TTarget, TRawResource, TResource extends Load
 			});
 	}
 	
-	protected abstract _createLoader(): LoaderBase.LoaderBase<TTarget, TRawResource, TResource>;
+	protected abstract _createLoader(): LoaderBase<TTarget, TRawResource, TResource>;
 	
 	destroyResources() {
 		for (let i in this._resources) {

@@ -1,4 +1,4 @@
-import * as LoaderBase from './LoaderBase';
+import { ILoaderOption, LoaderBase, LoaderResource } from "./LoaderBase";
 
 export interface IJsonData {
 	[name: string]: any;
@@ -6,7 +6,7 @@ export interface IJsonData {
 
 export type TJsonLoaderRawResource = IJsonData;
 
-export class JsonLoaderResource extends LoaderBase.LoaderResource<TJsonLoaderRawResource> {
+export class JsonLoaderResource extends LoaderResource<TJsonLoaderRawResource> {
 	destroy() {
 		this._data = {};
 	}
@@ -14,19 +14,11 @@ export class JsonLoaderResource extends LoaderBase.LoaderResource<TJsonLoaderRaw
 
 export type TJsonLoaderTarget = string;
 
-export interface IJsonLoaderTargetDictionary extends LoaderBase.ILoaderTargetDictionary<TJsonLoaderTarget> {
+export interface IJsonLoaderOption extends ILoaderOption {
 
 }
 
-export interface IJsonLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<JsonLoaderResource> {
-
-}
-
-export interface IJsonLoaderOption extends LoaderBase.ILoaderOption {
-
-}
-
-export class JsonLoader extends LoaderBase.LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, JsonLoaderResource> {
+export class JsonLoader extends LoaderBase<TJsonLoaderTarget, TJsonLoaderRawResource, JsonLoaderResource> {
 	protected _loadAsync(target: TJsonLoaderTarget, options: IJsonLoaderOption = {}) {
 		return (() => {
 			const data = this._resolveParams(target, options);

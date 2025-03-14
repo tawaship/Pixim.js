@@ -1,25 +1,26 @@
-import * as PIXI from 'pixi.js';
+import { Container as PixiContainer } from 'pixi.js';
 import { Container } from '../Container';
-import { IRawResourceDictionary } from './ManifestBase';
-
-export interface IContentLibrary {
-	[name: string]: typeof PIXI.Container | typeof Container
-}
-
-export interface IVariableDictionary {
-	[name: string]: any;
-}
+import { TJsonLoaderRawResource, TSoundLoaderRawResource, TSpritesheetLoaderRawResource, TTextureLoaderRawResource } from '../loader';
 
 export interface IContentResourceDictionary {
-	[name: string]: IRawResourceDictionary<any>;
+    images: Record<string, Exclude<TTextureLoaderRawResource, null>>;
+    spritesheets: Record<string, Exclude<TSpritesheetLoaderRawResource, null>>;
+    sounds: Record<string, Exclude<TSoundLoaderRawResource, null>>;
+    jsons: Record<string, Exclude<TJsonLoaderRawResource, null>>;
+	[name: string]: Record<string, any>;
 }
+
+export type TContentLibary = typeof PixiContainer | typeof Container;
+export type TContentLibraryDictionary = Record<string, TContentLibary>;
+
+export type TContentVariableDictionary = Record<string, any>;
 
 export interface IContentDeliverData {
 	width: number,
 	height: number,
-	lib: IContentLibrary,
+	lib: TContentLibraryDictionary,
 	resources: IContentResourceDictionary,
-	vars: IVariableDictionary
+	vars: TContentVariableDictionary;
 }
 
 export class ContentDeliver {
@@ -38,28 +39,28 @@ export class ContentDeliver {
 	/**
 	 * Content width.
 	 */
-	get width(): number {
+	get width() {
 		return this._piximData.width;
 	}
 	
 	/**
 	 * Content height.
 	 */
-	get height(): number {
+	get height() {
 		return this._piximData.height;
 	}
 	
 	/**
 	 * Defined classes in content.
 	 */
-	get lib(): IContentLibrary {
+	get lib() {
 		return this._piximData.lib;
 	}
 	
 	/**
 	 * Loaded resources.
 	 */
-	get resources(): IContentResourceDictionary {
+	get resources() {
 		return this._piximData.resources;
 	}
 	

@@ -1,9 +1,9 @@
 import { Howl } from 'howler';
-import * as LoaderBase from './LoaderBase';
+import { ILoaderOption, LoaderBase, LoaderResource } from './LoaderBase';
 
 export type TSoundLoaderRawResource = Howl | null;
 
-export class SoundLoaderResource extends LoaderBase.LoaderResource<TSoundLoaderRawResource> {
+export class SoundLoaderResource extends LoaderResource<TSoundLoaderRawResource> {
 	destroy() {
 		if (this._data) {
 			this._data.stop();
@@ -15,19 +15,11 @@ export class SoundLoaderResource extends LoaderBase.LoaderResource<TSoundLoaderR
 
 export type TSoundLoaderTarget = string;
 
-export interface ISoundLoaderTargetDictionary extends LoaderBase.ILoaderTargetDictionary<TSoundLoaderTarget> {
+export interface ISoundLoaderOption extends ILoaderOption {
 
 }
 
-export interface ISoundLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<SoundLoaderResource> {
-
-}
-
-export interface ISoundLoaderOption extends LoaderBase.ILoaderOption {
-
-}
-
-export class SoundLoader extends LoaderBase.LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, SoundLoaderResource> {
+export class SoundLoader extends LoaderBase<TSoundLoaderTarget, TSoundLoaderRawResource, SoundLoaderResource> {
 	protected _loadAsync(target: TSoundLoaderTarget, options: ISoundLoaderOption = {}) {
 		return (() => {
 			const data = this._resolveParams(target, options);

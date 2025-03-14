@@ -1,16 +1,8 @@
-import * as ManifestBase from './ManifestBase';
-import * as TextureLoader from '../loader/TextureLoader';
+import { TextureLoader, TextureLoaderResource, TTextureLoaderRawResource, TTextureLoaderTarget } from "../loader";
+import { ManifestBase } from "./ManifestBase";
 
-export interface ITextureManifestTargetDictionary extends ManifestBase.IManifestTargetDictionary<TextureLoader.TTextureLoaderTarget> {
-
-}
-
-export interface ITextureDictionary extends ManifestBase.IRawResourceDictionary<TextureLoader.TTextureLoaderRawResource> {
-
-}
-
-export class TextureManifest extends ManifestBase.ManifestBase<TextureLoader.TTextureLoaderTarget, TextureLoader.TTextureLoaderRawResource, TextureLoader.TextureLoaderResource> {
+export class TextureManifest extends ManifestBase<TTextureLoaderTarget, TTextureLoaderRawResource, TextureLoaderResource> {
 	protected _createLoader() {
-		return new TextureLoader.TextureLoader();
+		return new TextureLoader();
 	}
 }

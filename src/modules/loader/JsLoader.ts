@@ -1,8 +1,8 @@
-import * as LoaderBase from './LoaderBase';
+import { ILoaderOption, LoaderBase, LoaderResource } from "./LoaderBase";
 
 export type TJsLoaderRawResource = string;
 
-export class JsLoaderResource extends LoaderBase.LoaderResource<TJsLoaderRawResource> {
+export class JsLoaderResource extends LoaderResource<TJsLoaderRawResource> {
 	destroy() {
 		this._data = '';
 	}
@@ -15,19 +15,11 @@ export class JsLoaderResource extends LoaderBase.LoaderResource<TJsLoaderRawReso
 
 export type TJsLoaderTarget = string;
 
-export interface IJsLoaderTargetDictionary extends LoaderBase.ILoaderTargetDictionary<TJsLoaderTarget> {
+export interface IJsLoaderOption extends ILoaderOption {
 
 }
 
-export interface IJsLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<JsLoaderResource> {
-
-}
-
-export interface IJsLoaderOption extends LoaderBase.ILoaderOption {
-
-}
-
-export class JsLoader extends LoaderBase.LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, JsLoaderResource> {
+export class JsLoader extends LoaderBase<TJsLoaderTarget, TJsLoaderRawResource, JsLoaderResource> {
 	protected _loadAsync(target: TJsLoaderTarget, options: IJsLoaderOption = {}) {
 		return (() => {
 			const data = this._resolveParams(target, options);

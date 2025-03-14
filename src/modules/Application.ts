@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { DisplayObject, Application as PixiApplication, Container as PixiContainer, Ticker } from "pixi.js";
 import { Content } from './content/Content';
 import { Container } from './Container';
 import { Emitter } from './Emitter';
@@ -9,7 +9,7 @@ export interface IContentDictionary {
 }
 
 export interface IRootDictionary {
-	[id: string]: PIXI.Container;
+	[id: string]: PixiContainer;
 }
 
 export interface ILayerDictionary{
@@ -48,9 +48,9 @@ export interface IApplicationOption {
 export interface IApplicationData {
 	isRun: boolean;
 	/**
-	 * {@link http://pixijs.download/v5.3.2/docs/PIXI.Application.html | PIXI.Application]
+	 * {@link https://pixijs.download/v5.3.2/docs/PIXI.Application.html | PixiApplication}
 	 */
-	app: PIXI.Application;
+	app: PixiApplication;
 	container: HTMLElement;
 	layers: ILayerDictionary;
 	autoAdjuster: TAutoAdjuster;
@@ -86,12 +86,12 @@ export interface IDestroyOptions {
 	baseTexture?: boolean;
 }
 
-export class Layer extends PIXI.Container {}
+export class Layer extends PixiContainer {}
 
 /**
  * @ignore
  */
-function taskHandler(obj: PIXI.Container, e: ITickerData): void {
+function taskHandler(obj: PixiContainer, e: ITickerData): void {
 	if (obj instanceof Container) {
 		obj.updateTask(e);
 		
@@ -100,7 +100,7 @@ function taskHandler(obj: PIXI.Container, e: ITickerData): void {
 		}
 	}
 	
-	const children: PIXI.DisplayObject[] = [];
+	const children: DisplayObject[] = [];
 	
 	for (let i = 0; i < obj.children.length; i++) {
 		children.push(obj.children[i]);
@@ -109,7 +109,7 @@ function taskHandler(obj: PIXI.Container, e: ITickerData): void {
 	for (let i = 0; i < children.length; i++) {
 		const child = children[i];
 		
-		if (child instanceof PIXI.Container) {
+		if (child instanceof PixiContainer) {
 			taskHandler(child, e);
 		}
 	}
@@ -119,13 +119,13 @@ export class Application extends Emitter {
 	protected _piximData: IApplicationData;
 	
 	/**
-	 * @param pixiOptions Optional data for {@link http://pixijs.download/v5.3.2/docs/PIXI.Application.html | PIXI.Application} constructor.
+	 * @param pixiOptions Optional data for {@link https://pixijs.download/v5.3.2/docs/PIXI.Application.html | PixiApplication} constructor.
 	 * @param piximOptions Optional data for Pixim.
 	 */
 	constructor(pixiOptions: Object = {}, piximOptions: IApplicationOption = {}) {
 		super();
 		
-		const app: PIXI.Application = new PIXI.Application(pixiOptions);
+		const app: PixiApplication = new PixiApplication(pixiOptions);
 		app.stop();
 		
 		app.view.style.position = 'absolute';
@@ -142,7 +142,7 @@ export class Application extends Emitter {
 			contents: {}
 		};
 		
-		const ticker: PIXI.Ticker = this._piximData.app.ticker;
+		const ticker: Ticker = this._piximData.app.ticker;
 		
 		ticker.add((delta: number) => {
 			//TaskManager.done({ delta });
@@ -162,11 +162,11 @@ export class Application extends Emitter {
 		}
 	}
 	
-	get app(): PIXI.Application {
+	get app(): PixiApplication {
 		return this._piximData.app;
 	}
 	
-	get stage(): PIXI.Container {
+	get stage(): PixiContainer {
 		return this._piximData.app.stage;
 	}
 	
@@ -222,9 +222,9 @@ export class Application extends Emitter {
 	/**
 	 * Attach content to application.
 	 */
-	attachAsync(content: Content, layerName: string = 'anonymous'): Promise<PIXI.Container> {
+	attachAsync(content: Content, layerName: string = 'anonymous'): Promise<PixiContainer> {
 		return content.buildAsync()
-			.then((root: PIXI.Container) => {
+			.then((root: PixiContainer) => {
 				this.detach(content);
 				
 				this.addLayer(layerName);
@@ -241,7 +241,7 @@ export class Application extends Emitter {
 	 * Detach content from application.
 	 */
 	detach(content: Content, stageOptions: IDestroyOptions = { children: true }) {
-		const root: PIXI.Container = this._piximData.roots[content.contentID];
+		const root: PixiContainer = this._piximData.roots[content.contentID];
 		
 		if (!root) {
 			return this;
@@ -338,7 +338,7 @@ export class Application extends Emitter {
 		return this;
 	}
 	
-	private _destroyRoot(root: PIXI.Container, stageOptions?: IDestroyOptions): void {
+	private _destroyRoot(root: PixiContainer, stageOptions?: IDestroyOptions): void {
 		root.destroy(stageOptions);
 	}
 	

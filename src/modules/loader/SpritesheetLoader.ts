@@ -1,12 +1,13 @@
-import * as PIXI from 'pixi.js';
-import * as LoaderBase from './LoaderBase';
+
 import { JsonLoader } from './JsonLoader';
-import * as TextureLoader from './TextureLoader';
-import * as utils from '../utils/index';
+import { ITextureDictionary, Spritesheet } from 'pixi.js';
+import { ILoaderOption, LoaderBase, LoaderResource } from './LoaderBase';
+import { TextureLoader, TextureLoaderResource } from './TextureLoader';
+import { resolveUri } from '../utils';
 
-export type TSpritesheetLoaderRawResource = PIXI.ITextureDictionary;
+export type TSpritesheetLoaderRawResource = ITextureDictionary;
 
-export class SpritesheetLoaderResource extends LoaderBase.LoaderResource<TSpritesheetLoaderRawResource> {
+export class SpritesheetLoaderResource extends LoaderResource<TSpritesheetLoaderRawResource> {
 	destroy() {
 		for (let i in this._data) {
 			this._data[i].destroy(true);
@@ -29,23 +30,7 @@ export interface ISpritesheetJson {
 
 export type TSpritesheetLoaderTarget = string | ISpritesheetJson;
 
-export interface ISpritesheetLoaderTargetDictionary extends LoaderBase.ILoaderTargetDictionary<TSpritesheetLoaderTarget> {
-
-}
-
-export interface ISpritesheetLoaderUrlTargetDictionary extends LoaderBase.ILoaderTargetDictionary<string> {
-
-}
-
-export interface ISpritesheetLoaderJsonTargetDictionary extends LoaderBase.ILoaderTargetDictionary<ISpritesheetJson> {
-
-}
-
-export interface ISpritesheetLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<SpritesheetLoaderResource> {
-
-}
-
-export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
+export interface ISpritesheetLoaderOption extends ILoaderOption {
 	textureVersion?: string | number;
 }
 
@@ -54,7 +39,7 @@ export interface ISpritesheetLoaderOption extends LoaderBase.ILoaderOption {
  */
 const KEY_SINGLE_SPRITESHEET = '--single-spritesheet';
 
-export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, SpritesheetLoaderResource> {
+export class SpritesheetLoader extends LoaderBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, SpritesheetLoaderResource> {
 	protected _loadAsync(target: TSpritesheetLoaderTarget, options: ISpritesheetLoaderOption = {}) {
 		return (() => {
 			if (typeof target !== 'string') {
@@ -86,7 +71,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					throw 'invalid json';
 				}
 				
-				json.meta.image = utils.resolveUri(url, json.meta.image);
+				json.meta.image = resolveUri(url, json.meta.image);
 				
 				const data: ISpritesheetJson = {
 					frames: json.frames,
@@ -98,7 +83,7 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 	}
 	
 	private _loadTextureAsync(json: ISpritesheetJson, options: ISpritesheetLoaderOption) {
-		const loader = new TextureLoader.TextureLoader();
+		const loader = new TextureLoader();
 		
 		return loader.loadAsync(json.meta.image, Object.assign({}, options, { version: options.textureVersion || options.version }))
 			.then(resource => {
@@ -110,12 +95,12 @@ export class SpritesheetLoader extends LoaderBase.LoaderBase<TSpritesheetLoaderT
 					throw 'invalid resource';
 				}
 				
-				const ss = new PIXI.Spritesheet(resource.data, json);
+				const ss = new Spritesheet(resource.data, json);
 				
-				return new Promise<PIXI.ITextureDictionary>(resolve => {
+				return new Promise<ITextureDictionary>(resolve => {
 					ss.parse(e => {
 						for (let i in ss.textures) {
-							TextureLoader.TextureLoaderResource.removeCache(ss.textures[i]);
+							TextureLoaderResource.removeCache(ss.textures[i]);
 						}
 						
 						resolve(ss.textures);

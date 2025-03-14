@@ -1,6 +1,5 @@
-import * as PIXI from 'pixi.js';
+import { Container as PixiContainer } from 'pixi.js';
 import { Task } from './Task';
-//import { TaskManager } from './TaskManager';
 import { ITickerData } from './Application';
 
 export interface IContainerData {
@@ -14,9 +13,9 @@ export interface IContainerData {
 let _lastObserverID = 0;
 
 /**
- * {@link http://pixijs.download/v5.3.2/docs/docs/PIXI.Container.html}
+ * {@link https://pixijs.download/v5.3.2/docs/docs/PIXI.Container.html}
  */
-export class Container extends PIXI.Container {
+export class Container extends PixiContainer {
 	protected _piximData: IContainerData;
 	
 	constructor(...args: any[]) {

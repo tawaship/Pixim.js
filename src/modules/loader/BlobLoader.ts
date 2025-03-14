@@ -1,8 +1,8 @@
-import * as LoaderBase from './LoaderBase';
+import { ILoaderOption, LoaderBase, LoaderResource } from "./LoaderBase";
 
 export type TBlobLoaderRawResource = string;
 
-export class BlobLoaderResource extends LoaderBase.LoaderResource<TBlobLoaderRawResource> {
+export class BlobLoaderResource extends LoaderResource<TBlobLoaderRawResource> {
 	destroy() {
 		(window.URL || window.webkitURL).revokeObjectURL(this._data);
 		this._data = '';
@@ -11,19 +11,11 @@ export class BlobLoaderResource extends LoaderBase.LoaderResource<TBlobLoaderRaw
 
 export type TBlobLoaderTarget = string;
 
-export interface IBlobLoaderTargetDictionary extends LoaderBase.ILoaderTargetDictionary<TBlobLoaderTarget> {
+export interface IBlobLoaderOption extends ILoaderOption {
 
 }
 
-export interface IBlobLoaderResourceDictionary extends LoaderBase.ILoaderResourceDictionary<BlobLoaderResource> {
-
-}
-
-export interface IBlobLoaderOption extends LoaderBase.ILoaderOption {
-
-}
-
-export class BlobLoader extends LoaderBase.LoaderBase<TBlobLoaderTarget, TBlobLoaderRawResource, BlobLoaderResource> {
+export class BlobLoader extends LoaderBase<TBlobLoaderTarget, TBlobLoaderRawResource, BlobLoaderResource> {
 	protected _loadAsync(target: TBlobLoaderTarget, options: IBlobLoaderOption = {}) {
 		return (() => {
 			const data = this._resolveParams(target, options);

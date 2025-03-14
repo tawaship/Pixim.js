@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.14.0
+ * @tawaship/pixim.js - v1.15.0
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -22,7 +22,7 @@
             }
         })), n.default = e, Object.freeze(n);
     }
-    window.console.log("%c pixim.js%cv1.14.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.15.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     var PIXI__namespace = _interopNamespaceDefault(PIXI), Emitter$1 = function() {
         this._events = {};
     };
@@ -226,14 +226,14 @@
         }, Task.prototype.destroy = function() {
             _Task.prototype.destroy.call(this), this.clear();
         }, Task;
-    }(Task$1), Container = function(superclass) {
+    }(Task$1), Container = function(PixiContainer) {
         function Container() {
-            superclass.call(this), this._piximData = {
+            PixiContainer.call(this), this._piximData = {
                 task: new Task([], this),
                 taskEnabledChildren: !0
             }, this._piximData.task.first();
         }
-        superclass && (Container.__proto__ = superclass), Container.prototype = Object.create(superclass && superclass.prototype), 
+        PixiContainer && (Container.__proto__ = PixiContainer), Container.prototype = Object.create(PixiContainer && PixiContainer.prototype), 
         Container.prototype.constructor = Container;
         var prototypeAccessors = {
             taskEnabled: {
@@ -263,15 +263,15 @@
             for (var args = [], len = arguments.length; len--; ) {
                 args[len] = arguments[len];
             }
-            superclass.prototype.destroy.apply(this, args), this._piximData.task.destroy();
+            PixiContainer.prototype.destroy.apply(this, args), this._piximData.task.destroy();
         }, Object.defineProperties(Container.prototype, prototypeAccessors), Container;
-    }(PIXI__namespace.Container), Layer = function(superclass) {
+    }(PIXI.Container), Layer = function(PixiContainer) {
         function Layer() {
-            superclass.apply(this, arguments);
+            PixiContainer.apply(this, arguments);
         }
-        return superclass && (Layer.__proto__ = superclass), Layer.prototype = Object.create(superclass && superclass.prototype), 
+        return PixiContainer && (Layer.__proto__ = PixiContainer), Layer.prototype = Object.create(PixiContainer && PixiContainer.prototype), 
         Layer.prototype.constructor = Layer, Layer;
-    }(PIXI__namespace.Container);
+    }(PIXI.Container);
     function taskHandler(obj, e) {
         if (!(obj instanceof Container) || (obj.updateTask(e), obj.taskEnabledChildren)) {
             for (var children = [], i = 0; i < obj.children.length; i++) {
@@ -279,7 +279,7 @@
             }
             for (var i$1 = 0; i$1 < children.length; i$1++) {
                 var child = children[i$1];
-                child instanceof PIXI__namespace.Container && taskHandler(child, e);
+                child instanceof PIXI.Container && taskHandler(child, e);
             }
         }
     }
@@ -288,7 +288,7 @@
             var this$1$1 = this;
             void 0 === pixiOptions && (pixiOptions = {}), void 0 === piximOptions && (piximOptions = {}), 
             Emitter.call(this);
-            var app = new PIXI__namespace.Application(pixiOptions);
+            var app = new PIXI.Application(pixiOptions);
             app.stop(), app.view.style.position = "absolute";
             var autoAdjust = piximOptions.autoAdjust || !1;
             this._piximData = {
@@ -470,11 +470,11 @@
         }, prototypeAccessors.count.get = function() {
             return Object.keys(this._data).length;
         }, ManifestBase.prototype.getAsync = function(options) {
-            var this$1$1 = this;
+            var this$1$1 = this, res = {};
             if (0 === Object.keys(this._data).length) {
-                return Promise.resolve({});
+                return Promise.resolve(res);
             }
-            var res = {}, loader = this._createLoader();
+            var loader = this._createLoader();
             loader.onLoaded = function(resource) {
                 this$1$1.emit("loaderAssetLoaded", resource);
             };
@@ -602,19 +602,19 @@
             src: src
         };
     };
-    var BlobLoaderResource = function(superclass) {
+    var BlobLoaderResource = function(LoaderResource) {
         function BlobLoaderResource() {
-            superclass.apply(this, arguments);
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (BlobLoaderResource.__proto__ = superclass), BlobLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderResource && (BlobLoaderResource.__proto__ = LoaderResource), BlobLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
         BlobLoaderResource.prototype.constructor = BlobLoaderResource, BlobLoaderResource.prototype.destroy = function() {
             (window.URL || window.webkitURL).revokeObjectURL(this._data), this._data = "";
         }, BlobLoaderResource;
-    }(LoaderResource), BlobLoader = function(superclass) {
+    }(LoaderResource), BlobLoader = function(LoaderBase) {
         function BlobLoader() {
-            superclass.apply(this, arguments);
+            LoaderBase.apply(this, arguments);
         }
-        return superclass && (BlobLoader.__proto__ = superclass), BlobLoader.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderBase && (BlobLoader.__proto__ = LoaderBase), BlobLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
         BlobLoader.prototype.constructor = BlobLoader, BlobLoader.prototype._loadAsync = function(target, options) {
             var data, src, xhr;
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
@@ -631,22 +631,22 @@
                 return new BlobLoaderResource("", e);
             }));
         }, BlobLoader;
-    }(LoaderBase), TextureLoaderResource = function(superclass) {
+    }(LoaderBase), TextureLoaderResource = function(LoaderResource) {
         function TextureLoaderResource() {
-            superclass.apply(this, arguments);
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (TextureLoaderResource.__proto__ = superclass), TextureLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderResource && (TextureLoaderResource.__proto__ = LoaderResource), TextureLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
         TextureLoaderResource.prototype.constructor = TextureLoaderResource, TextureLoaderResource.prototype.destroy = function() {
             this._data && (TextureLoaderResource.removeCache(this._data), this._data.destroy(!0), 
             this._data = null);
         }, TextureLoaderResource.removeCache = function(texture) {
-            PIXI__namespace.Texture.removeFromCache(texture), texture.baseTexture && PIXI__namespace.BaseTexture.removeFromCache(texture.baseTexture);
+            PIXI.Texture.removeFromCache(texture), texture.baseTexture && PIXI.BaseTexture.removeFromCache(texture.baseTexture);
         }, TextureLoaderResource;
-    }(LoaderResource), TextureLoader = function(superclass) {
+    }(LoaderResource), TextureLoader = function(LoaderBase) {
         function TextureLoader() {
-            superclass.apply(this, arguments);
+            LoaderBase.apply(this, arguments);
         }
-        return superclass && (TextureLoader.__proto__ = superclass), TextureLoader.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderBase && (TextureLoader.__proto__ = LoaderBase), TextureLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
         TextureLoader.prototype.constructor = TextureLoader, TextureLoader.prototype._loadAsync = function(target, options) {
             var data, src, xhr, this$1$1 = this;
             return void 0 === options && (options = {}), (data = this$1$1._resolveParams(target, options), 
@@ -661,45 +661,66 @@
                 }
                 return this$1$1._loadBaseTextureAsync(resource.data);
             })) : this$1$1._loadBaseTextureAsync(src)).then((function(baseTexture) {
-                return new TextureLoaderResource(new PIXI__namespace.Texture(baseTexture), null);
+                return new TextureLoaderResource(new PIXI.Texture(baseTexture), null);
             })).catch((function(e) {
                 return new TextureLoaderResource(null, e);
             }));
         }, TextureLoader.prototype._loadBaseTextureAsync = function(target) {
             return (target instanceof HTMLImageElement || target instanceof HTMLVideoElement) && (target.crossOrigin = "anonymous"), 
             new Promise((function(resolve, reject) {
-                var bt = PIXI__namespace.BaseTexture.from(target);
+                var bt = PIXI.BaseTexture.from(target);
                 if (bt.valid) {
-                    return PIXI__namespace.BaseTexture.removeFromCache(bt), void resolve(bt);
+                    return PIXI.BaseTexture.removeFromCache(bt), void resolve(bt);
                 }
                 bt.on("loaded", (function(baseTexture) {
-                    PIXI__namespace.BaseTexture.removeFromCache(baseTexture), resolve(baseTexture);
+                    PIXI.BaseTexture.removeFromCache(baseTexture), resolve(baseTexture);
                 })), bt.on("error", (function(baseTexture, e) {
-                    PIXI__namespace.BaseTexture.removeFromCache(baseTexture), reject(e);
+                    PIXI.BaseTexture.removeFromCache(baseTexture), reject(e);
                 }));
             }));
         }, TextureLoader;
-    }(LoaderBase), TextureManifest = function(superclass) {
-        function TextureManifest() {
-            superclass.apply(this, arguments);
+    }(LoaderBase), JsLoaderResource = function(LoaderResource) {
+        function JsLoaderResource() {
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (TextureManifest.__proto__ = superclass), TextureManifest.prototype = Object.create(superclass && superclass.prototype), 
-        TextureManifest.prototype.constructor = TextureManifest, TextureManifest.prototype._createLoader = function() {
-            return new TextureLoader;
-        }, TextureManifest;
-    }(ManifestBase), JsonLoaderResource = function(superclass) {
+        return LoaderResource && (JsLoaderResource.__proto__ = LoaderResource), JsLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
+        JsLoaderResource.prototype.constructor = JsLoaderResource, JsLoaderResource.prototype.destroy = function() {
+            this._data = "";
+        }, JsLoaderResource.prototype.ref = function() {
+            document.body.appendChild(document.createElement("script")).text = this._data;
+        }, JsLoaderResource;
+    }(LoaderResource), JsLoader = function(LoaderBase) {
+        function JsLoader() {
+            LoaderBase.apply(this, arguments);
+        }
+        return LoaderBase && (JsLoader.__proto__ = LoaderBase), JsLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
+        JsLoader.prototype.constructor = JsLoader, JsLoader.prototype._loadAsync = function(target, options) {
+            var data, src, xhr;
+            return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
+            src = data.src, xhr = data.xhr, xhr ? fetch(src, xhr.requestOptions || {}) : fetch(src)).then((function(res) {
+                if (!res.ok) {
+                    throw res.statusText;
+                }
+                return res.text();
+            })).then((function(text) {
+                return new JsLoaderResource(text, null);
+            })).catch((function(e) {
+                return new JsLoaderResource("", e);
+            }));
+        }, JsLoader;
+    }(LoaderBase), JsonLoaderResource = function(LoaderResource) {
         function JsonLoaderResource() {
-            superclass.apply(this, arguments);
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (JsonLoaderResource.__proto__ = superclass), JsonLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderResource && (JsonLoaderResource.__proto__ = LoaderResource), JsonLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
         JsonLoaderResource.prototype.constructor = JsonLoaderResource, JsonLoaderResource.prototype.destroy = function() {
             this._data = {};
         }, JsonLoaderResource;
-    }(LoaderResource), JsonLoader = function(superclass) {
+    }(LoaderResource), JsonLoader = function(LoaderBase) {
         function JsonLoader() {
-            superclass.apply(this, arguments);
+            LoaderBase.apply(this, arguments);
         }
-        return superclass && (JsonLoader.__proto__ = superclass), JsonLoader.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderBase && (JsonLoader.__proto__ = LoaderBase), JsonLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
         JsonLoader.prototype.constructor = JsonLoader, JsonLoader.prototype._loadAsync = function(target, options) {
             var data, src, xhr;
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
@@ -714,22 +735,23 @@
                 return new JsonLoaderResource({}, e);
             }));
         }, JsonLoader;
-    }(LoaderBase), SpritesheetLoaderResource = function(superclass) {
+    }(LoaderBase), SpritesheetLoaderResource = function(LoaderResource) {
         function SpritesheetLoaderResource() {
-            superclass.apply(this, arguments);
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (SpritesheetLoaderResource.__proto__ = superclass), SpritesheetLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderResource && (SpritesheetLoaderResource.__proto__ = LoaderResource), 
+        SpritesheetLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
         SpritesheetLoaderResource.prototype.constructor = SpritesheetLoaderResource, SpritesheetLoaderResource.prototype.destroy = function() {
             for (var i in this._data) {
                 this._data[i].destroy(!0);
             }
             this._data = {};
         }, SpritesheetLoaderResource;
-    }(LoaderResource), SpritesheetLoader = function(superclass) {
+    }(LoaderResource), SpritesheetLoader = function(LoaderBase) {
         function SpritesheetLoader() {
-            superclass.apply(this, arguments);
+            LoaderBase.apply(this, arguments);
         }
-        return superclass && (SpritesheetLoader.__proto__ = superclass), SpritesheetLoader.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderBase && (SpritesheetLoader.__proto__ = LoaderBase), SpritesheetLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
         SpritesheetLoader.prototype.constructor = SpritesheetLoader, SpritesheetLoader.prototype._loadAsync = function(target, options) {
             var this$1$1 = this;
             return void 0 === options && (options = {}), ("string" != typeof target ? this$1$1._loadTextureAsync(target, options) : this$1$1._loadJsonAsync(target, options)).then((function(textures) {
@@ -767,7 +789,7 @@
                 if (!resource.data) {
                     throw "invalid resource";
                 }
-                var ss = new PIXI__namespace.Spritesheet(resource.data, json);
+                var ss = new PIXI.Spritesheet(resource.data, json);
                 return new Promise((function(resolve) {
                     ss.parse((function(e) {
                         for (var i in ss.textures) {
@@ -778,27 +800,19 @@
                 }));
             }));
         }, SpritesheetLoader;
-    }(LoaderBase), SpritesheetManifest = function(superclass) {
-        function SpritesheetManifest() {
-            superclass.apply(this, arguments);
-        }
-        return superclass && (SpritesheetManifest.__proto__ = superclass), SpritesheetManifest.prototype = Object.create(superclass && superclass.prototype), 
-        SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._createLoader = function() {
-            return new SpritesheetLoader;
-        }, SpritesheetManifest;
-    }(ManifestBase), SoundLoaderResource = function(superclass) {
+    }(LoaderBase), SoundLoaderResource = function(LoaderResource) {
         function SoundLoaderResource() {
-            superclass.apply(this, arguments);
+            LoaderResource.apply(this, arguments);
         }
-        return superclass && (SoundLoaderResource.__proto__ = superclass), SoundLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderResource && (SoundLoaderResource.__proto__ = LoaderResource), SoundLoaderResource.prototype = Object.create(LoaderResource && LoaderResource.prototype), 
         SoundLoaderResource.prototype.constructor = SoundLoaderResource, SoundLoaderResource.prototype.destroy = function() {
             this._data && (this._data.stop(), this._data.unload(), this._data = null);
         }, SoundLoaderResource;
-    }(LoaderResource), SoundLoader = function(superclass) {
+    }(LoaderResource), SoundLoader = function(LoaderBase) {
         function SoundLoader() {
-            superclass.apply(this, arguments);
+            LoaderBase.apply(this, arguments);
         }
-        return superclass && (SoundLoader.__proto__ = superclass), SoundLoader.prototype = Object.create(superclass && superclass.prototype), 
+        return LoaderBase && (SoundLoader.__proto__ = LoaderBase), SoundLoader.prototype = Object.create(LoaderBase && LoaderBase.prototype), 
         SoundLoader.prototype.constructor = SoundLoader, SoundLoader.prototype._loadAsync = function(target, options) {
             var data, src, xhr;
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
@@ -831,19 +845,35 @@
                 return new SoundLoaderResource(null, e);
             }));
         }, SoundLoader;
-    }(LoaderBase), SoundManifest = function(superclass) {
-        function SoundManifest() {
-            superclass.apply(this, arguments);
+    }(LoaderBase), TextureManifest = function(ManifestBase) {
+        function TextureManifest() {
+            ManifestBase.apply(this, arguments);
         }
-        return superclass && (SoundManifest.__proto__ = superclass), SoundManifest.prototype = Object.create(superclass && superclass.prototype), 
+        return ManifestBase && (TextureManifest.__proto__ = ManifestBase), TextureManifest.prototype = Object.create(ManifestBase && ManifestBase.prototype), 
+        TextureManifest.prototype.constructor = TextureManifest, TextureManifest.prototype._createLoader = function() {
+            return new TextureLoader;
+        }, TextureManifest;
+    }(ManifestBase), SpritesheetManifest = function(ManifestBase) {
+        function SpritesheetManifest() {
+            ManifestBase.apply(this, arguments);
+        }
+        return ManifestBase && (SpritesheetManifest.__proto__ = ManifestBase), SpritesheetManifest.prototype = Object.create(ManifestBase && ManifestBase.prototype), 
+        SpritesheetManifest.prototype.constructor = SpritesheetManifest, SpritesheetManifest.prototype._createLoader = function() {
+            return new SpritesheetLoader;
+        }, SpritesheetManifest;
+    }(ManifestBase), SoundManifest = function(ManifestBase) {
+        function SoundManifest() {
+            ManifestBase.apply(this, arguments);
+        }
+        return ManifestBase && (SoundManifest.__proto__ = ManifestBase), SoundManifest.prototype = Object.create(ManifestBase && ManifestBase.prototype), 
         SoundManifest.prototype.constructor = SoundManifest, SoundManifest.prototype._createLoader = function() {
             return new SoundLoader;
         }, SoundManifest;
-    }(ManifestBase), JsonManifest = function(superclass) {
+    }(ManifestBase), JsonManifest = function(ManifestBase) {
         function JsonManifest() {
-            superclass.apply(this, arguments);
+            ManifestBase.apply(this, arguments);
         }
-        return superclass && (JsonManifest.__proto__ = superclass), JsonManifest.prototype = Object.create(superclass && superclass.prototype), 
+        return ManifestBase && (JsonManifest.__proto__ = ManifestBase), JsonManifest.prototype = Object.create(ManifestBase && ManifestBase.prototype), 
         JsonManifest.prototype.constructor = JsonManifest, JsonManifest.prototype._createLoader = function() {
             return new JsonLoader;
         }, JsonManifest;
@@ -885,13 +915,23 @@
     }, Object.defineProperties(ContentDeliver.prototype, prototypeAccessors);
     var _contents = {}, _contentID = 0;
     function createManifests() {
-        var res = {};
-        for (var i in _manifests) {
-            res[i] = new _manifests[i](i);
+        var res = {
+            images: new TextureManifest("images"),
+            spritesheets: new SpritesheetManifest("spritesheets"),
+            sounds: new SoundManifest("sounds"),
+            jsons: new JsonManifest("jsons")
+        };
+        for (var i in _externalManifestClasses) {
+            res[i] = new _externalManifestClasses[i](i);
         }
         return res;
     }
-    var _manifests = {}, Content = function(Emitter) {
+    var _externalManifestClasses = {
+        images: TextureManifest,
+        spritesheets: SpritesheetManifest,
+        sounds: SoundManifest,
+        jsons: JsonManifest
+    }, Content = function(Emitter) {
         function Content(options, piximData) {
             var this$1$1 = this;
             void 0 === options && (options = {}), void 0 === piximData && (piximData = Content._piximData), 
@@ -902,7 +942,12 @@
                 width: piximData.config.width,
                 height: piximData.config.height,
                 lib: piximData.lib,
-                resources: {},
+                resources: {
+                    images: {},
+                    spritesheets: {},
+                    sounds: {},
+                    jsons: {}
+                },
                 vars: {}
             };
             for (var i in this._piximData = {
@@ -938,7 +983,7 @@
             }
         };
         return Content.registerManifest = function(key, Manifest) {
-            _manifests[key] = Manifest;
+            _externalManifestClasses[key] = Manifest;
         }, Content.create = function(key) {
             if (void 0 === key && (key = ""), key && key in _contents) {
                 throw new Error("Content key '" + key + "' has already exists.");
@@ -1104,7 +1149,7 @@
                 if (void 0 === options.typeOptions) {
                     var typeOptions$1 = {};
                     for (var i in manifests) {
-                        typeOptions$1[i] = [];
+                        typeOptions$1[i] = {};
                     }
                     return typeOptions$1;
                 }
@@ -1138,37 +1183,7 @@
         }, Object.defineProperties(Content.prototype, prototypeAccessors), Content;
     }(Emitter$1);
     Content.registerManifest("images", TextureManifest), Content.registerManifest("spritesheets", SpritesheetManifest), 
-    Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest);
-    var JsLoaderResource = function(superclass) {
-        function JsLoaderResource() {
-            superclass.apply(this, arguments);
-        }
-        return superclass && (JsLoaderResource.__proto__ = superclass), JsLoaderResource.prototype = Object.create(superclass && superclass.prototype), 
-        JsLoaderResource.prototype.constructor = JsLoaderResource, JsLoaderResource.prototype.destroy = function() {
-            this._data = "";
-        }, JsLoaderResource.prototype.ref = function() {
-            document.body.appendChild(document.createElement("script")).text = this._data;
-        }, JsLoaderResource;
-    }(LoaderResource), JsLoader = function(superclass) {
-        function JsLoader() {
-            superclass.apply(this, arguments);
-        }
-        return superclass && (JsLoader.__proto__ = superclass), JsLoader.prototype = Object.create(superclass && superclass.prototype), 
-        JsLoader.prototype.constructor = JsLoader, JsLoader.prototype._loadAsync = function(target, options) {
-            var data, src, xhr;
-            return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
-            src = data.src, xhr = data.xhr, xhr ? fetch(src, xhr.requestOptions || {}) : fetch(src)).then((function(res) {
-                if (!res.ok) {
-                    throw res.statusText;
-                }
-                return res.text();
-            })).then((function(text) {
-                return new JsLoaderResource(text, null);
-            })).catch((function(e) {
-                return new JsLoaderResource("", e);
-            }));
-        }, JsLoader;
-    }(LoaderBase);
+    Content.registerManifest("sounds", SoundManifest), Content.registerManifest("jsons", JsonManifest), 
     exports.Application = Application, exports.BlobLoader = BlobLoader, exports.BlobLoaderResource = BlobLoaderResource, 
     exports.Container = Container, exports.Content = Content, exports.ContentDeliver = ContentDeliver, 
     exports.EVENT_LOADER_ASSET_LOADED = "loaderAssetLoaded", exports.Emitter = Emitter, 

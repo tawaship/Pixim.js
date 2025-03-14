@@ -1,16 +1,8 @@
-import * as ManifestBase from './ManifestBase';
-import * as JsonLoader from '../loader/JsonLoader';
+import { JsonLoader, JsonLoaderResource, TJsonLoaderRawResource, TJsonLoaderTarget } from "../loader";
+import { ManifestBase } from "./ManifestBase";
 
-export interface IJsonManifestTargetDictionary extends ManifestBase.IManifestTargetDictionary<JsonLoader.TJsonLoaderTarget> {
-
-}
-
-export interface IJsonDictionary extends ManifestBase.IRawResourceDictionary<JsonLoader.TJsonLoaderRawResource> {
-
-}
-
-export class JsonManifest extends ManifestBase.ManifestBase<JsonLoader.TJsonLoaderTarget, JsonLoader.TJsonLoaderRawResource, JsonLoader.JsonLoaderResource> {
+export class JsonManifest extends ManifestBase<TJsonLoaderTarget, TJsonLoaderRawResource, JsonLoaderResource> {
 	protected _createLoader() {
-		return new JsonLoader.JsonLoader();
+		return new JsonLoader();
 	}
 }

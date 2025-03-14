@@ -1,18 +1,8 @@
-import * as ManifestBase from './ManifestBase';
-import * as SpritesheetLoader from '../loader/SpritesheetLoader';
-import * as LoaderBase from '../loader/LoaderBase';
-import * as utils from '../utils/index';
+import { SpritesheetLoader, SpritesheetLoaderResource, TSpritesheetLoaderRawResource, TSpritesheetLoaderTarget } from "../loader";
+import { ManifestBase } from "./ManifestBase";
 
-export interface ISpritesheetManifestTargetDictionary extends ManifestBase.IManifestTargetDictionary<SpritesheetLoader.TSpritesheetLoaderTarget> {
-
-}
-
-export interface ISpritesheetDictionary extends ManifestBase.IRawResourceDictionary<SpritesheetLoader.TSpritesheetLoaderRawResource> {
-
-}
-
-export class SpritesheetManifest extends ManifestBase.ManifestBase<SpritesheetLoader.TSpritesheetLoaderTarget, SpritesheetLoader.TSpritesheetLoaderRawResource, SpritesheetLoader.SpritesheetLoaderResource> {
+export class SpritesheetManifest extends ManifestBase<TSpritesheetLoaderTarget, TSpritesheetLoaderRawResource, SpritesheetLoaderResource> {
 	protected _createLoader() {
-		return new SpritesheetLoader.SpritesheetLoader();
+		return new SpritesheetLoader();
 	}
 }

@@ -1,17 +1,8 @@
-import * as ManifestBase from './ManifestBase';
-import * as SoundLoader from '../loader/SoundLoader';
-import * as utils from '../utils/index';
+import { SoundLoader, SoundLoaderResource, TSoundLoaderRawResource, TSoundLoaderTarget } from "../loader";
+import { ManifestBase } from "./ManifestBase";
 
-export interface ISoundManifestTargetDictionary extends ManifestBase.IManifestTargetDictionary<SoundLoader.TSoundLoaderTarget> {
-
-}
-
-export interface ISoundDictionary extends ManifestBase.IRawResourceDictionary<SoundLoader.TSoundLoaderRawResource> {
-
-}
-
-export class SoundManifest extends ManifestBase.ManifestBase<SoundLoader.TSoundLoaderTarget, SoundLoader.TSoundLoaderRawResource, SoundLoader.SoundLoaderResource> {
+export class SoundManifest extends ManifestBase<TSoundLoaderTarget, TSoundLoaderRawResource, SoundLoaderResource> {
 	protected _createLoader() {
-		return new SoundLoader.SoundLoader();
+		return new SoundLoader();
 	}
 }

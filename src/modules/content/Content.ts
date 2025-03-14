@@ -1,30 +1,35 @@
-import * as PIXI from 'pixi.js';
-import { ManifestBase, IManifestClass, IRawResourceDictionary, IManifestTargetDictionary, IManifestOption, IManifestLoaderOption, IManifestLoaderXhrOptionFacotryDelegate, TManifestResourceVersion, TManifestLoaderXhrOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
-import { TextureManifest, ITextureManifestTargetDictionary } from './TextureManifest';
-import { SpritesheetManifest, ISpritesheetManifestTargetDictionary } from './SpritesheetManifest';
-import { SoundManifest, ISoundManifestTargetDictionary } from './SoundManifest';
-import { JsonManifest, IJsonManifestTargetDictionary } from './JsonManifest';
-import { ContentDeliver, IContentDeliverData, IVariableDictionary, IContentLibrary, IContentResourceDictionary } from './ContentDeliver';
+import { ManifestBase, IManifestClass, IManifestOption, IManifestLoaderOption, TManifestResourceVersion, TManifestLoaderXhrOption, EVENT_LOADER_ASSET_LOADED } from './ManifestBase';
+import { TextureManifest } from './TextureManifest';
+import { SpritesheetManifest } from './SpritesheetManifest';
+import { SoundManifest } from './SoundManifest';
+import { JsonManifest } from './JsonManifest';
+import { ContentDeliver, IContentDeliverData, IContentResourceDictionary, TContentLibraryDictionary } from './ContentDeliver';
 import { Emitter } from '@tawaship/emitter';
+import { Container } from 'pixi.js';
+import { ILoaderOption, LoaderResource, TJsonLoaderTarget, TSoundLoaderTarget, TSpritesheetLoaderTarget, TTextureLoaderTarget } from '../loader';
 
 export interface IContentAssetBasepath {
-	[manifestKey: string]: string;
+	[ manifestKey: string ]: string;
 }
 
 export interface IContentAssetVersion {
-	[manifestKey: string]: TManifestResourceVersion;
+	[ manifestKey: string ]: TManifestResourceVersion;
 }
 
 export interface IContentAssetXhrOption {
-	[manifestKey: string]: TManifestLoaderXhrOption;
+	[ manifestKey: string ]: TManifestLoaderXhrOption;
 }
 
 export interface IContentAssetLoaderOption {
-	[manifestKey: string]: { [key: string]: any };
+	[ manifestKey: string ]: ILoaderOption;
 }
 
 export interface IContentManifests {
-	[manifestKey: string]: ManifestBase<any, any, any>;
+    images: TextureManifest;
+    spritesheets: SpritesheetManifest;
+    sounds: SoundManifest;
+    jsons: JsonManifest;
+    [manifestKey: string]: ManifestBase<any, any, any>;
 }
 
 export interface IContentConfigData {
@@ -42,10 +47,6 @@ export interface IContentData {
 	postloadPromise: Promise<void> | null;
 	contentDeliverData: IContentDeliverData;
 }
-
-export interface TContents {
-	[name: string]: typeof Content;
-};
 
 export interface IContentOption {
 	/**
@@ -70,7 +71,7 @@ export interface IContentOption {
 /**
  * @ignore
  */
-const _contents: TContents = {};
+const _contents: Record<string, typeof Content> = {};
 
 /**
  * @ignore
@@ -80,17 +81,22 @@ let _contentID: number = 0;
 export interface IContentStaticData {
 	config: IContentConfigData;
 	manifests: IContentManifests;
-	lib: IContentLibrary;
+	lib: TContentLibraryDictionary;
 }
 
 /**
  * @ignore
  */
 function createManifests(): IContentManifests {
-	const res: IContentManifests = {};
+	const res: IContentManifests = {
+        images: new TextureManifest("images"),
+        spritesheets: new SpritesheetManifest("spritesheets"),
+        sounds: new SoundManifest("sounds"),
+        jsons: new JsonManifest("jsons")
+    };
 	
-	for (let i in _manifests) {
-		res[i] = new _manifests[i](i);
+	for (let i in _externalManifestClasses) {
+		res[i] = new _externalManifestClasses[i](i);
 	}
 	
 	return res;
@@ -113,7 +119,15 @@ function createContentStatic(): IContentStaticData {
 /**
  * @ignore
  */
-const _manifests: { [key: string]: IManifestClass } = {};
+const _externalManifestClasses: {
+
+    [ key: string ]: IManifestClass<any, any, any>
+} = {
+    images: TextureManifest,
+    spritesheets: SpritesheetManifest,
+    sounds: SoundManifest,
+    jsons: JsonManifest
+};
 
 export class Content extends Emitter {
 	protected static _piximData: IContentStaticData;
@@ -136,7 +150,12 @@ export class Content extends Emitter {
 			width: piximData.config.width,
 			height: piximData.config.height,
 			lib: piximData.lib,
-			resources: {},
+			resources: {
+                images: {},
+                spritesheets: {},
+                sounds: {},
+                jsons: {}
+            },
 			vars: {}
 		};
 		
@@ -163,8 +182,8 @@ export class Content extends Emitter {
 	/**
 	 * Register manifest class.
 	 */
-	static registerManifest(key: string, Manifest: IManifestClass) {
-		_manifests[key] = Manifest;
+	static registerManifest<T, U, V extends LoaderResource<U>>(key: string, Manifest: IManifestClass<T, U, V>) {
+		_externalManifestClasses[key] = Manifest;
 	}
 	
 	/**
@@ -212,7 +231,7 @@ export class Content extends Emitter {
 	/**
 	 * Define assets for class.
 	 */
-	static defineTargets<T>(key: string, targets: IManifestTargetDictionary<T>, options: IManifestOption = {}) {
+	static defineTargets<T>(key: string, targets: Record<string, T>, options: IManifestOption = {}) {
 		if (!this._piximData.manifests[key]) {
 			console.warn(`Manifest '${key}' is not registered.`);
 			return this;
@@ -226,28 +245,28 @@ export class Content extends Emitter {
 	/**
 	 * Define image assets for class.
 	 */
-	static defineImages(targets: ITextureManifestTargetDictionary, options: IManifestOption = {}) {
+	static defineImages(targets: Record<string, TTextureLoaderTarget>, options: IManifestOption = {}) {
 		return this.defineTargets('images', targets, options);
 	}
 	
 	/**
 	 * Define spritesheet assets for class.
 	 */
-	static defineSpritesheets(targets: ISpritesheetManifestTargetDictionary, options: IManifestOption = {}) {
+	static defineSpritesheets(targets: Record<string, TSpritesheetLoaderTarget>, options: IManifestOption = {}) {
 		return this.defineTargets('spritesheets', targets, options);
 	}
 	
 	/**
 	 * Define sound assets for class.
 	 */
-	static defineSounds(targets: ISoundManifestTargetDictionary, options: IManifestOption = {}) {
+	static defineSounds(targets: Record<string, TSoundLoaderTarget>, options: IManifestOption = {}) {
 		return this.defineTargets('sounds', targets, options);
 	}
 	
 	/**
 	 * Define json assets for class.
 	 */
-	static defineJsons(targets: IJsonManifestTargetDictionary, options: IManifestOption = {}) {
+	static defineJsons(targets: Record<string, TJsonLoaderTarget>, options: IManifestOption = {}) {
 		return this.defineTargets('jsons', targets, options);
 	}
 	
@@ -271,7 +290,7 @@ export class Content extends Emitter {
 	 * 
 	 * @param data Library data.
 	 */
-	static defineLibraries(data: IContentLibrary) {
+	static defineLibraries(data: TContentLibraryDictionary) {
 		for (let i in data) {
 			this._piximData.lib[i] = data[i];
 		}
@@ -291,7 +310,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addTargets<T>(key: string, targets: IManifestTargetDictionary<T>, options: IManifestOption = {}): this {
+	addTargets<T>(key: string, targets: Record<string, T>, options: IManifestOption = {}): this {
 		if (!this._piximData.additionalManifests[key]) {
 			console.warn(`Manifest '${key}' is not registered.`);
 			return this;
@@ -307,7 +326,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addImages(data: ITextureManifestTargetDictionary, options: IManifestOption = {}): this {
+	addImages(data: Record<string, TTextureLoaderTarget>, options: IManifestOption = {}): this {
 		return this.addTargets('images', data, options);
 	}
 	
@@ -316,7 +335,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addSpritesheets(targets: ISpritesheetManifestTargetDictionary, options: IManifestOption = {}): this {
+	addSpritesheets(targets: Record<string, TSpritesheetLoaderTarget>, options: IManifestOption = {}): this {
 		return this.addTargets('spritesheets', targets, options);
 	}
 	
@@ -325,7 +344,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addSounds(targets: ISoundManifestTargetDictionary, options: IManifestOption = {}): this {
+	addSounds(targets: Record<string, TSoundLoaderTarget>, options: IManifestOption = {}) {
 		return this.addTargets('sounds', targets, options);
 	}
 	
@@ -334,7 +353,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addJsons(targets: IJsonManifestTargetDictionary, options: IManifestOption = {}): this {
+	addJsons(targets: Record<string, TJsonLoaderTarget>, options: IManifestOption = {}) {
 		return this.addTargets('jsons', targets, options);
 	}
 	
@@ -343,7 +362,7 @@ export class Content extends Emitter {
 	 * 
 	 * @return Returns itself for the method chaining.
 	 */
-	addVars(data: IVariableDictionary): this {
+	addVars(data: Record<string, any>) {
 		for (let i in data) {
 			 this._piximData.$.vars[i] = data[i];
 		}
@@ -364,7 +383,7 @@ export class Content extends Emitter {
 	/**
 	 * Build content.
 	 */
-	buildAsync(): Promise<PIXI.Container> {
+	buildAsync(): Promise<Container> {
 		if (!this._piximData.$.lib.root) {
 			throw new Error('There is no library named "root" in the content.');
 		}
@@ -532,7 +551,7 @@ export class Content extends Emitter {
 			if (typeof(options.typeOptions) === 'undefined') {
 				const typeOptions: IContentAssetLoaderOption = {};
 				for (let i in manifests) {
-					typeOptions[i] = [];
+					typeOptions[i] = {}
 				}
 				
 				return typeOptions;
@@ -546,7 +565,7 @@ export class Content extends Emitter {
 			return typeOptions;
 		})();
 		
-		const loaderOptions: { [manifestKey: string]: IManifestLoaderOption } = {};
+		const loaderOptions: { [ manifestKey: string ]: IManifestLoaderOption } = {};
 		for (let i in manifests) {
 			loaderOptions[i] = {
 				basepath: basepath[i],
@@ -558,7 +577,7 @@ export class Content extends Emitter {
 		
 		const resources: IContentResourceDictionary = this._piximData.$.resources;
 		
-		const promises: Promise<IRawResourceDictionary<any>>[] = [];
+		const promises: Promise<Record<string, any>>[] = [];
 		const keys: string[] = [];
 		for (let i in manifests) {
 			keys.push(i);
