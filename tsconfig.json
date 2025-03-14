@@ -7,7 +7,7 @@
     "outDir": "./dist"
   },
   "typedocOptions": {
-    "out": "docs",
+    "out": "docs/docs",
     "gitRemote": "docs",
     "gitRevision": "master",
     "entryPoints": ["src/Pixim.ts"],

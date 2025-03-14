@@ -26,7 +26,7 @@ const intro = `window.console.log("%c pixim.js%cv${version} %c","color: #FFF; ba
 
 export default (async () => {
 	if (process.env.PROD) {
-		await del(['./docs', './types', './dist']);
+		await del(['./docs/docs', './types', './dist']);
 	}
 	
 	return [
