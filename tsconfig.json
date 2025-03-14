@@ -8,6 +8,7 @@
   },
   "typedocOptions": {
     "out": "docs",
+    "gitRemote": "docs",
     "gitRevision": "master",
     "entryPoints": ["src/Pixim.ts"],
     "includeVersion": true
