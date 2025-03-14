@@ -11,8 +11,7 @@
     "gitRemote": "docs",
     "gitRevision": "master",
     "entryPoints": ["src/Pixim.ts"],
-    "includeVersion": true,
-    "githubPages": false
+    "includeVersion": true
   },
   "exclude": ["node_modules", "src/**/*.d.ts"]
 }
