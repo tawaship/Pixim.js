@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.15.1
+ * @tawaship/pixim.js - v1.15.0-1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)

@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.15.1
+ * @tawaship/pixim.js - v1.15.0-1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -22,7 +22,7 @@
             }
         })), n.default = e, Object.freeze(n);
     }
-    window.console.log("%c pixim.js%cv1.15.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.15.0-1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     var PIXI__namespace = _interopNamespaceDefault(PIXI), Emitter$1 = function() {
         this._events = {};
     };
