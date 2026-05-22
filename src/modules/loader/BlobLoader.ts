@@ -30,7 +30,7 @@ export class BlobLoader extends LoaderBase<TBlobLoaderTarget, TBlobLoaderRawReso
 		})()
 		.then(res => {
 			if (!res.ok) {
-				throw res.statusText;
+				throw res.statusText || "error";
 			}
 			
 			return res.blob();

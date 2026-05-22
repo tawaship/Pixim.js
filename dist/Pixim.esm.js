@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.15.0
+ * @tawaship/pixim.js - v1.15.1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -144,18 +144,46 @@ class Task extends Task$1 {
             emitter: new Emitter()
         };
     }
+    /**
+     * Register task with event type.
+     *
+     * @param type Event type.
+     * @param callback Callback when the event fires.
+     * @returns
+     */
     on(type, callback) {
         this._piximData.emitter.on(type, callback);
         return this;
     }
+    /**
+     * Register one-time task with event type.
+     *
+     * @param type Event type.
+     * @param callback Callback when the event fires.
+     * @returns
+     */
     once(type, callback) {
         this._piximData.emitter.once(type, callback);
         return this;
     }
+    /**
+     * Unregister task with event type.
+     *
+     * @param type Event type.
+     * @param callback Registered callback.
+     * @returns
+     */
     off(type, callback) {
         this._piximData.emitter.off(type, callback);
         return this;
     }
+    /**
+     * Emit task.
+     *
+     * @param type Event type to emit.
+     * @param args Argument(s) in callback.
+     * @returns
+     */
     emit(type, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -163,6 +191,14 @@ class Task extends Task$1 {
         this._piximData.emitter.emit(type, ...args);
         return this;
     }
+    /**
+     * Emit task with specifying a context.
+     *
+     * @param type Event type to emit.
+     * @param context Context to execute the callback.
+     * @param args Argument(s) in callback.
+     * @returns
+     */
     cemit(type, context, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -170,6 +206,12 @@ class Task extends Task$1 {
         this._piximData.emitter.cemit(type, context, ...args);
         return this;
     }
+    /**
+     * Emit all task events.
+     *
+     * @param args Argument(s) in callback.
+     * @returns
+     */
     emitAll(...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -177,6 +219,13 @@ class Task extends Task$1 {
         this._piximData.emitter.emitAll(...args);
         return this;
     }
+    /**
+     * Emit all task events with specifying a context.
+     *
+     * @param context Context to execute the callback.
+     * @param args Argument(s) in callback.
+     * @returns
+     */
     cemitAll(context, ...args) {
         if (!this._taskData.enabled) {
             return this;
@@ -184,10 +233,19 @@ class Task extends Task$1 {
         this._piximData.emitter.cemitAll(context, ...args);
         return this;
     }
+    /**
+     * Remove callbacks grouped task event type.
+     *
+     * @param type
+     * @returns
+     */
     clear(type = '') {
         this._piximData.emitter.clear(type);
         return this;
     }
+    /**
+     * Destroy instance.
+     */
     destroy() {
         super.destroy();
         this.clear();
@@ -215,6 +273,13 @@ class Container extends Container$1 {
         });
         */
     }
+    /**
+     * Executes the registered task.
+     * This function is called automatically by Pixim.js every frame, so there is usually no need to execute this function separately.
+     *
+     * @param e
+     * @returns
+     */
     updateTask(e) {
         const task = this._piximData.task;
         if (!this._piximData.task.enabled) {
@@ -848,7 +913,7 @@ class BlobLoader extends LoaderBase {
         })()
             .then(res => {
             if (!res.ok) {
-                throw res.statusText;
+                throw res.statusText || "error";
             }
             return res.blob();
         })
@@ -944,7 +1009,7 @@ class JsLoader extends LoaderBase {
         })()
             .then(res => {
             if (!res.ok) {
-                throw res.statusText;
+                throw res.statusText || "error";
             }
             return res.text();
         })
@@ -971,7 +1036,7 @@ class JsonLoader extends LoaderBase {
         })()
             .then(res => {
             if (!res.ok) {
-                throw res.statusText;
+                throw res.statusText || "error";
             }
             return res.json();
         })

@@ -33,7 +33,7 @@ export class JsonLoader extends LoaderBase<TJsonLoaderTarget, TJsonLoaderRawReso
 		})()
 		.then(res => {
 			if (!res.ok) {
-				throw res.statusText;
+				throw res.statusText || "error";
 			}
 			
 			return res.json();

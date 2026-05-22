@@ -1,5 +1,5 @@
 /*!
- * @tawaship/pixim.js - v1.15.0
+ * @tawaship/pixim.js - v1.15.1
  * 
  * @require pixi.js v^5.3.2
  * @require howler.js v^2.2.0 (If use sound)
@@ -22,7 +22,7 @@
             }
         })), n.default = e, Object.freeze(n);
     }
-    window.console.log("%c pixim.js%cv1.15.0 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
+    window.console.log("%c pixim.js%cv1.15.1 %c", "color: #FFF; background: #03F; padding: 5px; border-radius:12px 0 0 12px; margin-top: 5px; margin-bottom: 5px;", "color: #FFF; background: #F33; padding: 5px;  border-radius:0 12px 12px 0;", "padding: 5px;");
     var PIXI__namespace = _interopNamespaceDefault(PIXI), Emitter$1 = function() {
         this._events = {};
     };
@@ -620,7 +620,7 @@
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
             src = data.src, xhr = data.xhr, xhr ? fetch(src, xhr.requestOptions || {}) : fetch(src)).then((function(res) {
                 if (!res.ok) {
-                    throw res.statusText;
+                    throw res.statusText || "error";
                 }
                 return res.blob();
             })).then((function(blob) {
@@ -699,7 +699,7 @@
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
             src = data.src, xhr = data.xhr, xhr ? fetch(src, xhr.requestOptions || {}) : fetch(src)).then((function(res) {
                 if (!res.ok) {
-                    throw res.statusText;
+                    throw res.statusText || "error";
                 }
                 return res.text();
             })).then((function(text) {
@@ -726,7 +726,7 @@
             return void 0 === options && (options = {}), (data = this._resolveParams(target, options), 
             src = data.src, xhr = data.xhr, xhr ? fetch(src, xhr.requestOptions) : fetch(src)).then((function(res) {
                 if (!res.ok) {
-                    throw res.statusText;
+                    throw res.statusText || "error";
                 }
                 return res.json();
             })).then((function(json) {
