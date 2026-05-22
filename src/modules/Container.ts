@@ -40,6 +40,13 @@ export class Container extends PixiContainer {
 		*/
 	}
 	
+    /**
+     * Executes the registered task.
+     * This function is called automatically by Pixim.js every frame, so there is usually no need to execute this function separately.
+     * 
+     * @param e 
+     * @returns 
+     */
 	updateTask(e: ITickerData) {
 		const task: Task = this._piximData.task;
 		
